@@ -1,0 +1,4 @@
+/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/build/CMakeFiles/SimpleView.dir
+/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/build/CMakeFiles/SimpleView_automoc.dir
+/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/build/CMakeFiles/ALL_BUILD.dir
+/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/build/CMakeFiles/ZERO_CHECK.dir
