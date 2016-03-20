@@ -1,0 +1,1310 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		0A56D6A88D94407FB01921EA /* SimpleView_automoc */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 7A1B6D6EDDA34151BFAD8F24 /* Build configuration list for PBXAggregateTarget "SimpleView_automoc" */;
+			buildPhases = (
+				FF15CD74EB8D483185FAC46C /* CMake Rules */,
+			);
+			dependencies = (
+				2F0E79E0912A451293BD37C3 /* PBXTargetDependency */,
+			);
+			name = SimpleView_automoc;
+			productName = SimpleView_automoc;
+		};
+		63F2D2B4BDCA4C84A7170E41 /* ALL_BUILD */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = DB6FFD73C64547039386D504 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */;
+			buildPhases = (
+				2029430748A3428888E8B3BD /* CMake Rules */,
+			);
+			dependencies = (
+				C82F53083C3F4D4B82DB064E /* PBXTargetDependency */,
+				1B0F2963B5B448078AB29248 /* PBXTargetDependency */,
+			);
+			name = ALL_BUILD;
+			productName = ALL_BUILD;
+		};
+		C7864F6135F542C0A05349AC /* ZERO_CHECK */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 974491FB398D435087340DDA /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */;
+			buildPhases = (
+				197BBDFA56534098BF324DDC /* CMake Rules */,
+			);
+			dependencies = (
+			);
+			name = ZERO_CHECK;
+			productName = ZERO_CHECK;
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXBuildFile section */
+		1A30A6EB685947FA9B7FF191 /* main.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 00E7248FC67346AE93745335 /* main.cxx */; settings = {COMPILER_FLAGS = ""; }; };
+		2287E536F22F4EE599205636 /* qcustomplot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1ED8586ECEE14493AD019973 /* qcustomplot.cpp */; settings = {COMPILER_FLAGS = ""; }; };
+		450DF975C46F4A0E8DE994C7 /* SimpleView.cxx in Sources */ = {isa = PBXBuildFile; fileRef = 02414A0AA09C4E2794A6CFAA /* SimpleView.cxx */; settings = {COMPILER_FLAGS = ""; }; };
+		F038B07F2D68446C94B0B1BB /* qrc_icons.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6B28DBB394504DAE8776CD97 /* qrc_icons.cpp */; settings = {COMPILER_FLAGS = ""; }; };
+		F262749ECACA4240B119D4DD /* SimpleView_automoc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E9549CAA613249608BEEC2A8 /* SimpleView_automoc.cpp */; settings = {COMPILER_FLAGS = ""; }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		000148A6F0294B85BE516A49 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B623B1C017FD462788E05B12 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C7864F6135F542C0A05349AC;
+			remoteInfo = ZERO_CHECK;
+		};
+		043A95709FAA4D05B4209BA8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B623B1C017FD462788E05B12 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 517577D633604963BCF69320;
+			remoteInfo = SimpleView;
+		};
+		9FA7E23BF0F342038D8761FC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B623B1C017FD462788E05B12 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0A56D6A88D94407FB01921EA;
+			remoteInfo = SimpleView_automoc;
+		};
+		C3F5F235C2ED4DA4BD92E908 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B623B1C017FD462788E05B12 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C7864F6135F542C0A05349AC;
+			remoteInfo = ZERO_CHECK;
+		};
+		F18CF2241483477F8153A652 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B623B1C017FD462788E05B12 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C7864F6135F542C0A05349AC;
+			remoteInfo = ZERO_CHECK;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		00E7248FC67346AE93745335 /* main.cxx */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = main.cxx; sourceTree = SOURCE_ROOT; };
+		02414A0AA09C4E2794A6CFAA /* SimpleView.cxx */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = SimpleView.cxx; sourceTree = SOURCE_ROOT; };
+		1056EB41BB134354BDD248C1 /* icons.qrc */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; name = icons.qrc; path = Icons/icons.qrc; sourceTree = SOURCE_ROOT; };
+		123190A7C20547E2BB148B43 /* SimpleView.ui */ = {isa = PBXFileReference; explicitFileType = sourcecode; fileEncoding = 4; path = SimpleView.ui; sourceTree = SOURCE_ROOT; };
+		1ED8586ECEE14493AD019973 /* qcustomplot.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = qcustomplot.cpp; sourceTree = SOURCE_ROOT; };
+		26940ADFD0E74F5FBF7A9FCB /* Info.plist */ = {isa = PBXFileReference; explicitFileType = sourcecode.text.plist; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = build/CMakeFiles/SimpleView.dir/Info.plist; sourceTree = SOURCE_ROOT; };
+		3DE1039DC253423C8BCAA936 /* ui_SimpleView.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; name = ui_SimpleView.h; path = build/ui_SimpleView.h; sourceTree = SOURCE_ROOT; };
+		60297C8E71AE4A17B58F2573 /* SimpleView.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; path = SimpleView.h; sourceTree = SOURCE_ROOT; };
+		6B28DBB394504DAE8776CD97 /* qrc_icons.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = qrc_icons.cpp; path = build/qrc_icons.cpp; sourceTree = SOURCE_ROOT; };
+		A7CDF8A58C124F46A15A85AE /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		B7096151B24B4B17B108FC92 /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		CE9E6E45C69043498ACC4A2C /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		E9549CAA613249608BEEC2A8 /* SimpleView_automoc.cpp */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; name = SimpleView_automoc.cpp; path = build/SimpleView_automoc.cpp; sourceTree = SOURCE_ROOT; };
+		EA80795E32DE4218A517D9FD /* qcustomplot.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 4; path = qcustomplot.h; sourceTree = SOURCE_ROOT; };
+		FA44E5BF8831477EA2FCAD5B /* CMakeLists.txt */ = {isa = PBXFileReference; explicitFileType = sourcecode.text; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = SOURCE_ROOT; };
+		FA4E4FFA697C48C0B63F888B /* SimpleView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; path = SimpleView.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		0619F2D9842C433893F0F533 /* ZERO_CHECK */ = {
+			isa = PBXGroup;
+			children = (
+				F898FC658EA0440F973D521A /* CMake Rules */,
+				CE9E6E45C69043498ACC4A2C /* CMakeLists.txt */,
+			);
+			name = ZERO_CHECK;
+			sourceTree = "<group>";
+		};
+		10AA2215126440D79A6C1BE8 /* Generated */ = {
+			isa = PBXGroup;
+			children = (
+				6B28DBB394504DAE8776CD97 /* qrc_icons.cpp */,
+				3DE1039DC253423C8BCAA936 /* ui_SimpleView.h */,
+			);
+			name = Generated;
+			sourceTree = "<group>";
+		};
+		1AC2E8927DD74161A86069D3 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1056EB41BB134354BDD248C1 /* icons.qrc */,
+				123190A7C20547E2BB148B43 /* SimpleView.ui */,
+				26940ADFD0E74F5FBF7A9FCB /* Info.plist */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		3249F729328841A3B714C738 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		445CC58A8F21489686E9273D /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				810423CAFB2146948EB8CCAE /* ALL_BUILD */,
+				C7F73366429E4D6AA7FB1F92 /* SimpleView_automoc */,
+				0619F2D9842C433893F0F533 /* ZERO_CHECK */,
+				EB50D3DB1520477BAA9D6F94 /* SimpleView */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+		5033B05071FC4DB996FF5010 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FA4E4FFA697C48C0B63F888B /* SimpleView.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7B45D48074C64B79BCCF734E /* Source Files */ = {
+			isa = PBXGroup;
+			children = (
+				02414A0AA09C4E2794A6CFAA /* SimpleView.cxx */,
+				E9549CAA613249608BEEC2A8 /* SimpleView_automoc.cpp */,
+				00E7248FC67346AE93745335 /* main.cxx */,
+				1ED8586ECEE14493AD019973 /* qcustomplot.cpp */,
+			);
+			name = "Source Files";
+			sourceTree = "<group>";
+		};
+		810423CAFB2146948EB8CCAE /* ALL_BUILD */ = {
+			isa = PBXGroup;
+			children = (
+				3249F729328841A3B714C738 /* CMake Rules */,
+				B7096151B24B4B17B108FC92 /* CMakeLists.txt */,
+			);
+			name = ALL_BUILD;
+			sourceTree = "<group>";
+		};
+		A743604E480A46449AAC909F = {
+			isa = PBXGroup;
+			children = (
+				445CC58A8F21489686E9273D /* Sources */,
+				C4F93054D07F40C4B31875D4 /* Resources */,
+				5033B05071FC4DB996FF5010 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		C4F93054D07F40C4B31875D4 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		C7F73366429E4D6AA7FB1F92 /* SimpleView_automoc */ = {
+			isa = PBXGroup;
+			children = (
+				E013EBAE4A5E432F9E744051 /* CMake Rules */,
+				A7CDF8A58C124F46A15A85AE /* CMakeLists.txt */,
+			);
+			name = SimpleView_automoc;
+			sourceTree = "<group>";
+		};
+		D3F794A8EBAA45D7BA4903AE /* Header Files */ = {
+			isa = PBXGroup;
+			children = (
+				60297C8E71AE4A17B58F2573 /* SimpleView.h */,
+				EA80795E32DE4218A517D9FD /* qcustomplot.h */,
+			);
+			name = "Header Files";
+			sourceTree = "<group>";
+		};
+		E013EBAE4A5E432F9E744051 /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+		EB50D3DB1520477BAA9D6F94 /* SimpleView */ = {
+			isa = PBXGroup;
+			children = (
+				7B45D48074C64B79BCCF734E /* Source Files */,
+				D3F794A8EBAA45D7BA4903AE /* Header Files */,
+				10AA2215126440D79A6C1BE8 /* Generated */,
+				1AC2E8927DD74161A86069D3 /* Resources */,
+				FA44E5BF8831477EA2FCAD5B /* CMakeLists.txt */,
+			);
+			name = SimpleView;
+			sourceTree = "<group>";
+		};
+		F898FC658EA0440F973D521A /* CMake Rules */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "CMake Rules";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		517577D633604963BCF69320 /* SimpleView */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 802FB864CA8040B796507B8E /* Build configuration list for PBXNativeTarget "SimpleView" */;
+			buildPhases = (
+				1CD0A8DB078041068B0DC0A2 /* CMake Rules */,
+				77FE1D9D59464C6F81EAFFB9 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				449810E87F4A49DB90078582 /* PBXTargetDependency */,
+				F59238F1470143D28A5A4670 /* PBXTargetDependency */,
+			);
+			name = SimpleView;
+			productName = SimpleView;
+			productReference = FA4E4FFA697C48C0B63F888B /* SimpleView.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B623B1C017FD462788E05B12 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 0720;
+			};
+			buildConfigurationList = 4AD87D52FC2D4402BADE06AC /* Build configuration list for PBXProject "SimpleView" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = A743604E480A46449AAC909F;
+			projectDirPath = ../;
+			projectRoot = "";
+			targets = (
+				63F2D2B4BDCA4C84A7170E41 /* ALL_BUILD */,
+				517577D633604963BCF69320 /* SimpleView */,
+				0A56D6A88D94407FB01921EA /* SimpleView_automoc */,
+				C7864F6135F542C0A05349AC /* ZERO_CHECK */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		197BBDFA56534098BF324DDC /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/cxx/OneDrive/Documents/Research\\ Projects/Phase\\ field\\ package/MUPRO-visualization/SimpleView/build -f /Users/cxx/OneDrive/Documents/Research\\ Projects/Phase\\ field\\ package/MUPRO-visualization/SimpleView/build/CMakeScripts/ZERO_CHECK_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		1CD0A8DB078041068B0DC0A2 /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/cxx/OneDrive/Documents/Research\\ Projects/Phase\\ field\\ package/MUPRO-visualization/SimpleView/build -f /Users/cxx/OneDrive/Documents/Research\\ Projects/Phase\\ field\\ package/MUPRO-visualization/SimpleView/build/CMakeScripts/SimpleView_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		2029430748A3428888E8B3BD /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/cxx/OneDrive/Documents/Research\\ Projects/Phase\\ field\\ package/MUPRO-visualization/SimpleView/build -f /Users/cxx/OneDrive/Documents/Research\\ Projects/Phase\\ field\\ package/MUPRO-visualization/SimpleView/build/CMakeScripts/ALL_BUILD_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+		FF15CD74EB8D483185FAC46C /* CMake Rules */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			name = "CMake Rules";
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "make -C /Users/cxx/OneDrive/Documents/Research\\ Projects/Phase\\ field\\ package/MUPRO-visualization/SimpleView/build -f /Users/cxx/OneDrive/Documents/Research\\ Projects/Phase\\ field\\ package/MUPRO-visualization/SimpleView/build/CMakeScripts/SimpleView_automoc_cmakeRulesBuildPhase.make$CONFIGURATION all";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		77FE1D9D59464C6F81EAFFB9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				450DF975C46F4A0E8DE994C7 /* SimpleView.cxx in Sources */,
+				F262749ECACA4240B119D4DD /* SimpleView_automoc.cpp in Sources */,
+				F038B07F2D68446C94B0B1BB /* qrc_icons.cpp in Sources */,
+				1A30A6EB685947FA9B7FF191 /* main.cxx in Sources */,
+				2287E536F22F4EE599205636 /* qcustomplot.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		1B0F2963B5B448078AB29248 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 517577D633604963BCF69320 /* SimpleView */;
+			targetProxy = 043A95709FAA4D05B4209BA8 /* PBXContainerItemProxy */;
+		};
+		2F0E79E0912A451293BD37C3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C7864F6135F542C0A05349AC /* ZERO_CHECK */;
+			targetProxy = C3F5F235C2ED4DA4BD92E908 /* PBXContainerItemProxy */;
+		};
+		449810E87F4A49DB90078582 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C7864F6135F542C0A05349AC /* ZERO_CHECK */;
+			targetProxy = F18CF2241483477F8153A652 /* PBXContainerItemProxy */;
+		};
+		C82F53083C3F4D4B82DB064E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C7864F6135F542C0A05349AC /* ZERO_CHECK */;
+			targetProxy = 000148A6F0294B85BE516A49 /* PBXContainerItemProxy */;
+		};
+		F59238F1470143D28A5A4670 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0A56D6A88D94407FB01921EA /* SimpleView_automoc */;
+			targetProxy = 9FA7E23BF0F342038D8761FC /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0D4809A9F23D4DC2A076751B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/vtk-7.0",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build\"",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView\"",
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		10C0967A885042DCA9096491 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/vtk-7.0",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build\"",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView\"",
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = SimpleView_automoc;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		21844E4F58634DA9B5BC5D4E /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/vtk-7.0",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build\"",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView\"",
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		2E668610529B44ABAFBADBB7 /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				FRAMEWORK_SEARCH_PATHS = /Users/cxx/Qt/5.5/clang_64/lib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 2;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					QT_CORE_LIB,
+					QT_GUI_LIB,
+					QT_WIDGETS_LIB,
+					QT_PRINTSUPPORT_LIB,
+					"'vtkRenderingCore_AUTOINIT=3(vtkInteractionStyle,vtkRenderingFreeType,vtkRenderingOpenGL2)'",
+					"'vtkRenderingVolume_AUTOINIT=1(vtkRenderingVolumeOpenGL2)'",
+					QT_NO_DEBUG,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/vtk-7.0",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build\"",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView\"",
+					/Users/cxx/Qt/5.5/clang_64/lib/QtCore.framework/Headers,
+					"/Users/cxx/Qt/5.5/clang_64/./mkspecs/macx-clang",
+					/Users/cxx/Qt/5.5/clang_64/lib/QtGui.framework/Headers,
+					/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/OpenGL.framework/Headers,
+					/Users/cxx/Qt/5.5/clang_64/lib/QtWidgets.framework/Headers,
+					/Users/cxx/Qt/5.5/clang_64/lib/QtPrintSupport.framework/Headers,
+				);
+				INFOPLIST_FILE = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build/CMakeFiles/SimpleView.dir/Info.plist";
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = /Users/cxx/Qt/5.5/clang_64/lib;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-DNDEBUG",
+					"-fPIC",
+				);
+				OTHER_LDFLAGS = (
+					"-Wl,-search_paths_first",
+					"-Wl,-headerpad_max_install_names",
+					/Users/cxx/Qt/5.5/clang_64/lib/QtPrintSupport.framework/QtPrintSupport,
+					"/usr/local/lib/libvtkRenderingVolumeOpenGL2-7.0.1.dylib",
+					"/usr/local/lib/libvtkViewsQt-7.0.1.dylib",
+					"/usr/local/lib/libvtkIOLegacy-7.0.1.dylib",
+					"/usr/local/lib/libvtkGUISupportQt-7.0.1.dylib",
+					/Users/cxx/Qt/5.5/clang_64/lib/QtWidgets.framework/QtWidgets,
+					/Users/cxx/Qt/5.5/clang_64/lib/QtGui.framework/QtGui,
+					/Users/cxx/Qt/5.5/clang_64/lib/QtCore.framework/QtCore,
+					"/usr/local/lib/libvtkRenderingOpenGL2-7.0.1.dylib",
+					"/usr/local/lib/libvtkglew-7.0.1.dylib",
+					"-framework",
+					Cocoa,
+					"/usr/local/lib/libvtkViewsInfovis-7.0.1.dylib",
+					"/usr/local/lib/libvtkChartsCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersImaging-7.0.1.dylib",
+					"/usr/local/lib/libvtkInfovisLayout-7.0.1.dylib",
+					"/usr/local/lib/libvtkInfovisCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingContext2D-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingLabel-7.0.1.dylib",
+					"/usr/local/lib/libvtkViewsCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkInteractionWidgets-7.0.1.dylib",
+					"/usr/local/lib/libvtkInteractionStyle-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingVolume-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersModeling-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingGeneral-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingHybrid-7.0.1.dylib",
+					"/usr/local/lib/libvtkIOImage-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersHybrid-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingSources-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingAnnotation-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingFreeType-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersGeometry-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonColor-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersSources-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersExtraction-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersStatistics-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingFourier-7.0.1.dylib",
+					"/usr/local/lib/libvtkalglib-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersGeneral-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonComputationalGeometry-7.0.1.dylib",
+					"/usr/local/lib/libvtkfreetype-7.0.1.dylib",
+					"-framework",
+					ApplicationServices,
+					"-framework",
+					CoreServices,
+					"/usr/local/lib/libvtkImagingColor-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkIOCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonExecutionModel-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonDataModel-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonMisc-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonSystem-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonTransforms-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonMath-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkzlib-7.0.1.dylib",
+					"/usr/local/lib/libvtksys-7.0.1.dylib",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = SimpleView;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
+		};
+		3202C68B8666472DAC9B79FB /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk;
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build/build";
+			};
+			name = RelWithDebInfo;
+		};
+		47276DEE2C80490D984378E5 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/vtk-7.0",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build\"",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView\"",
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = SimpleView_automoc;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		516A2DAA342D4A098BB138B5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/vtk-7.0",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build\"",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView\"",
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = SimpleView_automoc;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		6A81D1641404411C8B735298 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk;
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build/build";
+			};
+			name = Debug;
+		};
+		73F651DB45E442F4B895508F /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				FRAMEWORK_SEARCH_PATHS = /Users/cxx/Qt/5.5/clang_64/lib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = s;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					QT_CORE_LIB,
+					QT_GUI_LIB,
+					QT_WIDGETS_LIB,
+					QT_PRINTSUPPORT_LIB,
+					"'vtkRenderingCore_AUTOINIT=3(vtkInteractionStyle,vtkRenderingFreeType,vtkRenderingOpenGL2)'",
+					"'vtkRenderingVolume_AUTOINIT=1(vtkRenderingVolumeOpenGL2)'",
+					QT_NO_DEBUG,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/vtk-7.0",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build\"",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView\"",
+					/Users/cxx/Qt/5.5/clang_64/lib/QtCore.framework/Headers,
+					"/Users/cxx/Qt/5.5/clang_64/./mkspecs/macx-clang",
+					/Users/cxx/Qt/5.5/clang_64/lib/QtGui.framework/Headers,
+					/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/OpenGL.framework/Headers,
+					/Users/cxx/Qt/5.5/clang_64/lib/QtWidgets.framework/Headers,
+					/Users/cxx/Qt/5.5/clang_64/lib/QtPrintSupport.framework/Headers,
+				);
+				INFOPLIST_FILE = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build/CMakeFiles/SimpleView.dir/Info.plist";
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = /Users/cxx/Qt/5.5/clang_64/lib;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-DNDEBUG",
+					"-fPIC",
+				);
+				OTHER_LDFLAGS = (
+					"-Wl,-search_paths_first",
+					"-Wl,-headerpad_max_install_names",
+					/Users/cxx/Qt/5.5/clang_64/lib/QtPrintSupport.framework/QtPrintSupport,
+					"/usr/local/lib/libvtkRenderingVolumeOpenGL2-7.0.1.dylib",
+					"/usr/local/lib/libvtkViewsQt-7.0.1.dylib",
+					"/usr/local/lib/libvtkIOLegacy-7.0.1.dylib",
+					"/usr/local/lib/libvtkGUISupportQt-7.0.1.dylib",
+					/Users/cxx/Qt/5.5/clang_64/lib/QtWidgets.framework/QtWidgets,
+					/Users/cxx/Qt/5.5/clang_64/lib/QtGui.framework/QtGui,
+					/Users/cxx/Qt/5.5/clang_64/lib/QtCore.framework/QtCore,
+					"/usr/local/lib/libvtkRenderingOpenGL2-7.0.1.dylib",
+					"/usr/local/lib/libvtkglew-7.0.1.dylib",
+					"-framework",
+					Cocoa,
+					"/usr/local/lib/libvtkViewsInfovis-7.0.1.dylib",
+					"/usr/local/lib/libvtkChartsCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersImaging-7.0.1.dylib",
+					"/usr/local/lib/libvtkInfovisLayout-7.0.1.dylib",
+					"/usr/local/lib/libvtkInfovisCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingContext2D-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingLabel-7.0.1.dylib",
+					"/usr/local/lib/libvtkViewsCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkInteractionWidgets-7.0.1.dylib",
+					"/usr/local/lib/libvtkInteractionStyle-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingVolume-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersModeling-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingGeneral-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingHybrid-7.0.1.dylib",
+					"/usr/local/lib/libvtkIOImage-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersHybrid-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingSources-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingAnnotation-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingFreeType-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersGeometry-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonColor-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersSources-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersExtraction-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersStatistics-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingFourier-7.0.1.dylib",
+					"/usr/local/lib/libvtkalglib-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersGeneral-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonComputationalGeometry-7.0.1.dylib",
+					"/usr/local/lib/libvtkfreetype-7.0.1.dylib",
+					"-framework",
+					ApplicationServices,
+					"-framework",
+					CoreServices,
+					"/usr/local/lib/libvtkImagingColor-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkIOCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonExecutionModel-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonDataModel-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonMisc-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonSystem-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonTransforms-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonMath-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkzlib-7.0.1.dylib",
+					"/usr/local/lib/libvtksys-7.0.1.dylib",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = SimpleView;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		813CE178D2F14071B0955D54 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/vtk-7.0",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build\"",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView\"",
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		A9DD0F295531415E9C50EC75 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/vtk-7.0",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build\"",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView\"",
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = MinSizeRel;
+		};
+		B2E1A20AA16244778D703A9E /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/vtk-7.0",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build\"",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView\"",
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
+		};
+		B4608774E4B84345A1D81633 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/vtk-7.0",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build\"",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView\"",
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		BCD27AC6E7D44554B48F1E8E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				FRAMEWORK_SEARCH_PATHS = /Users/cxx/Qt/5.5/clang_64/lib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					QT_CORE_LIB,
+					QT_GUI_LIB,
+					QT_WIDGETS_LIB,
+					QT_PRINTSUPPORT_LIB,
+					"'vtkRenderingCore_AUTOINIT=3(vtkInteractionStyle,vtkRenderingFreeType,vtkRenderingOpenGL2)'",
+					"'vtkRenderingVolume_AUTOINIT=1(vtkRenderingVolumeOpenGL2)'",
+					QT_NO_DEBUG,
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/vtk-7.0",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build\"",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView\"",
+					/Users/cxx/Qt/5.5/clang_64/lib/QtCore.framework/Headers,
+					"/Users/cxx/Qt/5.5/clang_64/./mkspecs/macx-clang",
+					/Users/cxx/Qt/5.5/clang_64/lib/QtGui.framework/Headers,
+					/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/OpenGL.framework/Headers,
+					/Users/cxx/Qt/5.5/clang_64/lib/QtWidgets.framework/Headers,
+					/Users/cxx/Qt/5.5/clang_64/lib/QtPrintSupport.framework/Headers,
+				);
+				INFOPLIST_FILE = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build/CMakeFiles/SimpleView.dir/Info.plist";
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = /Users/cxx/Qt/5.5/clang_64/lib;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CPLUSPLUSFLAGS = (
+					"-DNDEBUG",
+					"-fPIC",
+				);
+				OTHER_LDFLAGS = (
+					"-Wl,-search_paths_first",
+					"-Wl,-headerpad_max_install_names",
+					/Users/cxx/Qt/5.5/clang_64/lib/QtPrintSupport.framework/QtPrintSupport,
+					"/usr/local/lib/libvtkRenderingVolumeOpenGL2-7.0.1.dylib",
+					"/usr/local/lib/libvtkViewsQt-7.0.1.dylib",
+					"/usr/local/lib/libvtkIOLegacy-7.0.1.dylib",
+					"/usr/local/lib/libvtkGUISupportQt-7.0.1.dylib",
+					/Users/cxx/Qt/5.5/clang_64/lib/QtWidgets.framework/QtWidgets,
+					/Users/cxx/Qt/5.5/clang_64/lib/QtGui.framework/QtGui,
+					/Users/cxx/Qt/5.5/clang_64/lib/QtCore.framework/QtCore,
+					"/usr/local/lib/libvtkRenderingOpenGL2-7.0.1.dylib",
+					"/usr/local/lib/libvtkglew-7.0.1.dylib",
+					"-framework",
+					Cocoa,
+					"/usr/local/lib/libvtkViewsInfovis-7.0.1.dylib",
+					"/usr/local/lib/libvtkChartsCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersImaging-7.0.1.dylib",
+					"/usr/local/lib/libvtkInfovisLayout-7.0.1.dylib",
+					"/usr/local/lib/libvtkInfovisCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingContext2D-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingLabel-7.0.1.dylib",
+					"/usr/local/lib/libvtkViewsCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkInteractionWidgets-7.0.1.dylib",
+					"/usr/local/lib/libvtkInteractionStyle-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingVolume-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersModeling-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingGeneral-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingHybrid-7.0.1.dylib",
+					"/usr/local/lib/libvtkIOImage-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersHybrid-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingSources-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingAnnotation-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingFreeType-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersGeometry-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonColor-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersSources-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersExtraction-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersStatistics-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingFourier-7.0.1.dylib",
+					"/usr/local/lib/libvtkalglib-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersGeneral-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonComputationalGeometry-7.0.1.dylib",
+					"/usr/local/lib/libvtkfreetype-7.0.1.dylib",
+					"-framework",
+					ApplicationServices,
+					"-framework",
+					CoreServices,
+					"/usr/local/lib/libvtkImagingColor-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkIOCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonExecutionModel-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonDataModel-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonMisc-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonSystem-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonTransforms-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonMath-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkzlib-7.0.1.dylib",
+					"/usr/local/lib/libvtksys-7.0.1.dylib",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = SimpleView;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		BDFEA7044D894B74BD24CE0E /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/vtk-7.0",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build\"",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView\"",
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = SimpleView_automoc;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
+		};
+		DFD12482C52445BA9DFD5B94 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				EXECUTABLE_PREFIX = "";
+				EXECUTABLE_SUFFIX = "";
+				FRAMEWORK_SEARCH_PATHS = /Users/cxx/Qt/5.5/clang_64/lib;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'",
+					QT_CORE_LIB,
+					QT_GUI_LIB,
+					QT_WIDGETS_LIB,
+					QT_PRINTSUPPORT_LIB,
+					"'vtkRenderingCore_AUTOINIT=3(vtkInteractionStyle,vtkRenderingFreeType,vtkRenderingOpenGL2)'",
+					"'vtkRenderingVolume_AUTOINIT=1(vtkRenderingVolumeOpenGL2)'",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/vtk-7.0",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build\"",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView\"",
+					/Users/cxx/Qt/5.5/clang_64/lib/QtCore.framework/Headers,
+					"/Users/cxx/Qt/5.5/clang_64/./mkspecs/macx-clang",
+					/Users/cxx/Qt/5.5/clang_64/lib/QtGui.framework/Headers,
+					/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk/System/Library/Frameworks/OpenGL.framework/Headers,
+					/Users/cxx/Qt/5.5/clang_64/lib/QtWidgets.framework/Headers,
+					/Users/cxx/Qt/5.5/clang_64/lib/QtPrintSupport.framework/Headers,
+				);
+				INFOPLIST_FILE = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build/CMakeFiles/SimpleView.dir/Info.plist";
+				INSTALL_PATH = "";
+				LD_RUNPATH_SEARCH_PATHS = /Users/cxx/Qt/5.5/clang_64/lib;
+				LIBRARY_SEARCH_PATHS = "";
+				OTHER_CPLUSPLUSFLAGS = "     -fPIC  ";
+				OTHER_LDFLAGS = (
+					"-Wl,-search_paths_first",
+					"-Wl,-headerpad_max_install_names",
+					/Users/cxx/Qt/5.5/clang_64/lib/QtPrintSupport.framework/QtPrintSupport,
+					"/usr/local/lib/libvtkRenderingVolumeOpenGL2-7.0.1.dylib",
+					"/usr/local/lib/libvtkViewsQt-7.0.1.dylib",
+					"/usr/local/lib/libvtkIOLegacy-7.0.1.dylib",
+					"/usr/local/lib/libvtkGUISupportQt-7.0.1.dylib",
+					/Users/cxx/Qt/5.5/clang_64/lib/QtWidgets.framework/QtWidgets,
+					/Users/cxx/Qt/5.5/clang_64/lib/QtGui.framework/QtGui,
+					/Users/cxx/Qt/5.5/clang_64/lib/QtCore.framework/QtCore,
+					"/usr/local/lib/libvtkRenderingOpenGL2-7.0.1.dylib",
+					"/usr/local/lib/libvtkglew-7.0.1.dylib",
+					"-framework",
+					Cocoa,
+					"/usr/local/lib/libvtkViewsInfovis-7.0.1.dylib",
+					"/usr/local/lib/libvtkChartsCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersImaging-7.0.1.dylib",
+					"/usr/local/lib/libvtkInfovisLayout-7.0.1.dylib",
+					"/usr/local/lib/libvtkInfovisCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingContext2D-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingLabel-7.0.1.dylib",
+					"/usr/local/lib/libvtkViewsCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkInteractionWidgets-7.0.1.dylib",
+					"/usr/local/lib/libvtkInteractionStyle-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingVolume-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersModeling-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingGeneral-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingHybrid-7.0.1.dylib",
+					"/usr/local/lib/libvtkIOImage-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersHybrid-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingSources-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingAnnotation-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingFreeType-7.0.1.dylib",
+					"/usr/local/lib/libvtkRenderingCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersGeometry-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonColor-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersSources-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersExtraction-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersStatistics-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingFourier-7.0.1.dylib",
+					"/usr/local/lib/libvtkalglib-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersGeneral-7.0.1.dylib",
+					"/usr/local/lib/libvtkFiltersCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonComputationalGeometry-7.0.1.dylib",
+					"/usr/local/lib/libvtkfreetype-7.0.1.dylib",
+					"-framework",
+					ApplicationServices,
+					"-framework",
+					CoreServices,
+					"/usr/local/lib/libvtkImagingColor-7.0.1.dylib",
+					"/usr/local/lib/libvtkImagingCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkIOCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonExecutionModel-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonDataModel-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonMisc-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonSystem-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonTransforms-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonMath-7.0.1.dylib",
+					"/usr/local/lib/libvtkCommonCore-7.0.1.dylib",
+					"/usr/local/lib/libvtkzlib-7.0.1.dylib",
+					"/usr/local/lib/libvtksys-7.0.1.dylib",
+				);
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = SimpleView;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Debug;
+		};
+		E19E9DF85EAD4204AAD8F525 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/vtk-7.0",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build\"",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView\"",
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ALL_BUILD;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = Release;
+		};
+		E21AF20F6DCC41849FBFF098 /* MinSizeRel */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk;
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build/build";
+			};
+			name = MinSizeRel;
+		};
+		F48299C2595D4DD9B09C811E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.11.sdk;
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build/build";
+			};
+			name = Release;
+		};
+		F71C7734E1BA4382BEF68D4D /* RelWithDebInfo */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "'CMAKE_INTDIR=\"$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)\"'";
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"/usr/local/include/vtk-7.0",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build\"",
+					"\"/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView\"",
+				);
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = " ";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = ZERO_CHECK;
+				SECTORDER_FLAGS = "";
+				SYMROOT = "/Users/cxx/OneDrive/Documents/Research Projects/Phase field package/MUPRO-visualization/SimpleView/build";
+				USE_HEADERMAP = NO;
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+					"$(inherited)",
+				);
+			};
+			name = RelWithDebInfo;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4AD87D52FC2D4402BADE06AC /* Build configuration list for PBXProject "SimpleView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6A81D1641404411C8B735298 /* Debug */,
+				F48299C2595D4DD9B09C811E /* Release */,
+				E21AF20F6DCC41849FBFF098 /* MinSizeRel */,
+				3202C68B8666472DAC9B79FB /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7A1B6D6EDDA34151BFAD8F24 /* Build configuration list for PBXAggregateTarget "SimpleView_automoc" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				10C0967A885042DCA9096491 /* Debug */,
+				516A2DAA342D4A098BB138B5 /* Release */,
+				47276DEE2C80490D984378E5 /* MinSizeRel */,
+				BDFEA7044D894B74BD24CE0E /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		802FB864CA8040B796507B8E /* Build configuration list for PBXNativeTarget "SimpleView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DFD12482C52445BA9DFD5B94 /* Debug */,
+				BCD27AC6E7D44554B48F1E8E /* Release */,
+				73F651DB45E442F4B895508F /* MinSizeRel */,
+				2E668610529B44ABAFBADBB7 /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		974491FB398D435087340DDA /* Build configuration list for PBXAggregateTarget "ZERO_CHECK" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0D4809A9F23D4DC2A076751B /* Debug */,
+				B4608774E4B84345A1D81633 /* Release */,
+				A9DD0F295531415E9C50EC75 /* MinSizeRel */,
+				F71C7734E1BA4382BEF68D4D /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		DB6FFD73C64547039386D504 /* Build configuration list for PBXAggregateTarget "ALL_BUILD" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				813CE178D2F14071B0955D54 /* Debug */,
+				E19E9DF85EAD4204AAD8F525 /* Release */,
+				21844E4F58634DA9B5BC5D4E /* MinSizeRel */,
+				B2E1A20AA16244778D703A9E /* RelWithDebInfo */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B623B1C017FD462788E05B12 /* Project object */;
+}
