@@ -991,7 +991,7 @@
            <rect>
             <x>291</x>
             <y>31</y>
-            <width>261</width>
+            <width>281</width>
             <height>171</height>
            </rect>
           </property>
@@ -1959,7 +1959,7 @@
             <number>-1</number>
            </property>
            <item>
-            <widget class="QCheckBox" name="checkBox_8">
+            <widget class="QCheckBox" name="slice_CB">
              <property name="text">
               <string>Slice 2D plane</string>
              </property>
@@ -1981,7 +1981,7 @@
               </widget>
              </item>
              <item row="0" column="1">
-              <widget class="QLineEdit" name="lineEdit">
+              <widget class="QLineEdit" name="sliceOriginX">
                <property name="maximumSize">
                 <size>
                  <width>50</width>
@@ -1991,7 +1991,7 @@
               </widget>
              </item>
              <item row="0" column="2">
-              <widget class="QLineEdit" name="lineEdit_2">
+              <widget class="QLineEdit" name="sliceOriginY">
                <property name="maximumSize">
                 <size>
                  <width>50</width>
@@ -2001,7 +2001,7 @@
               </widget>
              </item>
              <item row="0" column="3">
-              <widget class="QLineEdit" name="lineEdit_3">
+              <widget class="QLineEdit" name="sliceOriginZ">
                <property name="maximumSize">
                 <size>
                  <width>50</width>
@@ -2024,7 +2024,7 @@
               </widget>
              </item>
              <item row="1" column="1">
-              <widget class="QLineEdit" name="lineEdit_4">
+              <widget class="QLineEdit" name="sliceNormalX">
                <property name="maximumSize">
                 <size>
                  <width>50</width>
@@ -2034,7 +2034,7 @@
               </widget>
              </item>
              <item row="1" column="2">
-              <widget class="QLineEdit" name="lineEdit_6">
+              <widget class="QLineEdit" name="sliceNormalY">
                <property name="maximumSize">
                 <size>
                  <width>50</width>
@@ -2044,7 +2044,7 @@
               </widget>
              </item>
              <item row="1" column="3">
-              <widget class="QLineEdit" name="lineEdit_5">
+              <widget class="QLineEdit" name="sliceNormalZ">
                <property name="maximumSize">
                 <size>
                  <width>50</width>
@@ -2151,9 +2151,9 @@
    <addaction name="actionOpenFile_scalar"/>
    <addaction name="actionOpenFile_vector"/>
    <addaction name="actionOpenFile_domain"/>
+   <addaction name="actionRefresh"/>
    <addaction name="actionSave"/>
    <addaction name="separator"/>
-   <addaction name="actionRefresh"/>
   </widget>
   <action name="actionOpenFile_scalar">
    <property name="enabled">
@@ -2161,7 +2161,7 @@
    </property>
    <property name="icon">
     <iconset resource="Icons/icons.qrc">
-     <normaloff>:/Icons/fileopen.png</normaloff>:/Icons/fileopen.png</iconset>
+     <normaloff>:/Icons/scalar-open.png</normaloff>:/Icons/scalar-open.png</iconset>
    </property>
    <property name="text">
     <string>Open File...</string>
@@ -2187,7 +2187,7 @@
   <action name="actionRefresh">
    <property name="icon">
     <iconset resource="Icons/icons.qrc">
-     <normaloff>:/Icons/help.png</normaloff>:/Icons/help.png</iconset>
+     <normaloff>:/Icons/refresh.png</normaloff>:/Icons/refresh.png</iconset>
    </property>
    <property name="text">
     <string>Help</string>
@@ -2208,7 +2208,7 @@
    </property>
    <property name="icon">
     <iconset resource="Icons/icons.qrc">
-     <normaloff>:/Icons/fileopen.png</normaloff>:/Icons/fileopen.png</iconset>
+     <normaloff>:/Icons/vector-open.png</normaloff>:/Icons/vector-open.png</iconset>
    </property>
    <property name="text">
     <string>Open File...</string>
@@ -2223,7 +2223,7 @@
    </property>
    <property name="icon">
     <iconset resource="Icons/icons.qrc">
-     <normaloff>:/Icons/fileopen.png</normaloff>:/Icons/fileopen.png</iconset>
+     <normaloff>:/Icons/domain-open.png</normaloff>:/Icons/domain-open.png</iconset>
    </property>
    <property name="text">
     <string>Open File...</string>

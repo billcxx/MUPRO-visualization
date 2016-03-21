@@ -1,12 +1,12 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
+<RCC>
   <qresource prefix="/Icons">
-    <!-- Typical file operations. -->
+    <file>refresh.png</file>
+    <file>domain-open.png</file>
+    <file>vector-open.png</file>
+    <file>scalar-open.png</file>
     <file>fileopen.png</file>
     <file>filesave.png</file>
     <file>print.png</file>
-
-    <!-- Help -->
     <file>help.png</file>
   </qresource>
 </RCC>
