@@ -88,6 +88,7 @@ public:
     double getAvg(double *list,int length);
     void outputScalar(int columnNumber,int x,int y, int z);
     void outputVector(int colX,int colY,int colZ,int x,int y,int z);
+    void saveImage();
     
     
     

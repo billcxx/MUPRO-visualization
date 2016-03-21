@@ -74,6 +74,8 @@
 #include <vtkPolyDataNormals.h>
 #include <vtkCutter.h>
 #include <vtkPlane.h>
+#include <vtkWindowToImageFilter.h>
+#include <vtkPNGWriter.h>
 #include <string>
 
 #define VTK_CREATE(type, name) \
@@ -103,6 +105,7 @@ SimpleView::SimpleView()
     connect(this->ui->actionOpenFile_domain, SIGNAL(triggered()), this, SLOT(slotOpenFile_domain()));
     connect(this->ui->actionExit, SIGNAL(triggered()), this, SLOT(slotExit()));
     connect(this->ui->actionRefresh,SIGNAL(triggered()),this,SLOT(slotUpdate()));
+    connect(this->ui->actionSave , SIGNAL(triggered()), this, SLOT(saveImage()));
 };
 
 SimpleView::~SimpleView()
@@ -136,14 +139,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     VTK_CREATE(vtkRenderer,renderer);
     VTK_CREATE(vtkDataSetReader, readerScalarOrigin);
     VTK_CREATE(vtkExtractVOI,readerScalar);
-    // VTK_CREATE(vtkGPUVolumeRayCastMapper,mapperScalar);
-    
-    // VTK_CREATE(vtkUnstructuredGridVolumeZSweepMapper,mapperScalar);
-    // VTK_CREATE(vtkVolume,actorScalar);
     VTK_CREATE(vtkVolumeProperty,volumePropertyScalar);
-    // VTK_CREATE(vtkSelectionNode,thresholdVector);
-    // VTK_CREATE(vtkGeometryFilter,geoFilter);
-    // VTK_CREATE(vtkSelectionNode,thresholdScalar);
     VTK_CREATE(vtkThreshold,thresholdScalar);
     VTK_CREATE(vtkDataSetReader,readerVectorOrigin);
     VTK_CREATE(vtkExtractVOI,readerVector);
@@ -151,9 +147,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     VTK_CREATE(vtkMaskPoints,maskVector);
     VTK_CREATE(vtkGlyph3D,glyphVector);
     VTK_CREATE(vtkPolyDataMapper,mapperVector);
-    // VTK_CREATE(vtkDataSetMapper,mapperVector);
     VTK_CREATE(vtkHedgeHog,hedgehog);
-    // VTK_CREATE(vtkStreamTracer,streamline);
     VTK_CREATE(vtkDataSetMapper,streamMapper);
     VTK_CREATE(vtkActor,streamActor);
     VTK_CREATE(vtkThresholdPoints,thresholdVector);
@@ -689,6 +683,9 @@ void SimpleView::slotOpenFile_scalar()
     this->ui->zMinMaxScalar->setText(printstatus);
     
     this->ui->scalar_Table->clearContents();
+    for (int i=0; i<this->ui->scalar_Table->rowCount(); i++) {
+        this->ui->scalar_Table->removeRow(i);
+    }
     for(int i=0;i<columns;++i){
         for (int j=0;j<rows;++j){
             dataHold[j]=vtkData[j][i];
@@ -766,6 +763,9 @@ void SimpleView::slotOpenFile_vector()
     this->ui->zMinMaxVector->setText(printstatus);
     
     this->ui->vector_Table->clearContents();
+    for (int i=0; i<this->ui->vector_Table->rowCount(); i++) {
+        this->ui->vector_Table->removeRow(i);
+    }
     for(i=0;i<columns;++i){
         for (int j=0;j<rows;++j){
             dataHold[j]=vtkData[j][i];
@@ -1373,6 +1373,9 @@ void SimpleView::slotOpenFile_domain(){
     this->ui->zMinMaxDomain->setText(printstatus);
     
     this->ui->domain_Table->clearContents();
+    for (int i=0; i<this->ui->domain_Table->rowCount(); i++) {
+        this->ui->domain_Table->removeRow(i);
+    }
     for(int i=0;i<columns;++i){
         for (int j=0;j<rows;++j){
             dataHold[j]=vtkData[j][i];
@@ -1552,3 +1555,31 @@ void SimpleView::on_domain_CB_stateChanged(int state){
     }
     this->ui->qvtkWidget->GetRenderWindow()->Render();
 }
+
+
+void SimpleView::saveImage(){
+    QFileDialog filedialog;
+    filedialog.setAcceptMode(QFileDialog::AcceptSave);
+    filedialog.setDefaultSuffix("png");
+    QString load=filedialog.getSaveFileName(0,tr("Save file"),0,tr("Images (*.png)"));
+    
+    
+    
+    VTK_CREATE(vtkWindowToImageFilter, windowToImage);
+    windowToImage->SetInput(this->ui->qvtkWidget->GetRenderWindow());
+    windowToImage->SetMagnification(3);
+    windowToImage->SetInputBufferTypeToRGBA();
+    windowToImage->FixBoundaryOff();
+    windowToImage->ReadFrontBufferOn();
+    windowToImage->Update();
+    VTK_CREATE(vtkPNGWriter, writer);
+    writer->SetFileName(load.toStdString().c_str());
+    writer->SetInputConnection(windowToImage->GetOutputPort());
+    this->ui->qvtkWidget->GetRenderWindow()->Render();
+    windowToImage->Modified();
+    writer->Write();
+    this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCamera();
+    this->ui->qvtkWidget->GetRenderWindow()->Render();
+}
+
+
