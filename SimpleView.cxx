@@ -76,6 +76,9 @@
 #include <vtkPlane.h>
 #include <vtkWindowToImageFilter.h>
 #include <vtkPNGWriter.h>
+#include <vtkContourFilter.h>
+#include <vtkMarchingCubes.h>
+#include <vtkPolyDataNormals.h>
 #include <string>
 
 #define VTK_CREATE(type, name) \
@@ -153,6 +156,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     VTK_CREATE(vtkThresholdPoints,thresholdVector);
     VTK_CREATE(vtkPlane, plane);
     VTK_CREATE(vtkCutter, cutter);
+    VTK_CREATE(vtkPolyDataNormals, isoNormals);
     
     
     renderer->SetBackground(0.9,0.9,0.9);
@@ -174,6 +178,8 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     
     VTK_CREATE(vtkOutlineFilter,outlineVector);
     VTK_CREATE(vtkDataSetMapper,outlineVectorMapper);
+    VTK_CREATE(vtkContourFilter, isosurface);
+    VTK_CREATE(vtkPolyDataMapper, isoMapper);
     renderer->AddActor(actorScalar);
     renderer->AddActor(actorVector);
     VTK_CREATE(vtkDoubleArray,range);
@@ -208,7 +214,35 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         }else{
             readerScalar->Update();
         }
-        
+        isosurface->SetInputConnection(readerScalar->GetOutputPort());
+        isosurface->ComputeScalarsOn();
+        isosurface->ComputeNormalsOn();
+        isosurface->GenerateTrianglesOn();
+        int contoursNumber=0;
+        qDebug()<<"Fine up till here"<<this->ui->RGBIso_Table->rowCount();
+        contoursNumber=this->ui->RGBIso_Table->rowCount();
+        qDebug()<<"Fine after"<<contoursNumber;
+        isosurface->SetNumberOfContours(contoursNumber);
+        qDebug()<<"fine after iso";
+        for (int i=0; i<contoursNumber; i++) {
+            isosurface->SetValue(i, this->ui->RGBIso_Table->item(i,0)->text().toDouble());
+            qDebug()<<"Number of isosurface"<<i<<" "<<this->ui->RGBIso_Table->item(i,0)->text().toDouble();
+        }
+//        if(contoursNumber!=0){
+        isoNormals->SetInputConnection(0, isosurface->GetOutputPort());
+            isoMapper->SetInputConnection(isoNormals->GetOutputPort());
+            isoMapper->ScalarVisibilityOff();
+            actorIsosurface->SetMapper(isoMapper);
+            actorIsosurface->GetProperty()->SetColor(0, 0, 0);
+            renderer->AddActor(actorIsosurface);
+            if (this->ui->isosurface_CB->checkState()) {
+                actorIsosurface->SetVisibility(true);
+                qDebug()<<"showing isosurface";
+            }else{
+                actorIsosurface->SetVisibility(false);
+                qDebug()<<"not showing isosurface";
+            }
+//        }
         
         VTK_CREATE(vtkSmartVolumeMapper,mapperScalar);
         if (this->ui->scalarRange_CB->checkState()){
@@ -1032,6 +1066,22 @@ void SimpleView::on_RGBAdd_PB_released(){
             // item=this->ui->RGBA_LE->text();
             // this->ui->RGBVector_Table->setItem(row,4,new QTableWidgetItem(item));
             this->ui->RGBVector_Table->sortItems(0,Qt::AscendingOrder);
+        }else if (this->ui->RGB_Stack->currentIndex()==2){
+            row=this->ui->RGBIso_Table->rowCount();
+            qDebug()<<row;
+            this->ui->RGBIso_Table->insertRow(row);
+            //      row=row;
+            item=this->ui->RGBValue_LE->text();
+            this->ui->RGBIso_Table->setItem(row,0,new QTableWidgetItem(item));
+            item=this->ui->RGBR_LE->text();
+            this->ui->RGBIso_Table->setItem(row,1,new QTableWidgetItem(item));
+            item=this->ui->RGBG_LE->text();
+            this->ui->RGBIso_Table->setItem(row,2,new QTableWidgetItem(item));
+            item=this->ui->RGBB_LE->text();
+            this->ui->RGBIso_Table->setItem(row,3,new QTableWidgetItem(item));
+            // item=this->ui->RGBA_LE->text();
+            // this->ui->RGBScalar_Table->setItem(row,4,new QTableWidgetItem(item));
+            this->ui->RGBIso_Table->sortItems(0,Qt::AscendingOrder);
         }
         
     }
@@ -1055,6 +1105,7 @@ void SimpleView::on_RGB_Combo_currentIndexChanged(int index){
         // this->ui->RGBA_LE->setEnabled(false);
         this->ui->RGBScalar_Table->setEnabled(false);
         this->ui->RGBVector_Table->setEnabled(false);
+        this->ui->RGBIso_Table->setEnabled(false);
         this->ui->RGB_Stack->setEnabled(false);
     }else{
         this->ui->RGBValue_LE->setEnabled(true);
@@ -1064,11 +1115,14 @@ void SimpleView::on_RGB_Combo_currentIndexChanged(int index){
         // this->ui->RGBA_LE->setEnabled(true);
         this->ui->RGBScalar_Table->setEnabled(true);
         this->ui->RGBVector_Table->setEnabled(true);
+        this->ui->RGBIso_Table->setEnabled(true);
         this->ui->RGB_Stack->setEnabled(true);
         if(index==1){
             this->ui->RGB_Stack->setCurrentIndex(0);
         }else if(index==2){
             this->ui->RGB_Stack->setCurrentIndex(1);
+        }else if (index==3){
+            this->ui->RGB_Stack->setCurrentIndex(2);
         }
     }
 }
@@ -1581,5 +1635,3 @@ void SimpleView::saveImage(){
     this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCamera();
     this->ui->qvtkWidget->GetRenderWindow()->Render();
 }
-
-

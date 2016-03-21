@@ -765,6 +765,11 @@
                  <string>RGB vector</string>
                 </property>
                </item>
+               <item>
+                <property name="text">
+                 <string>Isosurface</string>
+                </property>
+               </item>
               </widget>
              </item>
              <item>
@@ -880,7 +885,7 @@
            <item>
             <widget class="QStackedWidget" name="RGB_Stack">
              <property name="currentIndex">
-              <number>1</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="page">
               <widget class="QTableWidget" name="RGBScalar_Table">
@@ -943,6 +948,56 @@
                  <y>0</y>
                  <width>271</width>
                  <height>91</height>
+                </rect>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>300</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <attribute name="horizontalHeaderDefaultSectionSize">
+                <number>67</number>
+               </attribute>
+               <attribute name="horizontalHeaderStretchLastSection">
+                <bool>true</bool>
+               </attribute>
+               <attribute name="verticalHeaderDefaultSectionSize">
+                <number>25</number>
+               </attribute>
+               <column>
+                <property name="text">
+                 <string>Value</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>R</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>G</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>B</string>
+                </property>
+               </column>
+              </widget>
+             </widget>
+             <widget class="QWidget" name="page_5">
+              <widget class="QTableWidget" name="RGBIso_Table">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>10</y>
+                 <width>273</width>
+                 <height>81</height>
                 </rect>
                </property>
                <property name="maximumSize">
@@ -1836,7 +1891,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_5">
+              <widget class="QPushButton" name="isoAdd_PB">
                <property name="maximumSize">
                 <size>
                  <width>70</width>
@@ -1849,7 +1904,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="pushButton_6">
+              <widget class="QPushButton" name="isoDelete_PB">
                <property name="maximumSize">
                 <size>
                  <width>70</width>
@@ -1879,7 +1934,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_19">
+              <widget class="QLineEdit" name="isoValue_LE">
                <property name="maximumSize">
                 <size>
                  <width>40</width>

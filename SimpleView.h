@@ -115,6 +115,7 @@ private:
     vtkSmartPointer<vtkActor> outlineVectorActor = vtkSmartPointer<vtkActor>::New();
     vtkSmartPointer<vtkActor> outlineDomainActor = vtkSmartPointer<vtkActor>::New();
     vtkSmartPointer<vtkActor> actorVector = vtkSmartPointer<vtkActor>::New();
+    vtkSmartPointer<vtkActor> actorIsosurface = vtkSmartPointer<vtkActor>::New();
     vtkSmartPointer<vtkScalarBarActor> scalarScaleBarActor = vtkSmartPointer<vtkScalarBarActor>::New();
     vtkSmartPointer<vtkScalarBarActor> vectorScaleBarActor = vtkSmartPointer<vtkScalarBarActor>::New();
     vtkSmartPointer<vtkVolume> actorScalar = vtkSmartPointer<vtkVolume>::New();
