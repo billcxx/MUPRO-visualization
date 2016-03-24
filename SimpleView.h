@@ -54,6 +54,12 @@ public:
     virtual void slotOpenFile_domain();
     virtual void slotExit();
     virtual void slotUpdate();
+    virtual void slotUpdateCamera1();
+    virtual void slotUpdateCamera2();
+    virtual void slotUpdateCamera3();
+    virtual void slotUpdateCamera4();
+    virtual void slotUpdateCamera5();
+    virtual void slotUpdateCamera6();
     void on_scalarChoice_activated(int index);
     void on_vectorChoice_activated(int index);
     void on_axis_CB_stateChanged(int state);
@@ -88,6 +94,7 @@ public:
     double getAvg(double *list,int length);
     void outputScalar(int columnNumber,int x,int y, int z);
     void outputVector(int colX,int colY,int colZ,int x,int y,int z);
+    void updateCamera(int choice);
     void saveImage();
     
     

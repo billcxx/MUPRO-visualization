@@ -1,5 +1,11 @@
 <RCC>
   <qresource prefix="/Icons">
+    <file>Y+.png</file>
+    <file>X-.png</file>
+    <file>Z-.png</file>
+    <file>Z+.png</file>
+    <file>Y-.png</file>
+    <file>x+.png</file>
     <file>refresh.png</file>
     <file>domain-open.png</file>
     <file>vector-open.png</file>

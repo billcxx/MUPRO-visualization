@@ -93,8 +93,10 @@ SimpleView::SimpleView()
     for(int nr = 0; nr < 27; nr++){
         actorDomain.push_back(vtkActor::New());
     }
+    this->ui->qvtkWidget->setAutomaticImageCacheEnabled(1);
     VTK_CREATE(vtkTransform,transform);
-    transform->Translate(-5,0.0,0.0);
+    VTK_CREATE(vtkRenderer,renderer);
+    transform->Translate(-5,-5.0,-5.0);
     axes->SetUserTransform(transform);
     axes->SetScale(10);
     axes->SetTotalLength(10,10,10);
@@ -109,6 +111,20 @@ SimpleView::SimpleView()
     connect(this->ui->actionExit, SIGNAL(triggered()), this, SLOT(slotExit()));
     connect(this->ui->actionRefresh,SIGNAL(triggered()),this,SLOT(slotUpdate()));
     connect(this->ui->actionSave , SIGNAL(triggered()), this, SLOT(saveImage()));
+    connect(this->ui->actionRotateToXP , SIGNAL(triggered()), this, SLOT(slotUpdateCamera1()));
+    connect(this->ui->actionRotateToXN , SIGNAL(triggered()), this, SLOT(slotUpdateCamera2()));
+    connect(this->ui->actionRotateToYP , SIGNAL(triggered()), this, SLOT(slotUpdateCamera3()));
+    connect(this->ui->actionRotateToYN , SIGNAL(triggered()), this, SLOT(slotUpdateCamera4()));
+    connect(this->ui->actionRotateToZP , SIGNAL(triggered()), this, SLOT(slotUpdateCamera5()));
+    connect(this->ui->actionRotateToZN , SIGNAL(triggered()), this, SLOT(slotUpdateCamera6()));
+
+    if (this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems()==0){
+        this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(renderer);
+        qDebug()<<"creating new renderer";
+    }else{
+        renderer=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+    }
+
 };
 
 SimpleView::~SimpleView()
@@ -140,6 +156,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     
     
     VTK_CREATE(vtkRenderer,renderer);
+    renderer=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
     VTK_CREATE(vtkDataSetReader, readerScalarOrigin);
     VTK_CREATE(vtkExtractVOI,readerScalar);
     VTK_CREATE(vtkVolumeProperty,volumePropertyScalar);
@@ -521,28 +538,20 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     
     // VTK/Qt wedded
     // this->ui->qvtkWidget->GetRenderWindow()->RemoveRenderer(renderer);
-    
+
+
     if(reset){
-        camera->SetPosition(xmax/2, -3*ymax-20, zmax/2);
-        camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
-        camera->SetViewUp(0, 0, 1);
-    }
-    renderer->SetActiveCamera(camera);
-    if (this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems()==0){
-        this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(renderer);
+        updateCamera(-1);
     }else{
-        renderer=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+        updateCamera(0);
     }
     
-    this->ui->qvtkWidget->GetRenderWindow()->Render();
-    
-    camera=renderer->GetActiveCamera();
-    reset=false;
 }
 
 void SimpleView::on_axis_CB_stateChanged(int state){
     if(state!=0){
         axes->SetVisibility(true);
+        reset=false;
     }else{
         axes->SetVisibility(false);
     }
@@ -1634,4 +1643,76 @@ void SimpleView::saveImage(){
     writer->Write();
     this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCamera();
     this->ui->qvtkWidget->GetRenderWindow()->Render();
+}
+
+void SimpleView::slotUpdateCamera1(){
+    updateCamera(1);
+}
+
+void SimpleView::slotUpdateCamera2(){
+    updateCamera(2);
+}
+
+void SimpleView::slotUpdateCamera3(){
+    updateCamera(3);
+}
+
+void SimpleView::slotUpdateCamera4(){
+    updateCamera(4);
+}
+
+void SimpleView::slotUpdateCamera5(){
+    updateCamera(5);
+}
+
+void SimpleView::slotUpdateCamera6(){
+    updateCamera(6);
+}
+
+
+void SimpleView::updateCamera(int choice){
+    switch (choice) {
+        case 0:
+            break;
+        case 1:
+            camera->SetPosition(-3*xmax-ymax/2-zmax/2, ymax/2, zmax/2);
+            camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
+            camera->SetViewUp(0, 0, 1);
+            break;
+        case 2:
+            camera->SetPosition(3*xmax+ymax/2+zmax/2, ymax/2, zmax/2);
+            camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
+            camera->SetViewUp(0, 0, 1);
+            break;
+        case 3:
+            camera->SetPosition(xmax/2, -3*ymax-xmax/2-zmax/2, zmax/2);
+            camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
+            camera->SetViewUp(0, 0, 1);
+            break;
+        case 4:
+            camera->SetPosition(xmax/2, 3*ymax+xmax/2+zmax/2, zmax/2);
+            camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
+            camera->SetViewUp(0, 0, 1);
+            break;
+        case 5:
+            camera->SetPosition(xmax/2, ymax/2, -3*zmax-ymax/2-xmax/2);
+            camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
+            camera->SetViewUp(0, 1, 0);
+            break;
+        case 6:
+            camera->SetPosition(xmax/2, ymax/2, 3*zmax+ymax/2+xmax/2);
+            camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
+            camera->SetViewUp(0, 1, 0);
+            break;
+        default:
+            camera->SetPosition(xmax/2, 3*ymax+xmax/2+zmax/2, zmax/2);
+            camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
+            camera->SetViewUp(0, 0, 1);
+            break;
+    }
+    qDebug()<<"updateCamera"<<choice;
+    this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->SetActiveCamera(camera);
+    this->ui->qvtkWidget->GetRenderWindow()->Render();
+    camera=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
+    reset=false;
 }

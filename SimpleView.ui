@@ -2209,6 +2209,13 @@
    <addaction name="actionRefresh"/>
    <addaction name="actionSave"/>
    <addaction name="separator"/>
+   <addaction name="actionRotateToXP"/>
+   <addaction name="actionRotateToXN"/>
+   <addaction name="actionRotateToYP"/>
+   <addaction name="actionRotateToYN"/>
+   <addaction name="actionRotateToZP"/>
+   <addaction name="actionRotateToZN"/>
+   <addaction name="separator"/>
   </widget>
   <action name="actionOpenFile_scalar">
    <property name="enabled">
@@ -2219,7 +2226,7 @@
      <normaloff>:/Icons/scalar-open.png</normaloff>:/Icons/scalar-open.png</iconset>
    </property>
    <property name="text">
-    <string>Open File...</string>
+    <string>Open Scalar File...</string>
    </property>
    <property name="toolTip">
     <string>Open scalar file</string>
@@ -2266,7 +2273,7 @@
      <normaloff>:/Icons/vector-open.png</normaloff>:/Icons/vector-open.png</iconset>
    </property>
    <property name="text">
-    <string>Open File...</string>
+    <string>Open Vector File...</string>
    </property>
    <property name="toolTip">
     <string>Open vector file</string>
@@ -2281,10 +2288,100 @@
      <normaloff>:/Icons/domain-open.png</normaloff>:/Icons/domain-open.png</iconset>
    </property>
    <property name="text">
-    <string>Open File...</string>
+    <string>Open Domain File...</string>
    </property>
    <property name="toolTip">
     <string>Open vector file</string>
+   </property>
+  </action>
+  <action name="actionRotateToXP">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/x+.png</normaloff>:/Icons/x+.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotate to +X direction...</string>
+   </property>
+   <property name="toolTip">
+    <string>Rotate to +X direction</string>
+   </property>
+  </action>
+  <action name="actionRotateToYN">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/Y-.png</normaloff>:/Icons/Y-.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotate to -Y direction...</string>
+   </property>
+   <property name="toolTip">
+    <string>Rotate to -Y direction</string>
+   </property>
+  </action>
+  <action name="actionRotateToZP">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/Z+.png</normaloff>:/Icons/Z+.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotate to +Z direction...</string>
+   </property>
+   <property name="toolTip">
+    <string>Rotate to +Z direction</string>
+   </property>
+  </action>
+  <action name="actionRotateToZN">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/Z-.png</normaloff>:/Icons/Z-.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotate to -Z direction...</string>
+   </property>
+   <property name="toolTip">
+    <string>Rotate to -Z direction</string>
+   </property>
+  </action>
+  <action name="actionRotateToXN">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/X-.png</normaloff>:/Icons/X-.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotate to -X direction...</string>
+   </property>
+   <property name="toolTip">
+    <string>Rotate to -X direction</string>
+   </property>
+  </action>
+  <action name="actionRotateToYP">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/Y+.png</normaloff>:/Icons/Y+.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotate to +Y direction...</string>
+   </property>
+   <property name="toolTip">
+    <string>Rotate to +Y direction</string>
    </property>
   </action>
  </widget>
