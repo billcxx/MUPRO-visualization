@@ -90,6 +90,9 @@ SimpleView::SimpleView()
     this->ui = new Ui_SimpleView;
     this->ui->setupUi(this);
     this->TableView = vtkSmartPointer<vtkQtTableView>::New();
+    this->ui->RGB_Combo->setView(new QListView());
+    this->ui->alpha_Combo->setView(new QListView());
+    this->ui->scalarChoice->setView(new QListView());
     for(int nr = 0; nr < 27; nr++){
         actorDomain.push_back(vtkActor::New());
     }
@@ -110,6 +113,7 @@ SimpleView::SimpleView()
     connect(this->ui->actionOpenFile_domain, SIGNAL(triggered()), this, SLOT(slotOpenFile_domain()));
     connect(this->ui->actionExit, SIGNAL(triggered()), this, SLOT(slotExit()));
     connect(this->ui->actionRefresh,SIGNAL(triggered()),this,SLOT(slotUpdate()));
+    connect(this->ui->actionClear,SIGNAL(triggered()),this,SLOT(slotClear()));
     connect(this->ui->actionSave , SIGNAL(triggered()), this, SLOT(saveImage()));
     connect(this->ui->actionRotateToXP , SIGNAL(triggered()), this, SLOT(slotUpdateCamera1()));
     connect(this->ui->actionRotateToXN , SIGNAL(triggered()), this, SLOT(slotUpdateCamera2()));
@@ -117,14 +121,14 @@ SimpleView::SimpleView()
     connect(this->ui->actionRotateToYN , SIGNAL(triggered()), this, SLOT(slotUpdateCamera4()));
     connect(this->ui->actionRotateToZP , SIGNAL(triggered()), this, SLOT(slotUpdateCamera5()));
     connect(this->ui->actionRotateToZN , SIGNAL(triggered()), this, SLOT(slotUpdateCamera6()));
-
+    
     if (this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems()==0){
         this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(renderer);
         qDebug()<<"creating new renderer";
     }else{
         renderer=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
     }
-
+    
 };
 
 SimpleView::~SimpleView()
@@ -133,7 +137,67 @@ SimpleView::~SimpleView()
     
 }
 void SimpleView::slotUpdate(){
+    qDebug()<<"Slot update"<<scalarName.c_str()<<vectorName.c_str();
     updateVTK(scalarName,vectorName);
+}
+void SimpleView::slotClear(){
+    this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActors()->InitTraversal();
+    if (this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems()==0){
+
+    }else{
+//        qDebug()<<"renderers"<<this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems();
+//        for(int i=0;i<this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetNumberOfPropsRendered();i++){
+//        this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->RemoveActor(this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActors()->GetNextActor());
+////        this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->RemoveActor(this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetVolumes()->GetLastProp());
+//
+//            qDebug()<<"clean new renderer"<<0<<" "<<this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetNumberOfPropsRendered();
+//        }
+//        VTK_CREATE(vtkRenderer, renderer);
+//        this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(renderer);
+//        this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->RemoveAllViewProps();
+//        actorScalar=NULL;
+//        vtkSmartPointer<vtkVolume> actorScalar = vtkSmartPointer<vtkVolume>::New();
+//        this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->RemoveActor(this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActors()->GetNextActor());
+//        this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->AddActor(actorScalar);
+//        updateCamera(0);
+        
+//        this->ui->qvtkWidget->deleteLater();
+//        actorScalar->Delete();
+//        actorVector->Delete();
+        
+        
+        
+        qDebug()<<"close";
+        SimpleView *mySimpleView=new SimpleView();
+        mySimpleView->show();
+        
+//        this->ui = new Ui_SimpleView;
+//        this->ui->setupUi(this);
+//        this->ui->qvtkWidget->setAutomaticImageCacheEnabled(1);
+//
+//        VTK_CREATE(vtkRenderer,renderer);
+//
+//        
+//        // Set up action signals and slots
+//        
+//        if (this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems()==0){
+//            this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(renderer);
+//            qDebug()<<"creating new renderer";
+//        }else{
+//            renderer=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+//        }
+        this->ui->centralwidget->deleteLater();
+        this->ui->qvtkWidget->deleteLater();
+        this->actorVector->Delete();
+        this->actorScalar->Delete();
+        for(int nr = 0; nr < 27; nr++){
+            this->actorDomain[nr]->Delete();
+        }
+        this->close();
+        qDebug()<<"nothing showing";
+
+
+    }
 }
 
 void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
@@ -220,13 +284,13 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         readerScalarOrigin->GetOutput()->GetPointData()->GetScalars()->GetRange(scalar_range);
         readerScalar->SetInputConnection(readerScalarOrigin->GetOutputPort());
         if (this->ui->extract_CB->checkState()!=0){
-            xmin=this->ui->xmin_LE->text().toInt();
-            ymin=this->ui->ymin_LE->text().toInt();
-            zmin=this->ui->zmin_LE->text().toInt();
-            xmax=this->ui->xmax_LE->text().toInt();
-            ymax=this->ui->ymax_LE->text().toInt();
-            zmax=this->ui->zmax_LE->text().toInt();
-            readerScalar->SetVOI(xmin,xmax,ymin,ymax,zmin,zmax);
+            xminAll=this->ui->xmin_LE->text().toInt();
+            yminAll=this->ui->ymin_LE->text().toInt();
+            zminAll=this->ui->zmin_LE->text().toInt();
+            xmaxAll=this->ui->xmax_LE->text().toInt();
+            ymaxAll=this->ui->ymax_LE->text().toInt();
+            zmaxAll=this->ui->zmax_LE->text().toInt();
+            readerScalar->SetVOI(xminAll,xmaxAll,yminAll,ymaxAll,zminAll,zmaxAll);
             readerScalar->Update();
         }else{
             readerScalar->Update();
@@ -245,21 +309,21 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             isosurface->SetValue(i, this->ui->RGBIso_Table->item(i,0)->text().toDouble());
             qDebug()<<"Number of isosurface"<<i<<" "<<this->ui->RGBIso_Table->item(i,0)->text().toDouble();
         }
-//        if(contoursNumber!=0){
+        //        if(contoursNumber!=0){
         isoNormals->SetInputConnection(0, isosurface->GetOutputPort());
-            isoMapper->SetInputConnection(isoNormals->GetOutputPort());
-            isoMapper->ScalarVisibilityOff();
-            actorIsosurface->SetMapper(isoMapper);
-            actorIsosurface->GetProperty()->SetColor(0, 0, 0);
-            renderer->AddActor(actorIsosurface);
-            if (this->ui->isosurface_CB->checkState()) {
-                actorIsosurface->SetVisibility(true);
-                qDebug()<<"showing isosurface";
-            }else{
-                actorIsosurface->SetVisibility(false);
-                qDebug()<<"not showing isosurface";
-            }
-//        }
+        isoMapper->SetInputConnection(isoNormals->GetOutputPort());
+        isoMapper->ScalarVisibilityOff();
+        actorIsosurface->SetMapper(isoMapper);
+        actorIsosurface->GetProperty()->SetColor(0, 0, 0);
+        renderer->AddActor(actorIsosurface);
+        if (this->ui->isosurface_CB->checkState()) {
+            actorIsosurface->SetVisibility(true);
+            qDebug()<<"showing isosurface";
+        }else{
+            actorIsosurface->SetVisibility(false);
+            qDebug()<<"not showing isosurface";
+        }
+        //        }
         
         VTK_CREATE(vtkSmartVolumeMapper,mapperScalar);
         if (this->ui->scalarRange_CB->checkState()){
@@ -326,13 +390,13 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         
         readerVector->SetInputConnection(0,readerVectorOrigin->GetOutputPort(0));
         if (this->ui->extract_CB->checkState()!=0){
-            xmin=this->ui->xmin_LE->text().toInt();
-            ymin=this->ui->ymin_LE->text().toInt();
-            zmin=this->ui->zmin_LE->text().toInt();
-            xmax=this->ui->xmax_LE->text().toInt();
-            ymax=this->ui->ymax_LE->text().toInt();
-            zmax=this->ui->zmax_LE->text().toInt();
-            readerVector->SetVOI(xmin,xmax,ymin,ymax,zmin,zmax);
+            xminAll=this->ui->xmin_LE->text().toInt();
+            yminAll=this->ui->ymin_LE->text().toInt();
+            zminAll=this->ui->zmin_LE->text().toInt();
+            xmaxAll=this->ui->xmax_LE->text().toInt();
+            ymaxAll=this->ui->ymax_LE->text().toInt();
+            zmaxAll=this->ui->zmax_LE->text().toInt();
+            readerVector->SetVOI(xminAll,xmaxAll,yminAll,ymaxAll,zminAll,zmaxAll);
             readerVector->Update();
         }else{
             qDebug()<<xmin<<xmax;
@@ -342,7 +406,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         }
         
         arrowVector->Update();
-
+        
         vector_range[0]=this->ui->vectorValueMin_LE->text().toDouble();
         vector_range[1]=this->ui->vectorValueMax_LE->text().toDouble();
         
@@ -356,7 +420,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         glyphVector->SetScaleModeToScaleByVector();
         glyphVector->SetScaleFactor(this->ui->vectorScale_LE->text().toDouble());
         glyphVector->Update();
-
+        
         
         
         
@@ -538,8 +602,8 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     
     // VTK/Qt wedded
     // this->ui->qvtkWidget->GetRenderWindow()->RemoveRenderer(renderer);
-
-
+    
+    
     if(reset){
         updateCamera(-1);
     }else{
@@ -642,12 +706,12 @@ void SimpleView::on_extract_CB_stateChanged(int state){
         this->ui->ymax_LE->setEnabled(true);
         this->ui->zmin_LE->setEnabled(true);
         this->ui->zmax_LE->setEnabled(true);
-        this->ui->xmin_LE->setText(QString::fromStdString(std::to_string(xmin)));
-        this->ui->ymin_LE->setText(QString::fromStdString(std::to_string(ymin)));
-        this->ui->zmin_LE->setText(QString::fromStdString(std::to_string(zmin)));
-        this->ui->xmax_LE->setText(QString::fromStdString(std::to_string(xmax)));
-        this->ui->ymax_LE->setText(QString::fromStdString(std::to_string(ymax)));
-        this->ui->zmax_LE->setText(QString::fromStdString(std::to_string(zmax)));
+        this->ui->xmin_LE->setText(QString::fromStdString(std::to_string(xminAll)));
+        this->ui->ymin_LE->setText(QString::fromStdString(std::to_string(yminAll)));
+        this->ui->zmin_LE->setText(QString::fromStdString(std::to_string(zminAll)));
+        this->ui->xmax_LE->setText(QString::fromStdString(std::to_string(xmaxAll)));
+        this->ui->ymax_LE->setText(QString::fromStdString(std::to_string(ymaxAll)));
+        this->ui->zmax_LE->setText(QString::fromStdString(std::to_string(zmaxAll)));
     }
 }
 
@@ -688,70 +752,74 @@ void SimpleView::slotOpenFile_scalar()
     filedialog.setOption(QFileDialog::ReadOnly);
     QString load=filedialog.getOpenFileName();
     qDebug()<<"Filename:"<<load;
-    columns=loadData(load);
-    this->ui->scalar_CB->setCheckState(Qt::Checked);
-    this->ui->volume_CB->setCheckState(Qt::Checked);
-    this->ui->vector_CB->setCheckState(Qt::Unchecked);
-    this->ui->domain_CB->setCheckState(Qt::Unchecked);
-    int rows=(xmax+1)*(ymax+1)*(zmax+1);
-    double *dataHold= new double[rows];
-    QFileInfo filehold(load);
-    // outputScalar(0,xmax,ymax,zmax);
-    int current=this->ui->scalarChoice->count();
-    if(current!=0){
-        for(int i=0;i<current+1;++i){
-            this->ui->scalarChoice->removeItem(i);
+    if (!load.isEmpty()) {
+        columns=loadData(load);
+        this->ui->scalar_CB->setCheckState(Qt::Checked);
+        this->ui->volume_CB->setCheckState(Qt::Checked);
+        this->ui->vector_CB->setCheckState(Qt::Unchecked);
+        this->ui->domain_CB->setCheckState(Qt::Unchecked);
+        int rows=(xmax+1)*(ymax+1)*(zmax+1);
+        double *dataHold= new double[rows];
+        QFileInfo filehold(load);
+        // outputScalar(0,xmax,ymax,zmax);
+        int current=this->ui->scalarChoice->count();
+        if(current!=0){
+            for(int i=0;i<current+1;++i){
+                this->ui->scalarChoice->removeItem(i);
+            }
+        }else{
+            
         }
-    }else{
+        for (int i = 0; i < columns; ++i)
+        {
+            outputScalar(i,xmax,ymax,zmax);
+            this->ui->scalarChoice->addItem(QString::fromStdString(std::to_string(i+1)));
+        }
         
-    }
-    for (int i = 0; i < columns; ++i)
-    {
-        outputScalar(i,xmax,ymax,zmax);
-        this->ui->scalarChoice->addItem(QString::fromStdString(std::to_string(i+1)));
-    }
-    
-    this->ui->inputFileScalar->setText(filehold.fileName());
-    
-    printstatus = QString::fromStdString(std::to_string(columns));
-    this->ui->rowcolScalar->setText(printstatus);
-    
-    printstatus = QString::fromStdString("0 - "+std::to_string(xmax));
-    this->ui->xMinMaxScalar->setText(printstatus);
-    
-    printstatus = QString::fromStdString("0 - "+std::to_string(ymax));
-    this->ui->yMinMaxScalar->setText(printstatus);
-    
-    printstatus = QString::fromStdString("0 - "+std::to_string(zmax));
-    this->ui->zMinMaxScalar->setText(printstatus);
-    
-    this->ui->scalar_Table->clearContents();
-    for (int i=0; i<this->ui->scalar_Table->rowCount(); i++) {
-        this->ui->scalar_Table->removeRow(i);
-    }
-    for(int i=0;i<columns;++i){
-        for (int j=0;j<rows;++j){
-            dataHold[j]=vtkData[j][i];
+        this->ui->inputFileScalar->setText(filehold.fileName());
+        
+        printstatus = QString::fromStdString(std::to_string(columns));
+        this->ui->rowcolScalar->setText(printstatus);
+        
+        printstatus = QString::fromStdString("0 - "+std::to_string(xmax));
+        this->ui->xMinMaxScalar->setText(printstatus);
+        
+        printstatus = QString::fromStdString("0 - "+std::to_string(ymax));
+        this->ui->yMinMaxScalar->setText(printstatus);
+        
+        printstatus = QString::fromStdString("0 - "+std::to_string(zmax));
+        this->ui->zMinMaxScalar->setText(printstatus);
+        
+        this->ui->scalar_Table->clearContents();
+        for (int i=0; i<this->ui->scalar_Table->rowCount(); i++) {
+            this->ui->scalar_Table->removeRow(i);
         }
-        this->ui->scalar_Table->insertRow(this->ui->scalar_Table->rowCount());
-        printstatus = QString::fromStdString(std::to_string(getMin(dataHold,rows)));
-        this->ui->scalar_Table->setItem(this->ui->scalar_Table->rowCount()-1,0,new QTableWidgetItem(printstatus));
-        printstatus = QString::fromStdString(std::to_string(getMax(dataHold,rows)));
-        this->ui->scalar_Table->setItem(this->ui->scalar_Table->rowCount()-1,1,new QTableWidgetItem(printstatus));
-        printstatus = QString::fromStdString(std::to_string(getAvg(dataHold,rows)));
-        this->ui->scalar_Table->setItem(this->ui->scalar_Table->rowCount()-1,2,new QTableWidgetItem(printstatus));
+        for(int i=0;i<columns;++i){
+            for (int j=0;j<rows;++j){
+                dataHold[j]=vtkData[j][i];
+            }
+            this->ui->scalar_Table->insertRow(this->ui->scalar_Table->rowCount());
+            printstatus = QString::fromStdString(std::to_string(getMin(dataHold,rows)));
+            this->ui->scalar_Table->setItem(this->ui->scalar_Table->rowCount()-1,0,new QTableWidgetItem(printstatus));
+            printstatus = QString::fromStdString(std::to_string(getMax(dataHold,rows)));
+            this->ui->scalar_Table->setItem(this->ui->scalar_Table->rowCount()-1,1,new QTableWidgetItem(printstatus));
+            printstatus = QString::fromStdString(std::to_string(getAvg(dataHold,rows)));
+            this->ui->scalar_Table->setItem(this->ui->scalar_Table->rowCount()-1,2,new QTableWidgetItem(printstatus));
+        }
+        
+        this->ui->information_Tab->setCurrentIndex(0);
+        scalarName=(std::to_string(this->ui->scalarChoice->currentIndex()+1)+".vtk").c_str();
+        updateVTK(scalarName,vectorName);
+        delete this->vtkData;
     }
-    
-    this->ui->information_Tab->setCurrentIndex(0);
-    scalarName=(std::to_string(this->ui->scalarChoice->currentIndex()+1)+".vtk").c_str();
-    updateVTK(scalarName,vectorName);
 }
 
-void SimpleView::on_scalarChoice_activated(int index){
-    if (index!=this->ui->scalarChoice->currentIndex()){
+void SimpleView::on_scalarChoice_currentIndexChanged(int index){
+//    if (index!=this->ui->scalarChoice->currentIndex()){
         scalarName=(std::to_string(index+1)+".vtk").c_str();
+        qDebug()<<"scalar"<<scalarName.c_str();
         updateVTK(scalarName,vectorName);
-    }
+//    }
 }
 void SimpleView::slotOpenFile_vector()
 {
@@ -762,71 +830,76 @@ void SimpleView::slotOpenFile_vector()
     filedialog.setOption(QFileDialog::ReadOnly);
     QString load=filedialog.getOpenFileName();
     qDebug()<<"Filename:"<<load;
-    columns=loadData(load);
-    int rows=(xmax+1)*(ymax+1)*(zmax+1);
-    double *dataHold= new double[rows];
-    this->ui->scalar_CB->setCheckState(Qt::Unchecked);
-    this->ui->volume_CB->setCheckState(Qt::Unchecked);
-    this->ui->vector_CB->setCheckState(Qt::Checked);
-    this->ui->domain_CB->setCheckState(Qt::Unchecked);
-    QFileInfo filehold(load);
-    qDebug()<<columns<<columns/3;
-    qDebug()<<xmax<<ymax<<zmax;
-    int current=this->ui->vectorChoice->count();
-    if(current!=0){
-        for(i=0;i<current+1;++i){
-            this->ui->vectorChoice->removeItem(i);
+    if (!load.isEmpty()) {
+        columns=loadData(load);
+        int rows=(xmax+1)*(ymax+1)*(zmax+1);
+        double *dataHold= new double[rows];
+        this->ui->scalar_CB->setCheckState(Qt::Unchecked);
+        this->ui->volume_CB->setCheckState(Qt::Unchecked);
+        this->ui->vector_CB->setCheckState(Qt::Checked);
+        this->ui->domain_CB->setCheckState(Qt::Unchecked);
+        QFileInfo filehold(load);
+        qDebug()<<columns<<columns/3;
+        qDebug()<<xmax<<ymax<<zmax;
+        int current=this->ui->vectorChoice->count();
+        if(current!=0){
+            for(i=0;i<current+1;++i){
+                this->ui->vectorChoice->removeItem(i);
+            }
+        }else{
+            
         }
-    }else{
+        for (i = 0; i < columns/3; ++i)
+        {
+            qDebug()<<"not sure why nothing shows up";
+            qDebug()<<QString::fromStdString(std::to_string(3*i+1)+std::to_string(3*i+2)+std::to_string(3*i+3));
+            outputVector(3*i,3*i+1,3*i+2,xmax,ymax,zmax);
+            this->ui->vectorChoice->addItem(QString::fromStdString(std::to_string(3*i+1)+std::to_string(3*i+2)+std::to_string(3*i+3)));
+            qDebug()<<"not sure why nothing shows up";
+            qDebug()<<xmax<<ymax<<zmax;
+            qDebug()<<"not sure why nothing shows up";
+            qDebug()<<"not sure why nothing shows up";
+        }
+        this->ui->inputFileVector->setText(filehold.fileName());
+        
+        printstatus = QString::fromStdString(std::to_string(columns));
+        this->ui->rowcolVector->setText(printstatus);
+        
+        printstatus = QString::fromStdString("0 - "+std::to_string(xmax));
+        this->ui->xMinMaxVector->setText(printstatus);
+        
+        printstatus = QString::fromStdString("0 - "+std::to_string(ymax));
+        this->ui->yMinMaxVector->setText(printstatus);
+        
+        printstatus = QString::fromStdString("0 - "+std::to_string(zmax));
+        this->ui->zMinMaxVector->setText(printstatus);
+        
+        this->ui->vector_Table->clearContents();
+        for (int i=0; i<this->ui->vector_Table->rowCount(); i++) {
+            this->ui->vector_Table->removeRow(i);
+        }
+        for(i=0;i<columns;++i){
+            for (int j=0;j<rows;++j){
+                dataHold[j]=vtkData[j][i];
+            }
+            this->ui->vector_Table->insertRow(this->ui->vector_Table->rowCount());
+            printstatus = QString::fromStdString(std::to_string(getMin(dataHold,rows)));
+            this->ui->vector_Table->setItem(this->ui->vector_Table->rowCount()-1,0,new QTableWidgetItem(printstatus));
+            printstatus = QString::fromStdString(std::to_string(getMax(dataHold,rows)));
+            this->ui->vector_Table->setItem(this->ui->vector_Table->rowCount()-1,1,new QTableWidgetItem(printstatus));
+            printstatus = QString::fromStdString(std::to_string(getAvg(dataHold,rows)));
+            this->ui->vector_Table->setItem(this->ui->vector_Table->rowCount()-1,2,new QTableWidgetItem(printstatus));
+        }
+        this->ui->vectorValueMin_LE->setText("0");
+        this->ui->vectorValueMax_LE->setText("10000");
+        this->ui->information_Tab->setCurrentIndex(1);
+        int index=this->ui->vectorChoice->currentIndex();
+        vectorName=(std::to_string(3*index+1)+std::to_string(3*index+2)+std::to_string(3*index+3)+".vtk").c_str();
+        
+        updateVTK(scalarName,vectorName);
+        delete this->vtkData;
         
     }
-    for (i = 0; i < columns/3; ++i)
-    {
-        qDebug()<<"not sure why nothing shows up";
-        qDebug()<<QString::fromStdString(std::to_string(3*i+1)+std::to_string(3*i+2)+std::to_string(3*i+3));
-        outputVector(3*i,3*i+1,3*i+2,xmax,ymax,zmax);
-        this->ui->vectorChoice->addItem(QString::fromStdString(std::to_string(3*i+1)+std::to_string(3*i+2)+std::to_string(3*i+3)));
-        qDebug()<<"not sure why nothing shows up";
-        qDebug()<<xmax<<ymax<<zmax;
-        qDebug()<<"not sure why nothing shows up";
-        qDebug()<<"not sure why nothing shows up";
-    }
-    this->ui->inputFileVector->setText(filehold.fileName());
-    
-    printstatus = QString::fromStdString(std::to_string(columns));
-    this->ui->rowcolVector->setText(printstatus);
-    
-    printstatus = QString::fromStdString("0 - "+std::to_string(xmax));
-    this->ui->xMinMaxVector->setText(printstatus);
-    
-    printstatus = QString::fromStdString("0 - "+std::to_string(ymax));
-    this->ui->yMinMaxVector->setText(printstatus);
-    
-    printstatus = QString::fromStdString("0 - "+std::to_string(zmax));
-    this->ui->zMinMaxVector->setText(printstatus);
-    
-    this->ui->vector_Table->clearContents();
-    for (int i=0; i<this->ui->vector_Table->rowCount(); i++) {
-        this->ui->vector_Table->removeRow(i);
-    }
-    for(i=0;i<columns;++i){
-        for (int j=0;j<rows;++j){
-            dataHold[j]=vtkData[j][i];
-        }
-        this->ui->vector_Table->insertRow(this->ui->vector_Table->rowCount());
-        printstatus = QString::fromStdString(std::to_string(getMin(dataHold,rows)));
-        this->ui->vector_Table->setItem(this->ui->vector_Table->rowCount()-1,0,new QTableWidgetItem(printstatus));
-        printstatus = QString::fromStdString(std::to_string(getMax(dataHold,rows)));
-        this->ui->vector_Table->setItem(this->ui->vector_Table->rowCount()-1,1,new QTableWidgetItem(printstatus));
-        printstatus = QString::fromStdString(std::to_string(getAvg(dataHold,rows)));
-        this->ui->vector_Table->setItem(this->ui->vector_Table->rowCount()-1,2,new QTableWidgetItem(printstatus));
-    }
-    this->ui->vectorValueMin_LE->setText("0");
-    this->ui->vectorValueMax_LE->setText("10000");
-    this->ui->information_Tab->setCurrentIndex(1);
-    int index=this->ui->vectorChoice->currentIndex();
-    vectorName=(std::to_string(3*index+1)+std::to_string(3*index+2)+std::to_string(3*index+3)+".vtk").c_str();
-    updateVTK(scalarName,vectorName);
 }
 
 void SimpleView::on_vectorChoice_activated(int index){
@@ -1015,13 +1088,10 @@ int SimpleView::loadData(QString filedir){
         }
     }
     input.close();
-    
-    xmin=0;
-    ymin=0;
-    zmin=0;
-    xmax=x-1;
-    ymax=y-1;
-    zmax=z-1;
+
+    updateExtraction(x,y , z);
+
+
     return columnNumber;
 }
 
@@ -1344,6 +1414,7 @@ int SimpleView::domainProcessing(QString filedir){
         output << outputData[i] << "\n";
     }
     output.close();
+    
     return columnNumber;
 }
 
@@ -1410,51 +1481,54 @@ void SimpleView::slotOpenFile_domain(){
     filedialog.setOption(QFileDialog::ReadOnly);
     QString load=filedialog.getOpenFileName();
     qDebug()<<"Filename:"<<load;
-    columns=domainProcessing(load);
-    qDebug()<<"after domain processing";
-    int rows=(xmax+1)*(ymax+1)*(zmax+1);
-    double *dataHold= new double[rows];
-    QFileInfo filehold(load);
-    this->ui->scalar_CB->setCheckState(Qt::Unchecked);
-    this->ui->volume_CB->setCheckState(Qt::Unchecked);
-    this->ui->vector_CB->setCheckState(Qt::Unchecked);
-    this->ui->domain_CB->setCheckState(Qt::Checked);
-    
-    
-    this->ui->inputFileDomain->setText(filehold.fileName());
-    
-    printstatus = QString::fromStdString(std::to_string(columns));
-    this->ui->rowcolDomain->setText(printstatus);
-    
-    printstatus = QString::fromStdString("0 - "+std::to_string(xmax));
-    this->ui->xMinMaxDomain->setText(printstatus);
-    
-    printstatus = QString::fromStdString("0 - "+std::to_string(ymax));
-    this->ui->yMinMaxDomain->setText(printstatus);
-    
-    printstatus = QString::fromStdString("0 - "+std::to_string(zmax));
-    this->ui->zMinMaxDomain->setText(printstatus);
-    
-    this->ui->domain_Table->clearContents();
-    for (int i=0; i<this->ui->domain_Table->rowCount(); i++) {
-        this->ui->domain_Table->removeRow(i);
-    }
-    for(int i=0;i<columns;++i){
-        for (int j=0;j<rows;++j){
-            dataHold[j]=vtkData[j][i];
+    if (!load.isEmpty()) {
+        columns=domainProcessing(load);
+        qDebug()<<"after domain processing";
+        int rows=(xmax+1)*(ymax+1)*(zmax+1);
+        double *dataHold= new double[rows];
+        QFileInfo filehold(load);
+        this->ui->scalar_CB->setCheckState(Qt::Unchecked);
+        this->ui->volume_CB->setCheckState(Qt::Unchecked);
+        this->ui->vector_CB->setCheckState(Qt::Unchecked);
+        this->ui->domain_CB->setCheckState(Qt::Checked);
+        
+        
+        this->ui->inputFileDomain->setText(filehold.fileName());
+        
+        printstatus = QString::fromStdString(std::to_string(columns));
+        this->ui->rowcolDomain->setText(printstatus);
+        
+        printstatus = QString::fromStdString("0 - "+std::to_string(xmax));
+        this->ui->xMinMaxDomain->setText(printstatus);
+        
+        printstatus = QString::fromStdString("0 - "+std::to_string(ymax));
+        this->ui->yMinMaxDomain->setText(printstatus);
+        
+        printstatus = QString::fromStdString("0 - "+std::to_string(zmax));
+        this->ui->zMinMaxDomain->setText(printstatus);
+        
+        this->ui->domain_Table->clearContents();
+        for (int i=0; i<this->ui->domain_Table->rowCount(); i++) {
+            this->ui->domain_Table->removeRow(i);
         }
-        // qDebug()<<i<<" "<<dataHold[i];
-        this->ui->domain_Table->insertRow(this->ui->domain_Table->rowCount());
-        printstatus = QString::fromStdString(std::to_string(getMin(dataHold,rows)));
-        this->ui->domain_Table->setItem(this->ui->domain_Table->rowCount()-1,0,new QTableWidgetItem(printstatus));
-        printstatus = QString::fromStdString(std::to_string(getMax(dataHold,rows)));
-        this->ui->domain_Table->setItem(this->ui->domain_Table->rowCount()-1,1,new QTableWidgetItem(printstatus));
-        printstatus = QString::fromStdString(std::to_string(getAvg(dataHold,rows)));
-        this->ui->domain_Table->setItem(this->ui->domain_Table->rowCount()-1,2,new QTableWidgetItem(printstatus));
+        for(int i=0;i<columns;++i){
+            for (int j=0;j<rows;++j){
+                dataHold[j]=vtkData[j][i];
+            }
+            // qDebug()<<i<<" "<<dataHold[i];
+            this->ui->domain_Table->insertRow(this->ui->domain_Table->rowCount());
+            printstatus = QString::fromStdString(std::to_string(getMin(dataHold,rows)));
+            this->ui->domain_Table->setItem(this->ui->domain_Table->rowCount()-1,0,new QTableWidgetItem(printstatus));
+            printstatus = QString::fromStdString(std::to_string(getMax(dataHold,rows)));
+            this->ui->domain_Table->setItem(this->ui->domain_Table->rowCount()-1,1,new QTableWidgetItem(printstatus));
+            printstatus = QString::fromStdString(std::to_string(getAvg(dataHold,rows)));
+            this->ui->domain_Table->setItem(this->ui->domain_Table->rowCount()-1,2,new QTableWidgetItem(printstatus));
+        }
+        this->ui->information_Tab->setCurrentIndex(2);
+        qDebug()<<"before vtk part";
+        drawDomain("domain.vtk");
+        delete this->vtkData;
     }
-    this->ui->information_Tab->setCurrentIndex(2);
-    qDebug()<<"before vtk part";
-    drawDomain("domain.vtk");
 }
 
 
@@ -1518,6 +1592,12 @@ void SimpleView::drawDomain(std::string domainName){
     
     double R[3];
     
+    if (this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems()==0){
+        this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(domainRenderer);
+    }else{
+        domainRenderer=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+    }
+    
     for(int i=0;i<27;i++){
         VTK_CREATE(vtkThreshold,domainThreshold);
         VTK_CREATE(vtkDataSetSurfaceFilter,domainSurface);
@@ -1574,11 +1654,7 @@ void SimpleView::drawDomain(std::string domainName){
     outlineDomainMapper->SetInputConnection(outlineDomain->GetOutputPort());
     outlineDomainActor->SetMapper(outlineDomainMapper);
     outlineDomainActor->GetProperty()->SetColor(0,1,0);
-    if (this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems()==0){
-        this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(domainRenderer);
-    }else{
-        domainRenderer=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
-    }
+
     domainRenderer->SetBackground(0.9,0.9,0.9);
     domainRenderer->AddActor(outlineDomainActor);
     
@@ -1715,4 +1791,31 @@ void SimpleView::updateCamera(int choice){
     this->ui->qvtkWidget->GetRenderWindow()->Render();
     camera=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
     reset=false;
+}
+
+void SimpleView::updateExtraction(int x,int y, int z){
+    if (xmaxAll<x-1) {
+        xmaxAll=x-1;
+    }
+    if (ymaxAll<y-1) {
+        ymaxAll=y-1;
+    }
+    if (zmaxAll<z-1) {
+        zmaxAll=z-1;
+    }
+    xminAll=0;
+    yminAll=0;
+    zminAll=0;
+    xmax=x-1;
+    ymax=y-1;
+    zmax=z-1;
+    xmin=0;
+    ymin=0;
+    zmin=0;
+    this->ui->xmin_LE->setText(QString::fromStdString(std::to_string(xminAll)));
+    this->ui->ymin_LE->setText(QString::fromStdString(std::to_string(yminAll)));
+    this->ui->zmin_LE->setText(QString::fromStdString(std::to_string(zminAll)));
+    this->ui->xmax_LE->setText(QString::fromStdString(std::to_string(xmaxAll)));
+    this->ui->ymax_LE->setText(QString::fromStdString(std::to_string(ymaxAll)));
+    this->ui->zmax_LE->setText(QString::fromStdString(std::to_string(zmaxAll)));
 }

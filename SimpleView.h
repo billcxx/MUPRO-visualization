@@ -21,6 +21,7 @@
 #include <QFile>
 #include <QDebug>
 #include <QListWidget>
+#include <QListView>
 #include <iostream>
 #include <fstream>
 #include <vtkCamera.h>
@@ -54,13 +55,14 @@ public:
     virtual void slotOpenFile_domain();
     virtual void slotExit();
     virtual void slotUpdate();
+    virtual void slotClear();
     virtual void slotUpdateCamera1();
     virtual void slotUpdateCamera2();
     virtual void slotUpdateCamera3();
     virtual void slotUpdateCamera4();
     virtual void slotUpdateCamera5();
     virtual void slotUpdateCamera6();
-    void on_scalarChoice_activated(int index);
+    void on_scalarChoice_currentIndexChanged(int index);
     void on_vectorChoice_activated(int index);
     void on_axis_CB_stateChanged(int state);
     void on_outline_CB_stateChanged(int state);
@@ -95,6 +97,7 @@ public:
     void outputScalar(int columnNumber,int x,int y, int z);
     void outputVector(int colX,int colY,int colZ,int x,int y,int z);
     void updateCamera(int choice);
+    void updateExtraction(int x,int y, int z);
     void saveImage();
     
     
@@ -112,7 +115,8 @@ private:
     Ui_SimpleView *ui;
     QString printstatus;
     double cameraPosition[3],cameraFocal[3];
-    int xmin,xmax,ymin,ymax,zmin,zmax;
+    int xmin=0,xmax=0,ymin=0,ymax=0,zmin=0,zmax=0;
+    int xminAll=0,xmaxAll=0,yminAll=0,ymaxAll=0,zminAll=0,zmaxAll=0;
     vtkSmartPointer<vtkCamera> camera = vtkSmartPointer<vtkCamera>::New();
     double **vtkData;
     double RGBPoint;
@@ -121,12 +125,15 @@ private:
     vtkSmartPointer<vtkActor> outlineScalarActor = vtkSmartPointer<vtkActor>::New();
     vtkSmartPointer<vtkActor> outlineVectorActor = vtkSmartPointer<vtkActor>::New();
     vtkSmartPointer<vtkActor> outlineDomainActor = vtkSmartPointer<vtkActor>::New();
-    vtkSmartPointer<vtkActor> actorVector = vtkSmartPointer<vtkActor>::New();
+//    vtkSmartPointer<vtkActor> actorVector = vtkSmartPointer<vtkActor>::New();
     vtkSmartPointer<vtkActor> actorIsosurface = vtkSmartPointer<vtkActor>::New();
     vtkSmartPointer<vtkScalarBarActor> scalarScaleBarActor = vtkSmartPointer<vtkScalarBarActor>::New();
     vtkSmartPointer<vtkScalarBarActor> vectorScaleBarActor = vtkSmartPointer<vtkScalarBarActor>::New();
-    vtkSmartPointer<vtkVolume> actorScalar = vtkSmartPointer<vtkVolume>::New();
-    vtkSmartPointer<vtkActor> actorCutter = vtkSmartPointer<vtkActor>::New();
+//    vtkSmartPointer<vtkVolume> actorScalar = vtkSmartPointer<vtkVolume>::New();
+//    vtkSmartPointer<vtkActor> actorCutter = vtkSmartPointer<vtkActor>::New();
+    vtkActor *actorCutter = vtkActor::New();
+    vtkActor *actorVector = vtkActor::New();
+    vtkVolume *actorScalar = vtkVolume::New();
     std::vector<vtkActor *> actorDomain;
 };
 
