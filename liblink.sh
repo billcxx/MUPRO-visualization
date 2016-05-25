@@ -52,3 +52,6 @@ for name in ${lib[@]}; do
 	install_name_tool -change ${name}-7.0.1.dylib /usr/local/vtk7-share/lib/${name}-7.0.1.dylib ${app}.app/Contents/MacOS/${app}
 	install_name_tool -id /usr/local/vtk7-share/lib/${name}-7.0.1.dylib ${app}.app/Contents/MacOS/${app}
 done
+
+install_name_tool -id /usr/local/vtk7-share/lib/${name}-7.0.1.dylib ${app}.app/Contents/MacOS/${app}
+

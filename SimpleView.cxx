@@ -87,6 +87,8 @@ vtkSmartPointer<type> name = vtkSmartPointer<type>::New()
 // Constructor
 SimpleView::SimpleView()
 {
+    QString styleSheet = QString("font: 15px Arial;").arg(QApplication::font().pointSize());
+    this->setStyleSheet(styleSheet);
     this->ui = new Ui_SimpleView;
     this->ui->setupUi(this);
     this->TableView = vtkSmartPointer<vtkQtTableView>::New();
