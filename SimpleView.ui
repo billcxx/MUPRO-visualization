@@ -28,13 +28,18 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="styleSheet">
-       <string notr="true">QCheckBox{
+       <string notr="true">QWidget{
 	
 	font: 15pt &quot;Arial&quot;;
 }
+
+
+QCheckBox{
+
+}
 QPushButton{
 	    border:1px solid rgb(220,220,220);
-	font: 15pt &quot;Arial&quot;;
+
 	height:38px;
 }
 
@@ -58,7 +63,7 @@ QTabBar::tab{
 background: #018FBF;
 	padding: 5px 10px;
   color:#ffffff;
-font: Arial bold 15px;
+
 height:30px;
 width:110px;
 }
@@ -82,8 +87,6 @@ QGroupBox{
 	border: 2px solid rgb(210,210,210);
 border-radius:0px;
 margin-top:26px;
-font-family: Arial;
-font-size:15px;
 }
 
 QGroupBox::title{
@@ -99,7 +102,6 @@ QLineEdit{
 border:1px solid rgb(220,220,220);
 min-width:58px;
 min-height:38px;
-	font: 15pt &quot;Arial&quot;;
 qproperty-alignment: AlignCenter;
 }
 
@@ -114,7 +116,6 @@ QLineEdit:focus{
 QLabel{
 background-color:rgb(220, 220, 220);
 qproperty-alignment: AlignCenter;
-font: 15pt &quot;Arial&quot;;
 
 }
 
@@ -125,7 +126,6 @@ QComboBox {
     border:1px solid rgb(220,220,220);
 
 	min-height:38px;
-	font: 15pt &quot;Arial&quot;;
 	height:38px;
 
 }
@@ -134,7 +134,6 @@ QComboBox {
 QComboBox:!editable {
 
 	min-height:38px;
-	font: 15pt &quot;Arial&quot;;
      background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
                                  stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
                                  stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
@@ -148,7 +147,6 @@ QComboBox:!editable:on {
 
 	min-height:38px;
 border-radius:0px;
-	font: 15pt &quot;Arial&quot;;
 
 }
 
@@ -168,7 +166,6 @@ QComboBox::drop-down {
     border-left-style: solid; /* just a single line */
 	padding-right:2px;
 	min-height:38px;
-	font: 15pt &quot;Arial&quot;;
 }
 
 QComboBox::down-arrow {
@@ -188,7 +185,6 @@ QComboBox QListView
     selection-background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8DAEBE, stop: 1 #678EA3);
 	min-height:38px;
 	background-color:rgb(220,220,220);
-	font: 15pt &quot;Arial&quot;;
 outline: 0;
 }
 
