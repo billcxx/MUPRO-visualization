@@ -123,7 +123,9 @@ SimpleView::SimpleView()
     connect(this->ui->actionRotateToYN , SIGNAL(triggered()), this, SLOT(slotUpdateCamera4()));
     connect(this->ui->actionRotateToZP , SIGNAL(triggered()), this, SLOT(slotUpdateCamera5()));
     connect(this->ui->actionRotateToZN , SIGNAL(triggered()), this, SLOT(slotUpdateCamera6()));
-    
+    connect(this->ui->action1D,SIGNAL(triggered()), this, SLOT(slotSwitch1D()));
+    connect(this->ui->action3D,SIGNAL(triggered()), this, SLOT(slotSwitch3D()));
+
     if (this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems()==0){
         this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(renderer);
         qDebug()<<"creating new renderer";
@@ -138,6 +140,20 @@ SimpleView::~SimpleView()
     // The smart pointers should clean up for up
     
 }
+
+
+void SimpleView::slotSwitch1D(){
+    this->ui->stackedWidget->setCurrentIndex(1);
+}
+
+void SimpleView::slotSwitch3D(){
+    this->ui->stackedWidget->setCurrentIndex(0);
+}
+
+void SimpleView::setup1DFigure(QCustomPlot *customPlot){
+    
+}
+
 void SimpleView::slotUpdate(){
     qDebug()<<"Slot update"<<scalarName.c_str()<<vectorName.c_str();
     updateVTK(scalarName,vectorName);

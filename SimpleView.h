@@ -111,7 +111,7 @@ public:
     void saveImage();
     void slotSwitch3D();
     void slotSwitch1D();
-    void setupHeatDemo(QCustomPlot *customPlot);
+    void setup1DFigure(QCustomPlot *customPlot);
     
     
     
