@@ -1,6 +1,9 @@
 <RCC>
   <qresource prefix="/Icons">
     <file>dropdown.png</file>
+    <file>3d.png</file>
+    <file>2D.png</file>
+    <file>1D.png</file>
     <file>clear-icon.png</file>
     <file>Y+.png</file>
     <file>X-.png</file>

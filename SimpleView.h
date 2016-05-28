@@ -30,6 +30,14 @@
 #include <vtkScalarBarActor.h>
 #include <vtkActor.h>
 #include <vtkVolume.h>
+#include "qcustomplot.h"
+#include "simulationDataFilter.hpp"
+
+#include <QDesktopWidget>
+#include <QScreen>
+#include <QMessageBox>
+#include <QMetaEnum>
+#include <QtMath>
 
 // Forward Qt class declarations
 class Ui_SimpleView;
@@ -87,18 +95,20 @@ public:
     void on_domain_LW_itemChanged(QListWidgetItem *item);
     void on_domain_CB_stateChanged(int state);
     void updateVTK(std::string fileNameScalar,std::string fileNameVector);
+    
+    
     void drawDomain(std::string domainName);
-    int loadData(QString filedir);
-    int domainProcessing(QString filedir);
-    int domainType(double px,double py, double pz);
+
     double getMin(double *list,int length);
     double getMax(double *list,int length);
     double getAvg(double *list,int length);
-    void outputScalar(int columnNumber,int x,int y, int z);
-    void outputVector(int colX,int colY,int colZ,int x,int y,int z);
+    
     void updateCamera(int choice);
     void updateExtraction(int x,int y, int z);
     void saveImage();
+    void slotSwitch3D();
+    void slotSwitch1D();
+    void setupHeatDemo(QCustomPlot *customPlot);
     
     
     
@@ -118,7 +128,8 @@ private:
     int xmin=0,xmax=0,ymin=0,ymax=0,zmin=0,zmax=0;
     int xminAll=0,xmaxAll=0,yminAll=0,ymaxAll=0,zminAll=0,zmaxAll=0;
     vtkSmartPointer<vtkCamera> camera = vtkSmartPointer<vtkCamera>::New();
-    double **vtkData;
+    double **vtkData1;
+    double **vtkData2;
     double RGBPoint;
     bool reset=true;
     vtkSmartPointer<vtkAxesActor> axes = vtkSmartPointer<vtkAxesActor>::New();
@@ -135,6 +146,8 @@ private:
     vtkActor *actorVector = vtkActor::New();
     vtkVolume *actorScalar = vtkVolume::New();
     std::vector<vtkActor *> actorDomain;
+    simulationDataFilter vtkData3D,data1D;
+
 };
 
 #endif // SimpleView_H
