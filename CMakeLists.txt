@@ -52,9 +52,9 @@ include_directories(
 )
 
 # Set your files and resources here
-set( Srcs main.cxx SimpleView.cxx qcustomplot.cpp)
+set( Srcs main.cxx SimpleView.cxx qcustomplot.cpp simulationDataFilter.cpp)
 
-set( Hdrs SimpleView.h qcustomplot.h)
+set( Hdrs SimpleView.h qcustomplot.h simulationDataFilter.hpp)
 
 set( MOC_Hdrs SimpleView.h )
 
