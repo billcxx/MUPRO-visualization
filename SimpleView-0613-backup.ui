@@ -1,0 +1,4631 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SimpleView</class>
+ <widget class="QMainWindow" name="SimpleView">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1378</width>
+    <height>781</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>SimpleView</string>
+  </property>
+  <property name="windowIcon">
+   <iconset resource="Icons/icons.qrc">
+    <normaloff>:/Icons/help.png</normaloff>:/Icons/help.png</iconset>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>22</width>
+    <height>22</height>
+   </size>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="contextMenuPolicy">
+    <enum>Qt::PreventContextMenu</enum>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">#page_6,#page_7{
+	background: rgb(255,255,255);
+}</string>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="0">
+    <property name="sizeConstraint">
+     <enum>QLayout::SetMaximumSize</enum>
+    </property>
+    <property name="leftMargin">
+     <number>5</number>
+    </property>
+    <property name="topMargin">
+     <number>5</number>
+    </property>
+    <property name="rightMargin">
+     <number>5</number>
+    </property>
+    <property name="bottomMargin">
+     <number>5</number>
+    </property>
+    <item>
+     <widget class="QStackedWidget" name="stackedWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QToolBar{
+	background-color:red;
+border: 1px solid black;
+}
+
+
+
+QWidget{
+	
+	font: 15pt &quot;Arial&quot;;
+}
+
+
+QCheckBox{
+
+}
+QPushButton{
+	    border:1px solid rgb(220,220,220);
+
+	height:38px;
+}
+
+QPushButton:hover{
+	background-color:rgb(150, 188, 201);
+border-radius:0px;
+color:white;
+}
+
+/*QTabWidget::tab-bar{
+background:#F1F1F1;
+alignment:center;
+}*/
+
+/*QTabWidget::pane{
+	background:rgb(230,230,230);
+}*/
+
+QTabBar::tab{
+background: #018FBF;
+	padding: 5px 10px;
+  color:#ffffff;
+
+height:30px;
+width:70px;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    background: #015B8D;
+}
+
+QTabBar::tab:selected {
+    border-color: #F1F1F1;
+    border-bottom-color: #F1F1F1; /* same as pane color */
+}
+
+QTabBar::tab:!selected {
+    margin-top: 0px; /* make non-selected tabs look smaller */
+}
+
+
+QGroupBox{
+	/*background-color: rgb(230,230,230);*/
+	/*border: 2px solid rgb(210,210,210);*/
+border-radius:0px;
+border: 1px solid black;
+margin-top:26px;
+}
+
+QGroupBox::title{
+subcontrol-origin:margin;
+	background-color:rgb(210,210,210);
+
+padding: 5px 10px;
+}
+
+
+/*#QLineEdit{
+#	background-color:rgb(210,210,210);
+#border:1px solid rgb(220,220,220);
+#min-width:58px;
+#min-height:38px;
+#qproperty-alignment: AlignCenter;
+#}*/
+
+QLineEdit::hover, QLineEdit:focus{
+	background-color:rgb(255,255,255);
+}
+
+QLineEdit:focus{
+	background-color:rgb(255,255,255);
+}
+
+/*QLabel{
+background-color:rgb(230, 230, 230);
+qproperty-alignment: AlignCenter;
+
+}*/
+
+
+
+
+QComboBox {
+    border:1px solid rgb(220,220,220);
+
+	min-height:38px;
+	height:38px;
+
+}
+
+
+QComboBox:!editable {
+
+	min-height:38px;
+     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+}
+
+/* QComboBox gets the &quot;on&quot; state when the popup is open */
+QComboBox:!editable:on {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,
+                                stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);
+
+	min-height:38px;
+border-radius:0px;
+
+}
+
+QComboBox:on { /* shift the text when the popup opens */
+    padding-top: 0px;
+    padding-left: 20px;
+
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+		qproperty-alignment: AlignCenter;
+	border-left-width: 0px;
+    border-left-color: darkgray;
+    border-left-style: solid; /* just a single line */
+	padding-right:2px;
+	min-height:38px;
+}
+
+QComboBox::down-arrow {
+
+   image:url(:/Icons/dropdown.png);
+	width:12px;
+}
+
+QComboBox::down-arrow:on { /* shift the arrow when popup is open */
+    top: 1px;
+    left: 1px;
+}
+
+QComboBox QListView
+{
+	border-radius:0px;
+    selection-background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8DAEBE, stop: 1 #678EA3);
+	min-height:38px;
+	background-color:rgb(220,220,220);
+outline: 0;
+}
+
+QComboBox QListView::item{
+	color:rgb(0,0,0);
+	height:40px;
+	min-height:38px;
+}
+
+QComboBox QListView::item:selected{
+	color:rgb(0,0,0);
+background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8DAEBE, stop: 1 #678EA3);
+	height:40px;
+	min-height:38px;
+}
+</string>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="page_6">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <layout class="QGridLayout" name="gridLayout">
+        <item row="0" column="0">
+         <layout class="QGridLayout" name="gridLayout_2">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetFixedSize</enum>
+          </property>
+          <item row="0" column="0">
+           <widget class="QWidget" name="widget" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>271</width>
+              <height>711</height>
+             </size>
+            </property>
+            <widget class="QTabWidget" name="inputTab">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>271</width>
+               <height>711</height>
+              </rect>
+             </property>
+             <property name="toolTip">
+              <string>Checked to show the visualization for scalar</string>
+             </property>
+             <property name="autoFillBackground">
+              <bool>true</bool>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">/*#input1,#input2,#input3{
+	background: rgb(230,230,230);
+}
+*/</string>
+             </property>
+             <property name="currentIndex">
+              <number>0</number>
+             </property>
+             <widget class="QWidget" name="input1">
+              <attribute name="title">
+               <string>Scalar</string>
+              </attribute>
+              <widget class="QCheckBox" name="scalar_CB">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>0</y>
+                 <width>86</width>
+                 <height>20</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Scalar</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+              <widget class="QComboBox" name="scalarChoice">
+               <property name="geometry">
+                <rect>
+                 <x>170</x>
+                 <y>230</y>
+                 <width>100</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="toolTip">
+                <string>Choose which column of the data file you want to visualize, excluding the first three XYZ coordinate.</string>
+               </property>
+               <property name="editable">
+                <bool>false</bool>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>230</y>
+                 <width>160</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Column to be plotted:</string>
+               </property>
+              </widget>
+              <widget class="QWidget" name="widget_4" native="true">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>280</y>
+                 <width>271</width>
+                 <height>151</height>
+                </rect>
+               </property>
+               <widget class="QLineEdit" name="isoValue_LE">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="geometry">
+                 <rect>
+                  <x>60</x>
+                  <y>40</y>
+                  <width>80</width>
+                  <height>40</height>
+                 </rect>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>80</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>Position of isosurface (value)</string>
+                </property>
+               </widget>
+               <widget class="QCheckBox" name="isosurface_CB">
+                <property name="geometry">
+                 <rect>
+                  <x>10</x>
+                  <y>20</y>
+                  <width>100</width>
+                  <height>20</height>
+                 </rect>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <family>Arial</family>
+                  <pointsize>15</pointsize>
+                 </font>
+                </property>
+                <property name="toolTip">
+                 <string>Checked to specify and show isosurface of the scalar data</string>
+                </property>
+                <property name="text">
+                 <string>Isosurface</string>
+                </property>
+               </widget>
+               <widget class="QLabel" name="isoValue_LB">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>40</y>
+                  <width>50</width>
+                  <height>40</height>
+                 </rect>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>1000</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Value:</string>
+                </property>
+               </widget>
+               <widget class="QPushButton" name="isoAdd_PB">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="geometry">
+                 <rect>
+                  <x>190</x>
+                  <y>40</y>
+                  <width>40</width>
+                  <height>40</height>
+                 </rect>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>70</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>Add the input isosurface value to the list below for visualization.</string>
+                </property>
+                <property name="text">
+                 <string>+</string>
+                </property>
+               </widget>
+               <widget class="QPushButton" name="isoDelete_PB">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="geometry">
+                 <rect>
+                  <x>230</x>
+                  <y>40</y>
+                  <width>40</width>
+                  <height>40</height>
+                 </rect>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>70</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>Delete the selected isosurface value from the list below.</string>
+                </property>
+                <property name="text">
+                 <string>-</string>
+                </property>
+               </widget>
+               <widget class="QListWidget" name="isosurface_LW">
+                <property name="enabled">
+                 <bool>false</bool>
+                </property>
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>80</y>
+                  <width>271</width>
+                  <height>71</height>
+                 </rect>
+                </property>
+                <property name="toolTip">
+                 <string>List of currently specified isosurface value that will be visualized.</string>
+                </property>
+               </widget>
+              </widget>
+              <widget class="QWidget" name="widget_5" native="true">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>90</y>
+                 <width>271</width>
+                 <height>131</height>
+                </rect>
+               </property>
+               <widget class="QCheckBox" name="slice_CB">
+                <property name="geometry">
+                 <rect>
+                  <x>10</x>
+                  <y>10</y>
+                  <width>131</width>
+                  <height>20</height>
+                 </rect>
+                </property>
+                <property name="toolTip">
+                 <string>Checked to slice and visualize a plane of 3D data. The plane is specified by a point on the plane, and normal vector of the plane.</string>
+                </property>
+                <property name="text">
+                 <string>Slice 2D plane</string>
+                </property>
+               </widget>
+               <widget class="QLineEdit" name="sliceNormalZ">
+                <property name="geometry">
+                 <rect>
+                  <x>210</x>
+                  <y>80</y>
+                  <width>50</width>
+                  <height>20</height>
+                 </rect>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>Z cordinate of the normal vector for the plane.</string>
+                </property>
+               </widget>
+               <widget class="QLineEdit" name="sliceNormalY">
+                <property name="geometry">
+                 <rect>
+                  <x>150</x>
+                  <y>80</y>
+                  <width>50</width>
+                  <height>20</height>
+                 </rect>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>Y cordinate of the normal vector for the plane.</string>
+                </property>
+               </widget>
+               <widget class="QLineEdit" name="sliceOriginX">
+                <property name="geometry">
+                 <rect>
+                  <x>90</x>
+                  <y>30</y>
+                  <width>50</width>
+                  <height>20</height>
+                 </rect>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>X cordinate of a point on the plane.</string>
+                </property>
+               </widget>
+               <widget class="QLineEdit" name="sliceNormalX">
+                <property name="geometry">
+                 <rect>
+                  <x>90</x>
+                  <y>80</y>
+                  <width>50</width>
+                  <height>20</height>
+                 </rect>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>X cordinate of the normal vector for the plane.</string>
+                </property>
+               </widget>
+               <widget class="QLineEdit" name="sliceOriginY">
+                <property name="geometry">
+                 <rect>
+                  <x>150</x>
+                  <y>30</y>
+                  <width>50</width>
+                  <height>20</height>
+                 </rect>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>Y cordinate of a point on the plane.</string>
+                </property>
+               </widget>
+               <widget class="QLabel" name="label_8">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>30</y>
+                  <width>80</width>
+                  <height>40</height>
+                 </rect>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>1000</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Point:</string>
+                </property>
+               </widget>
+               <widget class="QLineEdit" name="sliceOriginZ">
+                <property name="geometry">
+                 <rect>
+                  <x>210</x>
+                  <y>30</y>
+                  <width>50</width>
+                  <height>20</height>
+                 </rect>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>50</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="toolTip">
+                 <string>Z cordinate of a point on the plane.</string>
+                </property>
+               </widget>
+               <widget class="QLabel" name="label_9">
+                <property name="geometry">
+                 <rect>
+                  <x>0</x>
+                  <y>80</y>
+                  <width>80</width>
+                  <height>40</height>
+                 </rect>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>1000</width>
+                  <height>16777215</height>
+                 </size>
+                </property>
+                <property name="text">
+                 <string>Normal:</string>
+                </property>
+               </widget>
+              </widget>
+              <widget class="QLabel" name="label_5">
+               <property name="geometry">
+                <rect>
+                 <x>90</x>
+                 <y>40</y>
+                 <width>40</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>to</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="scalarValueMax_LE">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>40</y>
+                 <width>80</width>
+                 <height>20</height>
+                </rect>
+               </property>
+               <property name="toolTip">
+                <string>Max value of the range filter</string>
+               </property>
+              </widget>
+              <widget class="QCheckBox" name="scalarRange_CB">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>20</y>
+                 <width>101</width>
+                 <height>20</height>
+                </rect>
+               </property>
+               <property name="toolTip">
+                <string>Checked to filter the data through the range you specified.</string>
+               </property>
+               <property name="text">
+                <string>Value range:</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="scalarValueMin_LE">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>40</y>
+                 <width>80</width>
+                 <height>20</height>
+                </rect>
+               </property>
+               <property name="toolTip">
+                <string>Min value for the range filter</string>
+               </property>
+              </widget>
+              <widget class="QCheckBox" name="volume_CB">
+               <property name="geometry">
+                <rect>
+                 <x>100</x>
+                 <y>0</y>
+                 <width>151</width>
+                 <height>20</height>
+                </rect>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                 <pointsize>15</pointsize>
+                </font>
+               </property>
+               <property name="toolTip">
+                <string>Checked to show the volume rendering of the scalar data.</string>
+               </property>
+               <property name="text">
+                <string>Volume rendering</string>
+               </property>
+               <property name="checked">
+                <bool>true</bool>
+               </property>
+              </widget>
+              <widget class="QLabel" name="zMinMaxScalar">
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>550</y>
+                 <width>130</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	background-color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>zmin - zmax</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_28">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>490</y>
+                 <width>110</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>x range:</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_29">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>520</y>
+                 <width>110</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>y range:</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="yMinMaxScalar">
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>520</y>
+                 <width>130</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	background-color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>ymin - ymax</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="rowcolScalar">
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>460</y>
+                 <width>130</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	background-color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>Colums number</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_24">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>430</y>
+                 <width>110</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Input file:</string>
+               </property>
+              </widget>
+              <widget class="QTableWidget" name="scalar_Table">
+               <property name="geometry">
+                <rect>
+                 <x>-20</x>
+                 <y>590</y>
+                 <width>301</width>
+                 <height>151</height>
+                </rect>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100000</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <attribute name="horizontalHeaderDefaultSectionSize">
+                <number>105</number>
+               </attribute>
+               <attribute name="horizontalHeaderMinimumSectionSize">
+                <number>40</number>
+               </attribute>
+               <attribute name="horizontalHeaderStretchLastSection">
+                <bool>true</bool>
+               </attribute>
+               <column>
+                <property name="text">
+                 <string>Min</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Max</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Avg</string>
+                </property>
+               </column>
+              </widget>
+              <widget class="QLabel" name="label_30">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>550</y>
+                 <width>110</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>z range:</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="inputFileScalar">
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>430</y>
+                 <width>130</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	background-color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>input file name</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_26">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>460</y>
+                 <width>110</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string># of columns:</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="xMinMaxScalar">
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>490</y>
+                 <width>130</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	background-color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>xmin - xmax</string>
+               </property>
+              </widget>
+             </widget>
+             <widget class="QWidget" name="input2">
+              <attribute name="title">
+               <string>Vector</string>
+              </attribute>
+              <widget class="QLineEdit" name="seedCenterZ_LE">
+               <property name="geometry">
+                <rect>
+                 <x>200</x>
+                 <y>310</y>
+                 <width>60</width>
+                 <height>40</height>
+                </rect>
+               </property>
+              </widget>
+              <widget class="QCheckBox" name="vector_CB">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>10</y>
+                 <width>86</width>
+                 <height>20</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Vector</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="seedRadius_LE">
+               <property name="geometry">
+                <rect>
+                 <x>80</x>
+                 <y>270</y>
+                 <width>60</width>
+                 <height>40</height>
+                </rect>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="seedCenterX_LE">
+               <property name="geometry">
+                <rect>
+                 <x>80</x>
+                 <y>310</y>
+                 <width>60</width>
+                 <height>40</height>
+                </rect>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_2">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>30</y>
+                 <width>160</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Columns to be plotted:</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="vectorScale_LE">
+               <property name="geometry">
+                <rect>
+                 <x>70</x>
+                 <y>70</y>
+                 <width>80</width>
+                 <height>40</height>
+                </rect>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_37">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>390</y>
+                 <width>150</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Integrate step length:</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_4">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>70</y>
+                 <width>60</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Scale:</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="streamStepLength_LE">
+               <property name="geometry">
+                <rect>
+                 <x>140</x>
+                 <y>350</y>
+                 <width>80</width>
+                 <height>40</height>
+                </rect>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="streamIntStepLength_LE">
+               <property name="geometry">
+                <rect>
+                 <x>180</x>
+                 <y>390</y>
+                 <width>80</width>
+                 <height>40</height>
+                </rect>
+               </property>
+              </widget>
+              <widget class="QComboBox" name="vectorChoice">
+               <property name="geometry">
+                <rect>
+                 <x>170</x>
+                 <y>30</y>
+                 <width>80</width>
+                 <height>40</height>
+                </rect>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_10">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>230</y>
+                 <width>130</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Number of seeds:</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="seedCenterY_LE">
+               <property name="geometry">
+                <rect>
+                 <x>140</x>
+                 <y>310</y>
+                 <width>60</width>
+                 <height>40</height>
+                </rect>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_34">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>310</y>
+                 <width>70</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Center:</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_36">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>350</y>
+                 <width>90</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Max steps :</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="seedNumber_LE">
+               <property name="geometry">
+                <rect>
+                 <x>140</x>
+                 <y>230</y>
+                 <width>60</width>
+                 <height>40</height>
+                </rect>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_11">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>270</y>
+                 <width>80</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Radius:</string>
+               </property>
+              </widget>
+              <widget class="QCheckBox" name="streamline_CB">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>200</y>
+                 <width>131</width>
+                 <height>20</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Streamline</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="vectorValueMax_LE">
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>150</y>
+                 <width>80</width>
+                 <height>40</height>
+                </rect>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="vectorValueMin_LE">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>150</y>
+                 <width>80</width>
+                 <height>40</height>
+                </rect>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_7">
+               <property name="geometry">
+                <rect>
+                 <x>90</x>
+                 <y>150</y>
+                 <width>40</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>to</string>
+               </property>
+              </widget>
+              <widget class="QCheckBox" name="vectorRange_CB">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>120</y>
+                 <width>142</width>
+                 <height>21</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Magnitude range:</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="zMinMaxVector">
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>560</y>
+                 <width>130</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	background-color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>zmin - zmax</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="inputFileVector">
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>440</y>
+                 <width>130</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	background-color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>input file name</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_27">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>470</y>
+                 <width>110</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string># of columns:</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_32">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>530</y>
+                 <width>110</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>y range:</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_33">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>560</y>
+                 <width>110</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>z range:</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="yMinMaxVector">
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>530</y>
+                 <width>130</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	background-color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>ymin - ymax</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_25">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>440</y>
+                 <width>110</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Input file:</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_31">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>500</y>
+                 <width>110</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>x range:</string>
+               </property>
+              </widget>
+              <widget class="QTableWidget" name="vector_Table">
+               <property name="geometry">
+                <rect>
+                 <x>-20</x>
+                 <y>590</y>
+                 <width>300</width>
+                 <height>120</height>
+                </rect>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100000</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <attribute name="horizontalHeaderDefaultSectionSize">
+                <number>105</number>
+               </attribute>
+               <attribute name="horizontalHeaderMinimumSectionSize">
+                <number>40</number>
+               </attribute>
+               <attribute name="horizontalHeaderStretchLastSection">
+                <bool>true</bool>
+               </attribute>
+               <column>
+                <property name="text">
+                 <string>Min</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Max</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Avg</string>
+                </property>
+               </column>
+              </widget>
+              <widget class="QLabel" name="xMinMaxVector">
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>500</y>
+                 <width>130</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	background-color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>xmin - xmax</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="rowcolVector">
+               <property name="geometry">
+                <rect>
+                 <x>130</x>
+                 <y>470</y>
+                 <width>130</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	background-color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>Colums number</string>
+               </property>
+              </widget>
+             </widget>
+             <widget class="QWidget" name="input3">
+              <attribute name="title">
+               <string>Domain</string>
+              </attribute>
+              <widget class="QListWidget" name="domain_LW">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>40</y>
+                 <width>256</width>
+                 <height>381</height>
+                </rect>
+               </property>
+               <property name="selectionMode">
+                <enum>QAbstractItemView::SingleSelection</enum>
+               </property>
+               <item>
+                <property name="text">
+                 <string>Substrate</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>R1+</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>R1-</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>R2+</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>R2-</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>R3+</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>R3-</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>R4+</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>R4-</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>O1+</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>O1-</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>O2+</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>O2-</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>O3+</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>O3-</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>O4+</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>O4-</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>O5+</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>O5-</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>O6+</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>O6-</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>T1+</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>T1-</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>T2+</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>T2-</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>T3+</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>T3-</string>
+                </property>
+                <property name="checkState">
+                 <enum>Checked</enum>
+                </property>
+               </item>
+              </widget>
+              <widget class="QCheckBox" name="domain_CB">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>10</y>
+                 <width>86</width>
+                 <height>20</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Domain</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_39">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>520</y>
+                 <width>110</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>y range:</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="rowcolDomain">
+               <property name="geometry">
+                <rect>
+                 <x>140</x>
+                 <y>460</y>
+                 <width>130</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	background-color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>Colums number</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="xMinMaxDomain">
+               <property name="geometry">
+                <rect>
+                 <x>140</x>
+                 <y>490</y>
+                 <width>130</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	background-color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>xmin - xmax</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_40">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>430</y>
+                 <width>110</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Input file:</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_38">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>490</y>
+                 <width>110</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>x range:</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="yMinMaxDomain">
+               <property name="geometry">
+                <rect>
+                 <x>140</x>
+                 <y>520</y>
+                 <width>130</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	background-color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>ymin - ymax</string>
+               </property>
+              </widget>
+              <widget class="QTableWidget" name="domain_Table">
+               <property name="geometry">
+                <rect>
+                 <x>-10</x>
+                 <y>580</y>
+                 <width>301</width>
+                 <height>111</height>
+                </rect>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100000</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <attribute name="horizontalHeaderDefaultSectionSize">
+                <number>105</number>
+               </attribute>
+               <attribute name="horizontalHeaderMinimumSectionSize">
+                <number>40</number>
+               </attribute>
+               <attribute name="horizontalHeaderStretchLastSection">
+                <bool>true</bool>
+               </attribute>
+               <column>
+                <property name="text">
+                 <string>Min</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Max</string>
+                </property>
+               </column>
+               <column>
+                <property name="text">
+                 <string>Avg</string>
+                </property>
+               </column>
+              </widget>
+              <widget class="QLabel" name="label_42">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>550</y>
+                 <width>110</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>z range:</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="zMinMaxDomain">
+               <property name="geometry">
+                <rect>
+                 <x>140</x>
+                 <y>550</y>
+                 <width>130</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	background-color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>zmin - zmax</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="inputFileDomain">
+               <property name="geometry">
+                <rect>
+                 <x>140</x>
+                 <y>430</y>
+                 <width>130</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
+	background-color:white;
+}</string>
+               </property>
+               <property name="text">
+                <string>input file name</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_41">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>460</y>
+                 <width>110</width>
+                 <height>30</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string># of columns:</string>
+               </property>
+              </widget>
+             </widget>
+            </widget>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QVTKWidget" name="qvtkWidget">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>750</width>
+              <height>711</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QWidget" name="widget_6" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>301</width>
+              <height>711</height>
+             </size>
+            </property>
+            <widget class="QGroupBox" name="groupBox">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>320</y>
+               <width>301</width>
+               <height>391</height>
+              </rect>
+             </property>
+             <property name="title">
+              <string>Color</string>
+             </property>
+             <widget class="QWidget" name="widget_2" native="true">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>27</y>
+                <width>301</width>
+                <height>181</height>
+               </rect>
+              </property>
+              <widget class="QPushButton" name="RGBDelete_PB">
+               <property name="geometry">
+                <rect>
+                 <x>260</x>
+                 <y>0</y>
+                 <width>40</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>70</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Delete the selected data value and RGB pair from the color table.</string>
+               </property>
+               <property name="text">
+                <string>-</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="RGBAdd_PB">
+               <property name="geometry">
+                <rect>
+                 <x>220</x>
+                 <y>0</y>
+                 <width>40</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>70</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Add the data value and RGB value pair to the color table below.</string>
+               </property>
+               <property name="text">
+                <string>+</string>
+               </property>
+              </widget>
+              <widget class="QStackedWidget" name="RGB_Stack">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>80</y>
+                 <width>300</width>
+                 <height>90</height>
+                </rect>
+               </property>
+               <property name="currentIndex">
+                <number>0</number>
+               </property>
+               <widget class="QWidget" name="page">
+                <widget class="QTableWidget" name="RGBScalar_Table">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>300</width>
+                   <height>90</height>
+                  </rect>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>10000</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="toolTip">
+                  <string>Color look up table.</string>
+                 </property>
+                 <attribute name="horizontalHeaderDefaultSectionSize">
+                  <number>70</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderStretchLastSection">
+                  <bool>true</bool>
+                 </attribute>
+                 <attribute name="verticalHeaderDefaultSectionSize">
+                  <number>25</number>
+                 </attribute>
+                 <column>
+                  <property name="text">
+                   <string>Value</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>R</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>G</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>B</string>
+                  </property>
+                 </column>
+                </widget>
+               </widget>
+               <widget class="QWidget" name="page_2">
+                <widget class="QTableWidget" name="RGBVector_Table">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>300</width>
+                   <height>90</height>
+                  </rect>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>1000</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <attribute name="horizontalHeaderDefaultSectionSize">
+                  <number>80</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderStretchLastSection">
+                  <bool>true</bool>
+                 </attribute>
+                 <attribute name="verticalHeaderDefaultSectionSize">
+                  <number>25</number>
+                 </attribute>
+                 <column>
+                  <property name="text">
+                   <string>Value</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>R</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>G</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>B</string>
+                  </property>
+                 </column>
+                </widget>
+               </widget>
+               <widget class="QWidget" name="page_5">
+                <widget class="QTableWidget" name="RGBIso_Table">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>300</width>
+                   <height>90</height>
+                  </rect>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>1000</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <attribute name="horizontalHeaderDefaultSectionSize">
+                  <number>85</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderStretchLastSection">
+                  <bool>true</bool>
+                 </attribute>
+                 <attribute name="verticalHeaderDefaultSectionSize">
+                  <number>25</number>
+                 </attribute>
+                 <column>
+                  <property name="text">
+                   <string>Value</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>R</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>G</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>B</string>
+                  </property>
+                 </column>
+                </widget>
+               </widget>
+              </widget>
+              <widget class="QComboBox" name="RGB_Combo">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>151</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="toolTip">
+                <string>Choose which type of color you want to set, scalar, vector or isosruface. Or use the default color scheme</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string>RGB default</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>RGB scalar</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>RGB vector</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Isosurface</string>
+                </property>
+               </item>
+              </widget>
+              <widget class="QStackedWidget" name="RGBIso_SW">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>40</y>
+                 <width>121</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="currentIndex">
+                <number>0</number>
+               </property>
+               <widget class="QWidget" name="page_9">
+                <widget class="QLabel" name="label_12">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>50</width>
+                   <height>40</height>
+                  </rect>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>50</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Value:</string>
+                 </property>
+                </widget>
+                <widget class="QLineEdit" name="RGBValue_LE">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="geometry">
+                  <rect>
+                   <x>60</x>
+                   <y>0</y>
+                   <width>60</width>
+                   <height>40</height>
+                  </rect>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>40</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="toolTip">
+                  <string>Data value that you want to set as a color lookuptable key point.</string>
+                 </property>
+                </widget>
+               </widget>
+               <widget class="QWidget" name="page_10">
+                <widget class="QComboBox" name="isoValue_Combo">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>121</width>
+                   <height>40</height>
+                  </rect>
+                 </property>
+                </widget>
+               </widget>
+              </widget>
+              <widget class="QLineEdit" name="RGBG_LE">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="geometry">
+                <rect>
+                 <x>180</x>
+                 <y>40</y>
+                 <width>60</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>G value of RGB</string>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background:rgb(196, 255, 195);</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="RGBR_LE">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="geometry">
+                <rect>
+                 <x>120</x>
+                 <y>40</y>
+                 <width>60</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>R value of RGB</string>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background: rgb(255, 213, 205)</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="RGBB_LE">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="geometry">
+                <rect>
+                 <x>240</x>
+                 <y>40</y>
+                 <width>60</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>40</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>B value of RGB</string>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background: rgb(185, 205, 255);</string>
+               </property>
+              </widget>
+             </widget>
+             <widget class="QWidget" name="widget_3" native="true">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>210</y>
+                <width>301</width>
+                <height>181</height>
+               </rect>
+              </property>
+              <widget class="QLabel" name="label_15">
+               <property name="geometry">
+                <rect>
+                 <x>110</x>
+                 <y>40</y>
+                 <width>50</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>50</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Alpha:</string>
+               </property>
+              </widget>
+              <widget class="QStackedWidget" name="alpha_Stack">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>80</y>
+                 <width>301</width>
+                 <height>101</height>
+                </rect>
+               </property>
+               <property name="currentIndex">
+                <number>1</number>
+               </property>
+               <widget class="QWidget" name="page_3">
+                <widget class="QTableWidget" name="alphaScalar_Table">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>300</width>
+                   <height>101</height>
+                  </rect>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>300</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <attribute name="horizontalHeaderDefaultSectionSize">
+                  <number>110</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderStretchLastSection">
+                  <bool>true</bool>
+                 </attribute>
+                 <attribute name="verticalHeaderDefaultSectionSize">
+                  <number>25</number>
+                 </attribute>
+                 <column>
+                  <property name="text">
+                   <string>Value</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Alpha</string>
+                  </property>
+                 </column>
+                </widget>
+               </widget>
+               <widget class="QWidget" name="page_4">
+                <widget class="QTableWidget" name="alphaVector_Table">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>300</width>
+                   <height>100</height>
+                  </rect>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>300</width>
+                   <height>16777215</height>
+                  </size>
+                 </property>
+                 <property name="toolTip">
+                  <string>Data opacity pair table</string>
+                 </property>
+                 <attribute name="horizontalHeaderDefaultSectionSize">
+                  <number>120</number>
+                 </attribute>
+                 <attribute name="horizontalHeaderStretchLastSection">
+                  <bool>true</bool>
+                 </attribute>
+                 <attribute name="verticalHeaderDefaultSectionSize">
+                  <number>25</number>
+                 </attribute>
+                 <column>
+                  <property name="text">
+                   <string>Value</string>
+                  </property>
+                 </column>
+                 <column>
+                  <property name="text">
+                   <string>Alpha</string>
+                  </property>
+                 </column>
+                </widget>
+               </widget>
+              </widget>
+              <widget class="QLineEdit" name="alphaValue_LE">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="geometry">
+                <rect>
+                 <x>50</x>
+                 <y>40</y>
+                 <width>60</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>50</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Data value for the opacity key point</string>
+               </property>
+              </widget>
+              <widget class="QComboBox" name="alpha_Combo">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>0</y>
+                 <width>141</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Choose which type of opacity to specify, for scalar or use the default one.</string>
+               </property>
+               <item>
+                <property name="text">
+                 <string>Alpha default</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Alpha scalar</string>
+                </property>
+               </item>
+              </widget>
+              <widget class="QLabel" name="label_14">
+               <property name="geometry">
+                <rect>
+                 <x>0</x>
+                 <y>40</y>
+                 <width>50</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>50</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Value:</string>
+               </property>
+              </widget>
+              <widget class="QLineEdit" name="alpha_LE">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="geometry">
+                <rect>
+                 <x>160</x>
+                 <y>40</y>
+                 <width>60</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>0</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>50</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Opacity value at the data value you specified.</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="alphaDelete_PB">
+               <property name="geometry">
+                <rect>
+                 <x>260</x>
+                 <y>0</y>
+                 <width>40</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>70</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Delete selected entry from the data opacity table</string>
+               </property>
+               <property name="text">
+                <string>-</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="alphaAdd_PB">
+               <property name="geometry">
+                <rect>
+                 <x>220</x>
+                 <y>0</y>
+                 <width>40</width>
+                 <height>40</height>
+                </rect>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>70</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="toolTip">
+                <string>Add input into the data opacity table below</string>
+               </property>
+               <property name="text">
+                <string>+</string>
+               </property>
+              </widget>
+             </widget>
+            </widget>
+            <widget class="QGroupBox" name="groupBox_2">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>10</y>
+               <width>271</width>
+               <height>221</height>
+              </rect>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>230</width>
+               <height>50</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>10000</width>
+               <height>10000</height>
+              </size>
+             </property>
+             <property name="title">
+              <string>General</string>
+             </property>
+             <widget class="QCheckBox" name="axis_CB">
+              <property name="geometry">
+               <rect>
+                <x>110</x>
+                <y>40</y>
+                <width>86</width>
+                <height>20</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>Check to show the xyz axis representation.</string>
+              </property>
+              <property name="text">
+               <string>Axis</string>
+              </property>
+             </widget>
+             <widget class="QCheckBox" name="scalarBar_CB">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>60</y>
+                <width>86</width>
+                <height>20</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>Check to show the scale bar for the data plotted (magnitude for vector data)</string>
+              </property>
+              <property name="text">
+               <string>Scale bar</string>
+              </property>
+             </widget>
+             <widget class="QCheckBox" name="extract_CB">
+              <property name="geometry">
+               <rect>
+                <x>110</x>
+                <y>60</y>
+                <width>91</width>
+                <height>20</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>Check to specify the range of data to be visualized</string>
+              </property>
+              <property name="text">
+               <string>Extraction</string>
+              </property>
+             </widget>
+             <widget class="QCheckBox" name="outline_CB">
+              <property name="geometry">
+               <rect>
+                <x>10</x>
+                <y>40</y>
+                <width>86</width>
+                <height>20</height>
+               </rect>
+              </property>
+              <property name="toolTip">
+               <string>Check to show the domain outline of visualizing data.</string>
+              </property>
+              <property name="text">
+               <string>Outline</string>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_18">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>90</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>xmin:</string>
+              </property>
+             </widget>
+             <widget class="QLineEdit" name="xmin_LE">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="geometry">
+               <rect>
+                <x>60</x>
+                <y>90</y>
+                <width>60</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_19">
+              <property name="geometry">
+               <rect>
+                <x>150</x>
+                <y>90</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>xmax:</string>
+              </property>
+             </widget>
+             <widget class="QLineEdit" name="xmax_LE">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="geometry">
+               <rect>
+                <x>190</x>
+                <y>90</y>
+                <width>60</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_21">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>130</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>ymin:</string>
+              </property>
+             </widget>
+             <widget class="QLineEdit" name="ymin_LE">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="geometry">
+               <rect>
+                <x>60</x>
+                <y>130</y>
+                <width>60</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_20">
+              <property name="geometry">
+               <rect>
+                <x>150</x>
+                <y>130</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>ymax:</string>
+              </property>
+             </widget>
+             <widget class="QLineEdit" name="ymax_LE">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="geometry">
+               <rect>
+                <x>190</x>
+                <y>130</y>
+                <width>60</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_23">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>170</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>zmin:</string>
+              </property>
+             </widget>
+             <widget class="QLineEdit" name="zmin_LE">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="geometry">
+               <rect>
+                <x>60</x>
+                <y>170</y>
+                <width>60</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+             </widget>
+             <widget class="QLabel" name="label_22">
+              <property name="geometry">
+               <rect>
+                <x>150</x>
+                <y>170</y>
+                <width>40</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>zmax:</string>
+              </property>
+             </widget>
+             <widget class="QLineEdit" name="zmax_LE">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="geometry">
+               <rect>
+                <x>190</x>
+                <y>170</y>
+                <width>60</width>
+                <height>40</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>50</width>
+                <height>16777215</height>
+               </size>
+              </property>
+             </widget>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="page_7">
+       <widget class="QCustomPlot" name="customPlot" native="true">
+        <property name="geometry">
+         <rect>
+          <x>280</x>
+          <y>10</y>
+          <width>810</width>
+          <height>520</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QWidget" name="widget_11" native="true">
+        <property name="geometry">
+         <rect>
+          <x>280</x>
+          <y>530</y>
+          <width>810</width>
+          <height>201</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit{
+	min-height:30px;
+	min-width:40px;
+	border:0px solid;
+}
+
+QListWidget{
+	border: 0px solid;
+	padding-left:10px;
+}
+
+QListWidget::item{
+	border:0px solid;
+	min-height:30px;
+}
+QListWidget::item:selected,QListWidget::item:hover{
+border:0px solid;
+	background: #015B8D;
+color:rgb(255,255,255);
+}
+
+</string>
+        </property>
+        <widget class="QLabel" name="label_76">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>10</y>
+           <width>71</width>
+           <height>41</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>General </string>
+         </property>
+        </widget>
+        <widget class="QStackedWidget" name="plot1DGeneral_SW">
+         <property name="geometry">
+          <rect>
+           <x>250</x>
+           <y>0</y>
+           <width>481</width>
+           <height>201</height>
+          </rect>
+         </property>
+         <property name="currentIndex">
+          <number>5</number>
+         </property>
+         <widget class="QWidget" name="page_13">
+          <widget class="QLabel" name="label_53">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>90</width>
+             <height>40</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Figure title:</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DFigureTitle_LE">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>10</y>
+             <width>131</width>
+             <height>40</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_8">
+          <widget class="QLineEdit" name="plot1DRangeMaxX1_LE">
+           <property name="geometry">
+            <rect>
+             <x>180</x>
+             <y>30</y>
+             <width>50</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_50">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>60</y>
+             <width>91</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>X1 label:</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_35">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>30</y>
+             <width>91</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>X1 range:</string>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="plot1DAxisX1_CB">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>0</y>
+             <width>171</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Enable X1 axis (left)</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DRangeMinX1_LE">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>30</y>
+             <width>50</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_13">
+           <property name="geometry">
+            <rect>
+             <x>150</x>
+             <y>30</y>
+             <width>31</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>-</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DTickValueX1_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>350</x>
+             <y>30</y>
+             <width>120</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="placeholderText">
+            <string>Tick value 1,2,3</string>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="plot1DAutoTickX1_CB">
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>0</y>
+             <width>111</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>X1 auto tick</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DTickLabelX1_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>350</x>
+             <y>60</y>
+             <width>120</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Tick labels</string>
+           </property>
+           <property name="placeholderText">
+            <string>Tick label 1,2,3</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DLabelX1_LE">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>60</y>
+             <width>130</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="plot1DTickLabelX1_CB">
+           <property name="geometry">
+            <rect>
+             <x>360</x>
+             <y>0</y>
+             <width>111</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>X1 tick label</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_45">
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>30</y>
+             <width>100</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Tick positions:</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_46">
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>60</y>
+             <width>100</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Tick texts:</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_54">
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>130</y>
+             <width>100</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Tick positions:</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DRangeMinY1_LE">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>130</y>
+             <width>50</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="plot1DTickLabelY1_CB">
+           <property name="geometry">
+            <rect>
+             <x>360</x>
+             <y>100</y>
+             <width>111</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Y1 tick label</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_48">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>130</y>
+             <width>90</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Y1 range:</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DTickLabelY1_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>350</x>
+             <y>160</y>
+             <width>120</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Tick labels</string>
+           </property>
+           <property name="placeholderText">
+            <string>Tick label 1,2,3</string>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="plot1DAutoTickY1_CB">
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>100</y>
+             <width>101</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Y1 auto tick</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_47">
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>160</y>
+             <width>100</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Tick texts:</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_51">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>160</y>
+             <width>91</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Y1 label:</string>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="plot1DAxisY1_CB">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>100</y>
+             <width>191</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Enable Y1 axis (bottom)</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_17">
+           <property name="geometry">
+            <rect>
+             <x>150</x>
+             <y>130</y>
+             <width>31</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>-</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DTickValueY1_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>350</x>
+             <y>130</y>
+             <width>120</width>
+             <height>32</height>
+            </rect>
+           </property>
+           <property name="placeholderText">
+            <string>Tick value 1,2,3</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DLabelY1_LE">
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>160</y>
+             <width>130</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DRangeMaxY1_LE">
+           <property name="geometry">
+            <rect>
+             <x>180</x>
+             <y>130</y>
+             <width>50</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_11">
+          <widget class="QLabel" name="label_72">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>60</y>
+             <width>91</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>X2 label:</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_74">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>150</x>
+             <y>30</y>
+             <width>31</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>-</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_73">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>30</y>
+             <width>91</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>X2 range:</string>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="plot1DAutoTickX2_CB">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>0</y>
+             <width>111</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>X2 auto tick</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DRangeMaxX2_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>180</x>
+             <y>30</y>
+             <width>50</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DRangeMinX2_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>30</y>
+             <width>50</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DLabelX2_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>60</y>
+             <width>130</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DTickValueX2_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>350</x>
+             <y>30</y>
+             <width>120</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="placeholderText">
+            <string>Tick value 1,2,3</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DTickLabelX2_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>350</x>
+             <y>60</y>
+             <width>120</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Tick labels</string>
+           </property>
+           <property name="placeholderText">
+            <string>Tick label 1,2,3</string>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="plot1DAxisX2_CB">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>0</y>
+             <width>161</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Enable X2 axis (top)</string>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="plot1DTickLabelX2_CB">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>360</x>
+             <y>0</y>
+             <width>111</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>X2 tick label</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_55">
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>60</y>
+             <width>100</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Tick texts:</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_56">
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>30</y>
+             <width>100</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Tick positions:</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_52">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>160</y>
+             <width>91</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Y2 label:</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DRangeMaxY2_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>180</x>
+             <y>130</y>
+             <width>50</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="plot1DAutoTickY2_CB">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>100</y>
+             <width>101</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Y2 auto tick</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_49">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>130</y>
+             <width>91</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Y2 range:</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DTickValueY2_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>350</x>
+             <y>130</y>
+             <width>120</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="placeholderText">
+            <string>Tick value 1,2,3</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DRangeMinY2_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>130</y>
+             <width>50</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="plot1DTickLabelY2_CB">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>360</x>
+             <y>100</y>
+             <width>111</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Y2 tick label</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_57">
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>160</y>
+             <width>100</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Tick texts:</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DLabelY2_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>100</x>
+             <y>160</y>
+             <width>130</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_75">
+           <property name="enabled">
+            <bool>true</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>150</x>
+             <y>130</y>
+             <width>31</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>-</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DTickLabelY2_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>350</x>
+             <y>160</y>
+             <width>120</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="toolTip">
+            <string>Tick labels</string>
+           </property>
+           <property name="placeholderText">
+            <string>Tick label 1,2,3</string>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="plot1DAxisY2_CB">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>100</y>
+             <width>181</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Enable Y2 axis (right)</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_58">
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>130</y>
+             <width>100</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Tick positions:</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_12">
+          <widget class="QLineEdit" name="plot1DLegendX_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>130</x>
+             <y>10</y>
+             <width>41</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="plot1DLegend_CB">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>81</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Legend</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DLegendY_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>210</x>
+             <y>10</y>
+             <width>41</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DLegendH_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>370</x>
+             <y>10</y>
+             <width>51</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLabel" name="plot1DLegendY_LB">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>170</x>
+             <y>10</y>
+             <width>41</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Y</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="plot1DLegendH_LB">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>330</x>
+             <y>10</y>
+             <width>41</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>h</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DLegendW_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>290</x>
+             <y>10</y>
+             <width>41</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLabel" name="plot1DLegendW_LB">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>250</x>
+             <y>10</y>
+             <width>41</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>w</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="plot1DLegendX_LB">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>90</x>
+             <y>10</y>
+             <width>41</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>X</string>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_14">
+          <widget class="QCheckBox" name="plot1DYGrid_CB">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>10</y>
+             <width>86</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Y grid</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="plot1DXGrid_CB">
+           <property name="geometry">
+            <rect>
+             <x>110</x>
+             <y>10</y>
+             <width>86</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>X grid</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_15">
+          <widget class="QLabel" name="plot1DTitleFontSize_LB">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>269</x>
+             <y>40</y>
+             <width>101</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Title size:</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="plot1DAxisFontSize_LB">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>269</x>
+             <y>70</y>
+             <width>101</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Axis size:</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="plot1DLegendFontSize_LB">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>269</x>
+             <y>130</y>
+             <width>101</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Legend size:</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="plot1DTickFontSize_LB">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>269</x>
+             <y>100</y>
+             <width>101</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Ticks size:</string>
+           </property>
+          </widget>
+          <widget class="QFontComboBox" name="plot1DFont_fontComboBox">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>40</y>
+             <width>251</width>
+             <height>40</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DTitleFontSize_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>370</x>
+             <y>40</y>
+             <width>40</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DAxisFontSize_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>370</x>
+             <y>70</y>
+             <width>40</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DTickFontSize_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>370</x>
+             <y>100</y>
+             <width>40</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DLegendFontSize_LE">
+           <property name="enabled">
+            <bool>false</bool>
+           </property>
+           <property name="geometry">
+            <rect>
+             <x>370</x>
+             <y>130</y>
+             <width>40</width>
+             <height>30</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="plot1DFont_CB">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>10</y>
+             <width>100</width>
+             <height>30</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Use default</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </widget>
+         <widget class="QWidget" name="page_16">
+          <widget class="QLabel" name="label_59">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>80</y>
+             <width>130</width>
+             <height>40</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Annotation text:</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DAnnotation_LE">
+           <property name="geometry">
+            <rect>
+             <x>140</x>
+             <y>80</y>
+             <width>181</width>
+             <height>40</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DAnnotationArrowX_LE">
+           <property name="geometry">
+            <rect>
+             <x>180</x>
+             <y>40</y>
+             <width>50</width>
+             <height>40</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="plot1DAnnotationArrowY_LE">
+           <property name="geometry">
+            <rect>
+             <x>270</x>
+             <y>40</y>
+             <width>50</width>
+             <height>40</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_60">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>40</y>
+             <width>130</width>
+             <height>40</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Arrow pointing to:</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_61">
+           <property name="geometry">
+            <rect>
+             <x>140</x>
+             <y>40</y>
+             <width>40</width>
+             <height>40</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>x</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_62">
+           <property name="geometry">
+            <rect>
+             <x>230</x>
+             <y>40</y>
+             <width>40</width>
+             <height>40</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>y</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_63">
+           <property name="geometry">
+            <rect>
+             <x>10</x>
+             <y>120</y>
+             <width>170</width>
+             <height>40</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Annotation text position:</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="lineEdit_3">
+           <property name="geometry">
+            <rect>
+             <x>220</x>
+             <y>120</y>
+             <width>50</width>
+             <height>40</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_64">
+           <property name="geometry">
+            <rect>
+             <x>270</x>
+             <y>120</y>
+             <width>40</width>
+             <height>40</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>y</string>
+           </property>
+          </widget>
+          <widget class="QLabel" name="label_65">
+           <property name="geometry">
+            <rect>
+             <x>180</x>
+             <y>120</y>
+             <width>40</width>
+             <height>40</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>x</string>
+           </property>
+          </widget>
+          <widget class="QLineEdit" name="lineEdit_4">
+           <property name="geometry">
+            <rect>
+             <x>310</x>
+             <y>120</y>
+             <width>50</width>
+             <height>40</height>
+            </rect>
+           </property>
+          </widget>
+          <widget class="QCheckBox" name="checkBox">
+           <property name="geometry">
+            <rect>
+             <x>20</x>
+             <y>0</y>
+             <width>131</width>
+             <height>40</height>
+            </rect>
+           </property>
+           <property name="text">
+            <string>Use annotation</string>
+           </property>
+          </widget>
+         </widget>
+        </widget>
+        <widget class="QListWidget" name="plot1DGeneral_LW">
+         <property name="geometry">
+          <rect>
+           <x>130</x>
+           <y>0</y>
+           <width>121</width>
+           <height>201</height>
+          </rect>
+         </property>
+         <item>
+          <property name="text">
+           <string>Figure title</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>X1, Y1 axis</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>X2, Y2 axis</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Legend</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Grids</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Font</string>
+          </property>
+         </item>
+        </widget>
+       </widget>
+       <widget class="column1D" name="file2_Widget" native="true">
+        <property name="geometry">
+         <rect>
+          <x>1090</x>
+          <y>10</y>
+          <width>270</width>
+          <height>710</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="column1D" name="file1_Widget" native="true">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>270</width>
+          <height>710</height>
+         </rect>
+        </property>
+       </widget>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QToolBar" name="toolBar">
+   <property name="sizePolicy">
+    <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>22</width>
+     <height>22</height>
+    </size>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionOpenFile_scalar"/>
+   <addaction name="actionOpenFile_vector"/>
+   <addaction name="actionOpenFile_domain"/>
+   <addaction name="actionRefresh"/>
+   <addaction name="actionSave"/>
+   <addaction name="actionClear"/>
+   <addaction name="separator"/>
+   <addaction name="actionRotateToXP"/>
+   <addaction name="actionRotateToXN"/>
+   <addaction name="actionRotateToYP"/>
+   <addaction name="actionRotateToYN"/>
+   <addaction name="actionRotateToZP"/>
+   <addaction name="actionRotateToZN"/>
+   <addaction name="separator"/>
+   <addaction name="action3D"/>
+   <addaction name="action1D"/>
+  </widget>
+  <action name="actionOpenFile_scalar">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/scalar-open.png</normaloff>:/Icons/scalar-open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open Scalar File...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open scalar file</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionPrint">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/print.png</normaloff>:/Icons/print.png</iconset>
+   </property>
+   <property name="text">
+    <string>Print</string>
+   </property>
+  </action>
+  <action name="actionRefresh">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/refresh.png</normaloff>:/Icons/refresh.png</iconset>
+   </property>
+   <property name="text">
+    <string>Help</string>
+   </property>
+   <property name="toolTip">
+    <string>Refresh the scene</string>
+   </property>
+  </action>
+  <action name="actionSave">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/filesave.png</normaloff>:/Icons/filesave.png</iconset>
+   </property>
+   <property name="text">
+    <string>Save</string>
+   </property>
+   <property name="toolTip">
+    <string>Save as a png figure</string>
+   </property>
+  </action>
+  <action name="actionOpenFile_vector">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/vector-open.png</normaloff>:/Icons/vector-open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open Vector File...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open vector file</string>
+   </property>
+  </action>
+  <action name="actionOpenFile_domain">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/domain-open.png</normaloff>:/Icons/domain-open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open Domain File...</string>
+   </property>
+   <property name="toolTip">
+    <string>Open domain file</string>
+   </property>
+  </action>
+  <action name="actionRotateToXP">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/x+.png</normaloff>:/Icons/x+.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotate to +X direction...</string>
+   </property>
+   <property name="toolTip">
+    <string>Rotate to +X direction</string>
+   </property>
+  </action>
+  <action name="actionRotateToYN">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/Y-.png</normaloff>:/Icons/Y-.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotate to -Y direction...</string>
+   </property>
+   <property name="toolTip">
+    <string>Rotate to -Y direction</string>
+   </property>
+  </action>
+  <action name="actionRotateToZP">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/Z+.png</normaloff>:/Icons/Z+.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotate to +Z direction...</string>
+   </property>
+   <property name="toolTip">
+    <string>Rotate to +Z direction</string>
+   </property>
+  </action>
+  <action name="actionRotateToZN">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/Z-.png</normaloff>:/Icons/Z-.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotate to -Z direction...</string>
+   </property>
+   <property name="toolTip">
+    <string>Rotate to -Z direction</string>
+   </property>
+  </action>
+  <action name="actionRotateToXN">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/X-.png</normaloff>:/Icons/X-.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotate to -X direction...</string>
+   </property>
+   <property name="toolTip">
+    <string>Rotate to -X direction</string>
+   </property>
+  </action>
+  <action name="actionRotateToYP">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/Y+.png</normaloff>:/Icons/Y+.png</iconset>
+   </property>
+   <property name="text">
+    <string>Rotate to +Y direction...</string>
+   </property>
+   <property name="toolTip">
+    <string>Rotate to +Y direction</string>
+   </property>
+  </action>
+  <action name="actionClear">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/clear-icon.png</normaloff>:/Icons/clear-icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Clear</string>
+   </property>
+   <property name="toolTip">
+    <string>Clear everything in scene</string>
+   </property>
+  </action>
+  <action name="action3D">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/3d.png</normaloff>:/Icons/3d.png</iconset>
+   </property>
+   <property name="text">
+    <string>3D</string>
+   </property>
+   <property name="toolTip">
+    <string>3D visualization</string>
+   </property>
+  </action>
+  <action name="action1D">
+   <property name="icon">
+    <iconset resource="Icons/icons.qrc">
+     <normaloff>:/Icons/1D.png</normaloff>:/Icons/1D.png</iconset>
+   </property>
+   <property name="text">
+    <string>1D</string>
+   </property>
+   <property name="toolTip">
+    <string>1D plotting</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QVTKWidget</class>
+   <extends>QWidget</extends>
+   <header>QVTKWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QCustomPlot</class>
+   <extends>QWidget</extends>
+   <header location="global">qcustomplot.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>column1D</class>
+   <extends>QWidget</extends>
+   <header location="global">column1D.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="Icons/icons.qrc"/>
+ </resources>
+ <connections/>
+</ui>

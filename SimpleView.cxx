@@ -79,7 +79,16 @@
 #include <vtkContourFilter.h>
 #include <vtkMarchingCubes.h>
 #include <vtkPolyDataNormals.h>
+#include <vtkStreamLine.h>
+#include <fstream>
+#include <iostream>
+#include <sstream>
 #include <string>
+#include <algorithm>
+#include <cmath>
+
+
+
 
 #define VTK_CREATE(type, name) \
 vtkSmartPointer<type> name = vtkSmartPointer<type>::New()
@@ -87,14 +96,15 @@ vtkSmartPointer<type> name = vtkSmartPointer<type>::New()
 // Constructor
 SimpleView::SimpleView()
 {
-    QString styleSheet = QString("font: 15px Arial;").arg(QApplication::font().pointSize());
-    this->setStyleSheet(styleSheet);
+//    QString styleSheet = QString("font: 15px Arial;").arg(QApplication::font().pointSize());
+//    this->setStyleSheet(styleSheet);
     this->ui = new Ui_SimpleView;
     this->ui->setupUi(this);
-    this->TableView = vtkSmartPointer<vtkQtTableView>::New();
     this->ui->RGB_Combo->setView(new QListView());
     this->ui->alpha_Combo->setView(new QListView());
     this->ui->scalarChoice->setView(new QListView());
+//    this->ui->plot1DGeneral_LW->SetView
+    
     for(int nr = 0; nr < 27; nr++){
         actorDomain.push_back(vtkActor::New());
     }
@@ -126,13 +136,20 @@ SimpleView::SimpleView()
     connect(this->ui->action1D,SIGNAL(triggered()), this, SLOT(slotSwitch1D()));
     connect(this->ui->action3D,SIGNAL(triggered()), this, SLOT(slotSwitch3D()));
 
+    
+    
+    connect(this->ui->file1_Widget,SIGNAL(figureReplot()),this,SLOT(figurePlot()));
+    connect(this->ui->file2_Widget,SIGNAL(figureReplot()),this,SLOT(figurePlot()));
+    
     if (this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems()==0){
         this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(renderer);
         qDebug()<<"creating new renderer";
     }else{
         renderer=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
     }
-    
+    scatterStyle<<QCPScatterStyle::ssNone<<QCPScatterStyle::ssDot <<QCPScatterStyle::ssCross<<QCPScatterStyle::ssPlus<<QCPScatterStyle::ssCircle<<QCPScatterStyle::ssDisc<<QCPScatterStyle::ssSquare<<QCPScatterStyle::ssDiamond<<QCPScatterStyle::ssStar<<QCPScatterStyle::ssTriangle<<QCPScatterStyle::ssTriangleInverted<<QCPScatterStyle::ssCrossSquare<<QCPScatterStyle::ssPlusSquare<<QCPScatterStyle::ssCrossCircle<<QCPScatterStyle::ssPlusCircle;
+    lineStyleList<<Qt::PenStyle::SolidLine<<Qt::PenStyle::DashLine<<Qt::PenStyle::DotLine<<Qt::PenStyle::DashDotLine<<Qt::PenStyle::DashDotDotLine;
+
 };
 
 SimpleView::~SimpleView()
@@ -140,81 +157,382 @@ SimpleView::~SimpleView()
     // The smart pointers should clean up for up
     
 }
-
+void SimpleView::figurePlot(){
+    this->ui->customPlot->replot();
+}
 
 void SimpleView::slotSwitch1D(){
     this->ui->stackedWidget->setCurrentIndex(1);
+    xmin=0;
+    xmax=0;
+    ymin=0;
+    ymax=0;
+    zmax=0;
+    zmin=0;
+    this->ui->actionOpenFile_scalar->setEnabled(false);
+    this->ui->actionOpenFile_vector->setEnabled(false);
+    this->ui->actionOpenFile_domain->setEnabled(false);
+    this->ui->actionClear->setEnabled(false);
+    this->ui->actionRotateToXN->setEnabled(false);
+    this->ui->actionRotateToXP->setEnabled(false);
+    this->ui->actionRotateToYN->setEnabled(false);
+    this->ui->actionRotateToYP->setEnabled(false);
+    this->ui->actionRotateToZN->setEnabled(false);
+    this->ui->actionRotateToZP->setEnabled(false);
+    
 }
 
 void SimpleView::slotSwitch3D(){
     this->ui->stackedWidget->setCurrentIndex(0);
+    xmin=0;
+    xmax=0;
+    ymin=0;
+    ymax=0;
+    zmax=0;
+    zmin=0;
+    this->ui->actionOpenFile_scalar->setEnabled(true);
+    this->ui->actionOpenFile_vector->setEnabled(true);
+    this->ui->actionOpenFile_domain->setEnabled(true);
+    this->ui->actionClear->setEnabled(true);
+    this->ui->actionRotateToXN->setEnabled(true);
+    this->ui->actionRotateToXP->setEnabled(true);
+    this->ui->actionRotateToYN->setEnabled(true);
+    this->ui->actionRotateToYP->setEnabled(true);
+    this->ui->actionRotateToZN->setEnabled(true);
+    this->ui->actionRotateToZP->setEnabled(true);
 }
 
 void SimpleView::setup1DFigure(QCustomPlot *customPlot){
+    // generate some data:
+    int dataRows1=0;
+    int dataRows2=0;
+    this->ui->customPlot->clearGraphs();
+    this->ui->customPlot->clearItems();
+    this->ui->customPlot->clearPlottables();
+    dataRows1=this->ui->file1_Widget->filter();
+    dataRows2=this->ui->file2_Widget->filter();
+
+    double xmin1D1=1;
+    double xmax1D1=0;
+    double ymin1D1=1;
+    double ymax1D1=0;
+    double xmin1D2=1;
+    double xmax1D2=0;
+    double ymin1D2=1;
+    double ymax1D2=0;
+
+    QVector<double> piTicks;
+    QVector<QString> piLabels;
+    if (this->ui->plot1DAutoTickX1_CB->isChecked()) {
+        customPlot->xAxis->setAutoTicks(true);
+        customPlot->xAxis->setAutoTickLabels(true);
+
+    }else{
+        customPlot->xAxis->setAutoTicks(false);
+        customPlot->xAxis->setAutoTickLabels(false);
+        std::istringstream iss1(this->ui->plot1DTickValueX1_LE->text().toStdString());
+        std::string num;
+        double number;
+        std::istringstream convert;
+        while(iss1){
+            if(!std::getline(iss1, num, ',')) break;
+            convert.str(num+" ");
+            convert >> number;
+            qDebug()<< QString::fromStdString(num) << number << convert;
+            
+            piTicks.push_back(number);
+        }
+        std::istringstream iss2(this->ui->plot1DTickLabelX1_LE->text().toStdString());
+        while(iss2){
+            if(!std::getline(iss2, num, ',')) break;
+            piLabels.push_back(QString:: fromStdString(num));
+        }
+        customPlot->xAxis->setTickVector(piTicks);
+        customPlot->xAxis->setTickVectorLabels(piLabels);
+    }
+
+    qDebug()<<piLabels<<piTicks;
+    if(this->ui->plot1DTickLabelX1_CB->isChecked()){
+        customPlot->xAxis->setTickLabels(true);
+    }else{
+        customPlot->xAxis->setTickLabels(false);
+    }
+    if(this->ui->plot1DTickLabelX2_CB->isChecked()){
+        customPlot->xAxis2->setTickLabels(true);
+    }else{
+        customPlot->xAxis2->setTickLabels(false);
+    }
+    if(this->ui->plot1DTickLabelY1_CB->isChecked()){
+        customPlot->yAxis->setTickLabels(true);
+    }else{
+        customPlot->yAxis->setTickLabels(false);
+    }
+    if(this->ui->plot1DTickLabelY2_CB->isChecked()){
+        customPlot->yAxis2->setTickLabels(true);
+    }else{
+        customPlot->yAxis2->setTickLabels(false);
+    }
     
+    int graphNum=0;
+    int columns1=this->ui->file1_Widget->getColumns();
+    int columns2=this->ui->file2_Widget->getColumns();
+    for(int colY=0;colY<columns1;colY++){
+        QVector<double> x(dataRows1), y(dataRows1); // initialize with entries 0..100
+        if (dataRows1>0) {
+            if (this->ui->file1_Widget->findChild<QListWidget*>("plot1DFileY_LW")->item(colY)->checkState()!=0) {
+                
+                x=this->ui->file1_Widget->returnX();
+                y=this->ui->file1_Widget->returnY(colY);
+                if(xmin1D1>this->ui->file1_Widget->returnXMin())xmin1D1=this->ui->file1_Widget->returnXMin();
+                if(xmax1D1<this->ui->file1_Widget->returnXMax())xmax1D1=this->ui->file1_Widget->returnXMax();
+                if(ymin1D1>this->ui->file1_Widget->returnYMin())ymin1D1=this->ui->file1_Widget->returnYMin();
+                if(ymax1D1<this->ui->file1_Widget->returnYMax())ymax1D1=this->ui->file1_Widget->returnYMax();
+                // create graph and assign data to it:
+                customPlot->addGraph();
+                customPlot->graph(graphNum)->setData(x, y);
+                customPlot->graph(graphNum)->setPen(this->ui->file1_Widget->getLineStyle(graphNum));
+                customPlot->graph(graphNum)->setScatterStyle(this->ui->file1_Widget->getScatterStyle(graphNum));
+                customPlot->graph(graphNum)->setName(this->ui->file1_Widget->getLineName(graphNum));
+                graphNum++;
+                
+            }
+        }
+    }
+    if (!this->ui->plot1DRangeMinX1_LE->text().isEmpty()) {
+        qDebug()<<this->ui->plot1DRangeMinX1_LE->text();
+        qDebug()<<isnan(this->ui->plot1DRangeMinX1_LE->text().toDouble());
+        if (!isnan(this->ui->plot1DRangeMinX1_LE->text().toDouble())) {
+            xmin1D1=this->ui->plot1DRangeMinX1_LE->text().toDouble();
+        }
+    }
+    if (!this->ui->plot1DRangeMaxX1_LE->text().isEmpty()) {
+        if (!isnan(this->ui->plot1DRangeMaxX1_LE->text().toDouble())) {
+            xmax1D1=this->ui->plot1DRangeMaxX1_LE->text().toDouble();
+        }
+    }
+    if (!this->ui->plot1DRangeMinY1_LE->text().isEmpty()) {
+        if (!isnan(this->ui->plot1DRangeMinY1_LE->text().toDouble())) {
+            ymin1D1=this->ui->plot1DRangeMinY1_LE->text().toDouble();
+        }
+    }
+    if (!this->ui->plot1DRangeMaxY1_LE->text().isEmpty()) {
+        if (!isnan(this->ui->plot1DRangeMaxY1_LE->text().toDouble())) {
+            ymax1D1=this->ui->plot1DRangeMaxY1_LE->text().toDouble();
+        }
+    }
+    
+    if(isnan(xmin1D1)){
+        xmin1D1=0;
+    }
+    if(isnan(xmax1D1)){
+        xmax1D1=1;
+    }
+    if(isnan(ymin1D1)){
+        ymin1D1=0;
+    }
+    if(isnan(ymax1D1)){
+        ymax1D1=1;
+    }
+
+    int graphNumLeft=graphNum;
+    for(int colY=0;colY<columns2;colY++){
+        QVector<double> x(dataRows2), y(dataRows2); // initialize with entries 0..100
+        if (dataRows2 >0) {
+            if (this->ui->file2_Widget->findChild<QListWidget*>("plot1DFileY_LW")->item(colY)->checkState()!=0) {
+                
+                x=this->ui->file2_Widget->returnX();
+                y=this->ui->file2_Widget->returnY(colY);
+                if(xmin1D2>this->ui->file2_Widget->returnXMin())xmin1D2=this->ui->file2_Widget->returnXMin();
+                if(xmax1D2<this->ui->file2_Widget->returnXMax())xmax1D2=this->ui->file2_Widget->returnXMax();
+                if(ymin1D2>this->ui->file2_Widget->returnYMin())ymin1D2=this->ui->file2_Widget->returnYMin();
+                if(ymax1D2<this->ui->file2_Widget->returnYMax())ymax1D2=this->ui->file2_Widget->returnYMax();
+                qDebug()<<"x,y:"<<x[0]<<colY<<y[0];
+                qDebug()<<"x,y:"<<x[0]<<colY<<y[0]<<graphNum<<dataRows2;
+                // create graph and assign data to it:
+                customPlot->addGraph(customPlot->xAxis2,customPlot->yAxis2);
+                customPlot->graph(graphNum)->setData(x, y);
+                customPlot->graph(graphNum)->setPen(this->ui->file2_Widget->getLineStyle(graphNum-graphNumLeft));
+                customPlot->graph(graphNum)->setScatterStyle(this->ui->file2_Widget->getScatterStyle(graphNum-graphNumLeft));
+                customPlot->graph(graphNum)->setName(this->ui->file2_Widget->getLineName(graphNum-graphNumLeft));
+                graphNum++;
+                
+            }
+        }
+    }
+    
+    if (!this->ui->plot1DRangeMinX2_LE->text().isEmpty()) {
+        if (!isnan(this->ui->plot1DRangeMinX2_LE->text().toDouble())) {
+            xmin1D2=this->ui->plot1DRangeMinX2_LE->text().toDouble();
+        }
+    }
+    if (!this->ui->plot1DRangeMaxX2_LE->text().isEmpty()) {
+        if (!isnan(this->ui->plot1DRangeMaxX2_LE->text().toDouble())) {
+            xmax1D2=this->ui->plot1DRangeMaxX2_LE->text().toDouble();
+        }
+    }
+    if (!this->ui->plot1DRangeMinY2_LE->text().isEmpty()) {
+        if (!isnan(this->ui->plot1DRangeMinY2_LE->text().toDouble())) {
+            ymin1D2=this->ui->plot1DRangeMinY2_LE->text().toDouble();
+        }
+    }
+    if (!this->ui->plot1DRangeMaxY2_LE->text().isEmpty()) {
+        if (!isnan(this->ui->plot1DRangeMaxY2_LE->text().toDouble())) {
+            ymax1D2=this->ui->plot1DRangeMaxY2_LE->text().toDouble();
+        }
+    }
+    
+    if(isnan(xmin1D2)){
+        xmin1D2=0;
+    }
+    if(isnan(xmax1D2)){
+        xmax1D2=1;
+    }
+    if(isnan(ymin1D2)){
+        ymin1D2=0;
+    }
+    if(isnan(ymax1D2)){
+        ymax1D2=1;
+    }
+
+    
+    qDebug()<<"xyminmax:"<<xmin1D1<<xmax1D1<<ymin1D1<<ymax1D1;
+    qDebug()<<"xyminmax:"<<xmin1D2<<xmax1D2<<ymin1D2<<ymax1D2;
+
+    // give the axes some labels:
+    customPlot->xAxis->setLabel("x");
+    customPlot->yAxis->setLabel("y");
+    
+//    QCPPlotTitle *plotTitle = new QCPPlotTitle(customPlot,this->ui->plot1DFigureTitle_LE->text());
+    QCPPlotTitle* plotTitle = new QCPPlotTitle(customPlot,this->ui->plot1DFigureTitle_LE->text());
+    qDebug()<<customPlot->plotLayout()->rowCount();
+    if (customPlot->plotLayout()->rowCount()==1) {
+        customPlot->plotLayout()->insertRow(0);
+        customPlot->plotLayout()->addElement(0, 0,plotTitle);
+    }else{
+        customPlot->plotLayout()->removeAt(0);
+        customPlot->plotLayout()->updateLayout();
+        customPlot->plotLayout()->simplify();
+        qDebug()<<customPlot->plotLayout()->rowCount();
+        customPlot->plotLayout()->insertRow(0);
+        qDebug()<<customPlot->plotLayout()->rowCount();
+        customPlot->plotLayout()->addElement(0, 0,plotTitle);
+    }
+    // set labels:
+    customPlot->xAxis->setLabel(this->ui->plot1DLabelX1_LE->text());
+    customPlot->yAxis->setLabel(this->ui->plot1DLabelY1_LE->text());
+    customPlot->xAxis2->setLabel(this->ui->plot1DLabelX2_LE->text());
+    customPlot->yAxis2->setLabel(this->ui->plot1DLabelY2_LE->text());
+    // make ticks on bottom axis go outward:
+    customPlot->xAxis->setTickLength(0, 5);
+    customPlot->xAxis->setSubTickLength(0, 3);
+    // make ticks on right axis go inward and outward:
+    customPlot->yAxis2->setTickLength(3, 3);
+    customPlot->yAxis2->setSubTickLength(1, 1);
+
+    // set axes ranges, so we see all data:
+    customPlot->xAxis->setRange(xmin1D1, xmax1D1);
+    customPlot->yAxis->setRange(ymin1D1, ymax1D1);
+    customPlot->xAxis2->setRange(xmin1D2,xmax1D2);
+    customPlot->yAxis2->setRange(ymin1D2,ymax1D2);
+    
+    if (this->ui->plot1DXGrid_CB->isChecked()) {
+        customPlot->xAxis->grid()->setVisible(true);
+    }else{
+        customPlot->xAxis->grid()->setVisible(false);
+    }
+    if (this->ui->plot1DYGrid_CB->isChecked()) {
+        customPlot->yAxis->grid()->setVisible(true);
+    }else{
+        customPlot->yAxis->grid()->setVisible(false);
+    }
+    
+    if(this->ui->plot1DLegend_CB->isChecked()){
+        this->ui->customPlot->legend->setVisible(true);
+        double x=this->ui->plot1DLegendX_LE->text().toDouble();
+        double y=this->ui->plot1DLegendY_LE->text().toDouble();
+        double w=this->ui->plot1DLegendW_LE->text().toDouble();
+        double h=this->ui->plot1DLegendH_LE->text().toDouble();
+        qDebug()<<"xwyh:"<<x<<this->ui->customPlot->axisRect()->insetLayout()->elementCount();
+        this->ui->customPlot->axisRect()->insetLayout()->setInsetPlacement(0, QCPLayoutInset::InsetPlacement::ipFree);
+        this->ui->customPlot->axisRect()->insetLayout()->setInsetRect(0, QRectF(x,y,w,h));
+    }
+    
+    if(!this->ui->plot1DFont_CB->isChecked()){
+        QFont titleFont=this->ui->plot1DFont_fontComboBox->currentFont();
+        if (this->ui->plot1DTitleFontSize_LE->text().isEmpty()) {
+//            titleFont.setPointSize(10);
+        }else{
+            titleFont.setPointSize(this->ui->plot1DTitleFontSize_LE->text().toInt());
+        }
+        QFont axisFont=this->ui->plot1DFont_fontComboBox->currentFont();
+        if (this->ui->plot1DAxisFontSize_LE->text().isEmpty()) {
+            //            titleFont.setPointSize(10);
+        }else{
+            axisFont.setPointSize(this->ui->plot1DAxisFontSize_LE->text().toInt());
+        }
+        QFont tickFont=this->ui->plot1DFont_fontComboBox->currentFont();
+        if (this->ui->plot1DTickFontSize_LE->text().isEmpty()) {
+            //            titleFont.setPointSize(10);
+        }else{
+            tickFont.setPointSize(this->ui->plot1DTickFontSize_LE->text().toInt());
+        }
+        QFont legendFont=this->ui->plot1DFont_fontComboBox->currentFont();
+        if (this->ui->plot1DLegendFontSize_LE->text().isEmpty()) {
+            //            titleFont.setPointSize(10);
+        }else{
+            legendFont.setPointSize(this->ui->plot1DLegendFontSize_LE->text().toInt());
+        }
+//        qobject_cast<QCPPlotTitle*>(customPlot->plotLayout()->element(0, 0))->setTextColor(QColor(200,100,0));
+        qobject_cast<QCPPlotTitle*>(customPlot->plotLayout()->element(0, 0))->setFont(titleFont);
+        customPlot->legend->setFont(legendFont);
+        customPlot->xAxis->setLabelFont(axisFont);
+        customPlot->yAxis->setLabelFont(axisFont);
+        customPlot->xAxis2->setLabelFont(axisFont);
+        customPlot->yAxis2->setLabelFont(axisFont);
+        customPlot->xAxis->setTickLabelFont(tickFont);
+        customPlot->yAxis->setTickLabelFont(tickFont);
+        customPlot->xAxis2->setTickLabelFont(tickFont);
+        customPlot->yAxis2->setTickLabelFont(tickFont);
+        
+    }
+    
+    
+    customPlot->replot();
 }
+
 
 void SimpleView::slotUpdate(){
     qDebug()<<"Slot update"<<scalarName.c_str()<<vectorName.c_str();
-    updateVTK(scalarName,vectorName);
+    if(this->ui->stackedWidget->currentIndex()==0){
+        updateVTK(scalarName,vectorName);
+    }else if(this->ui->stackedWidget->currentIndex()==1){
+        setup1DFigure(this->ui->customPlot);
+    }
 }
 void SimpleView::slotClear(){
     this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActors()->InitTraversal();
-    if (this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems()==0){
-
-    }else{
-//        qDebug()<<"renderers"<<this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems();
-//        for(int i=0;i<this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetNumberOfPropsRendered();i++){
-//        this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->RemoveActor(this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActors()->GetNextActor());
-////        this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->RemoveActor(this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetVolumes()->GetLastProp());
-//
-//            qDebug()<<"clean new renderer"<<0<<" "<<this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetNumberOfPropsRendered();
-//        }
-//        VTK_CREATE(vtkRenderer, renderer);
-//        this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(renderer);
-//        this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->RemoveAllViewProps();
-//        actorScalar=NULL;
-//        vtkSmartPointer<vtkVolume> actorScalar = vtkSmartPointer<vtkVolume>::New();
-//        this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->RemoveActor(this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActors()->GetNextActor());
-//        this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->AddActor(actorScalar);
-//        updateCamera(0);
-        
-//        this->ui->qvtkWidget->deleteLater();
-//        actorScalar->Delete();
-//        actorVector->Delete();
-        
-        
-        
-        qDebug()<<"close";
-        SimpleView *mySimpleView=new SimpleView();
-        mySimpleView->show();
-        
-//        this->ui = new Ui_SimpleView;
-//        this->ui->setupUi(this);
-//        this->ui->qvtkWidget->setAutomaticImageCacheEnabled(1);
-//
-//        VTK_CREATE(vtkRenderer,renderer);
-//
-//        
-//        // Set up action signals and slots
-//        
-//        if (this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems()==0){
-//            this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(renderer);
-//            qDebug()<<"creating new renderer";
-//        }else{
-//            renderer=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
-//        }
-        this->ui->centralwidget->deleteLater();
-        this->ui->qvtkWidget->deleteLater();
-        this->actorVector->Delete();
-        this->actorScalar->Delete();
-        for(int nr = 0; nr < 27; nr++){
-            this->actorDomain[nr]->Delete();
+    if (this->ui->stackedWidget->currentIndex()==0) {
+        if (this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems()==0){
+            
+        }else{
+            qDebug()<<"close";
+            SimpleView *mySimpleView=new SimpleView();
+            mySimpleView->show();
+            this->ui->centralwidget->deleteLater();
+            this->ui->qvtkWidget->deleteLater();
+            this->actorVector->Delete();
+            this->actorScalar->Delete();
+            for(int nr = 0; nr < 27; nr++){
+                this->actorDomain[nr]->Delete();
+            }
+            this->close();
+            qDebug()<<"nothing showing";
+            
+            
         }
-        this->close();
-        qDebug()<<"nothing showing";
 
-
+    }else if (this->ui->stackedWidget->currentIndex()==1){
+        this->ui->customPlot->clearGraphs();
     }
 }
 
@@ -251,7 +569,6 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     VTK_CREATE(vtkPolyDataMapper,mapperVector);
     VTK_CREATE(vtkHedgeHog,hedgehog);
     VTK_CREATE(vtkDataSetMapper,streamMapper);
-    VTK_CREATE(vtkActor,streamActor);
     VTK_CREATE(vtkThresholdPoints,thresholdVector);
     VTK_CREATE(vtkPlane, plane);
     VTK_CREATE(vtkCutter, cutter);
@@ -279,6 +596,9 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     VTK_CREATE(vtkDataSetMapper,outlineVectorMapper);
     VTK_CREATE(vtkContourFilter, isosurface);
     VTK_CREATE(vtkPolyDataMapper, isoMapper);
+    
+    VTK_CREATE(vtkStreamLine,stream);
+//    vtkStreamLine* stream =vtkStreamLine::New();
     renderer->AddActor(actorScalar);
     renderer->AddActor(actorVector);
     VTK_CREATE(vtkDoubleArray,range);
@@ -295,7 +615,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     plane->SetNormal(planeNX, planeNY, planeNZ);
     cutter->SetCutFunction(plane);
     
-    if (scalarFile){
+    if (scalarFile && this->ui->scalar_CB->isChecked()){
         readerScalarOrigin->SetFileName(fileNameScalar);
         qDebug() << readerScalarOrigin;
         readerScalarOrigin->Update();
@@ -313,34 +633,34 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         }else{
             readerScalar->Update();
         }
-        isosurface->SetInputConnection(readerScalar->GetOutputPort());
-        isosurface->ComputeScalarsOn();
-        isosurface->ComputeNormalsOn();
-        isosurface->GenerateTrianglesOn();
-        int contoursNumber=0;
-        qDebug()<<"Fine up till here"<<this->ui->RGBIso_Table->rowCount();
-        contoursNumber=this->ui->RGBIso_Table->rowCount();
-        qDebug()<<"Fine after"<<contoursNumber;
-        isosurface->SetNumberOfContours(contoursNumber);
-        qDebug()<<"fine after iso";
-        for (int i=0; i<contoursNumber; i++) {
-            isosurface->SetValue(i, this->ui->RGBIso_Table->item(i,0)->text().toDouble());
-            qDebug()<<"Number of isosurface"<<i<<" "<<this->ui->RGBIso_Table->item(i,0)->text().toDouble();
-        }
-        //        if(contoursNumber!=0){
-        isoNormals->SetInputConnection(0, isosurface->GetOutputPort());
-        isoMapper->SetInputConnection(isoNormals->GetOutputPort());
-        isoMapper->ScalarVisibilityOff();
-        actorIsosurface->SetMapper(isoMapper);
-        actorIsosurface->GetProperty()->SetColor(0, 0, 0);
-        renderer->AddActor(actorIsosurface);
-        if (this->ui->isosurface_CB->checkState()) {
-            actorIsosurface->SetVisibility(true);
-            qDebug()<<"showing isosurface";
-        }else{
-            actorIsosurface->SetVisibility(false);
-            qDebug()<<"not showing isosurface";
-        }
+//        isosurface->SetInputConnection(readerScalar->GetOutputPort());
+//        isosurface->ComputeScalarsOn();
+//        isosurface->ComputeNormalsOn();
+//        isosurface->GenerateTrianglesOn();
+//        int contoursNumber=0;
+//        qDebug()<<"Fine up till here"<<this->ui->RGBIso_Table->rowCount();
+//        contoursNumber=this->ui->RGBIso_Table->rowCount();
+//        qDebug()<<"Fine after"<<contoursNumber;
+//        isosurface->SetNumberOfContours(contoursNumber);
+//        qDebug()<<"fine after iso";
+//        for (int i=0; i<contoursNumber; i++) {
+//            isosurface->SetValue(i, this->ui->RGBIso_Table->item(i,0)->text().toDouble());
+//            qDebug()<<"Number of isosurface"<<i<<" "<<this->ui->RGBIso_Table->item(i,0)->text().toDouble();
+//        }
+//        //        if(contoursNumber!=0){
+//        isoNormals->SetInputConnection(0, isosurface->GetOutputPort());
+//        isoMapper->SetInputConnection(isoNormals->GetOutputPort());
+//        isoMapper->ScalarVisibilityOff();
+//        actorIsosurface->SetMapper(isoMapper);
+//        actorIsosurface->GetProperty()->SetColor(0, 0, 0);
+//        renderer->AddActor(actorIsosurface);
+//        if (this->ui->isosurface_CB->checkState()) {
+//            actorIsosurface->SetVisibility(true);
+//            qDebug()<<"showing isosurface";
+//        }else{
+//            actorIsosurface->SetVisibility(false);
+//            qDebug()<<"not showing isosurface";
+//        }
         //        }
         
         VTK_CREATE(vtkSmartVolumeMapper,mapperScalar);
@@ -367,6 +687,10 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             mapperScalar->SetInputConnection(0,readerScalar->GetOutputPort(0));
             // mapperScalar->SetLookupTable(tableScalar);
             actorScalar->SetMapper(mapperScalar);
+            
+            if(this->ui->isosurface_CB->isChecked()){
+                drawIsoSurface(readerScalar->GetOutputPort());
+            }
         }
         
         if(this->ui->scalar_CB->checkState()==0 || this->ui->volume_CB->checkState()==0){
@@ -394,7 +718,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         outlineScalarActor->SetVisibility(false);
     }
     
-    if (vectorFile){
+    if (vectorFile && this->ui->vector_CB->isChecked()){
         //Then is the vector part
         readerVectorOrigin->SetFileName(fileNameVector);
         readerVectorOrigin->Update();
@@ -439,16 +763,13 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         glyphVector->SetScaleFactor(this->ui->vectorScale_LE->text().toDouble());
         glyphVector->Update();
         
-        
-        
-        
         mapperVector->SetInputConnection(glyphVector->GetOutputPort());
         mapperVector->SetScalarRange(vector_range);
         mapperVector->SetLookupTable(colorVector);
         
         actorVector->SetMapper(mapperVector);
         
-        if(this->ui->vector_CB->checkState()!=0){
+        if(this->ui->vectorGlyph_CB->checkState()!=0){
             actorVector->SetVisibility(true);
         }else{
             actorVector->SetVisibility(false);
@@ -456,6 +777,22 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         valueRange[0]=vector_range[0];
         valueRange[1]=vector_range[1];
         outlineVector->SetInputConnection(readerVector->GetOutputPort());
+        
+        if(this->ui->streamline_CB->isChecked()){
+            vectorSeed->SetCenter(this->ui->seedCenterX_LE->text().toDouble(), this->ui->seedCenterY_LE->text().toDouble(), this->ui->seedCenterZ_LE->text().toDouble());
+            vectorSeed->SetNumberOfPoints(this->ui->seedNumber_LE->text().toInt());
+            vectorSeed->SetRadius(this->ui->seedRadius_LE->text().toDouble());
+            stream->SetSourceConnection(vectorSeed->GetOutputPort());
+            stream->SetInputConnection(readerVector->GetOutputPort());
+            stream->SetStepLength(this->ui->streamIntStepLength_LE->text().toDouble());
+            stream->SetIntegrationStepLength(this->ui->streamIntStepLength_LE->text().toDouble());
+            stream->SetStepLength(this->ui->streamStepLength_LE->text().toDouble());
+            stream->SetIntegrationDirectionToForward();
+            streamMapper->SetInputConnection(stream->GetOutputPort());
+            actorStream->SetMapper(streamMapper);
+            renderer->AddActor(actorStream);
+        }
+        
     }else{
         outlineVectorActor->SetVisibility(false);
     }
@@ -825,7 +1162,7 @@ void SimpleView::slotOpenFile_scalar()
             this->ui->scalar_Table->setItem(this->ui->scalar_Table->rowCount()-1,2,new QTableWidgetItem(printstatus));
         }
         
-        this->ui->information_Tab->setCurrentIndex(0);
+//        this->ui->information_Tab->setCurrentIndex(0);
         scalarName=(std::to_string(this->ui->scalarChoice->currentIndex()+1)+".vtk").c_str();
         updateVTK(scalarName,vectorName);
         delete this->vtkData;
@@ -910,7 +1247,7 @@ void SimpleView::slotOpenFile_vector()
         }
         this->ui->vectorValueMin_LE->setText("0");
         this->ui->vectorValueMax_LE->setText("10000");
-        this->ui->information_Tab->setCurrentIndex(1);
+//        this->ui->information_Tab->setCurrentIndex(1);
         int index=this->ui->vectorChoice->currentIndex();
         vectorName=(std::to_string(3*index+1)+std::to_string(3*index+2)+std::to_string(3*index+3)+".vtk").c_str();
         
@@ -1114,6 +1451,7 @@ int SimpleView::loadData(QString filedir){
 }
 
 
+
 void SimpleView::on_scalarRange_CB_stateChanged(int state){
     if(state==0){
         this->ui->scalarValueMin_LE->setEnabled(false);
@@ -1126,75 +1464,112 @@ void SimpleView::on_scalarRange_CB_stateChanged(int state){
 void SimpleView::on_RGBAdd_PB_released(){
     QString item;
     int row;
-    if (this->ui->RGBValue_LE->text().isEmpty() |
-        this->ui->RGBR_LE->text().isEmpty() |
-        this->ui->RGBG_LE->text().isEmpty() |
-        this->ui->RGBB_LE->text().isEmpty()){
+    if (this->ui->RGB_Combo->currentIndex()!=3) {
+        if (this->ui->RGBValue_LE->text().isEmpty() |
+            this->ui->RGBR_LE->text().isEmpty() |
+            this->ui->RGBG_LE->text().isEmpty() |
+            this->ui->RGBB_LE->text().isEmpty()){
+        }else{
+            switch (this->ui->RGB_Stack->currentIndex()) {
+                case 0:
+                    row=this->ui->RGBScalar_Table->rowCount();
+                    qDebug()<<row;
+                    this->ui->RGBScalar_Table->insertRow(row);
+                    //      row=row;
+                    item=this->ui->RGBValue_LE->text();
+                    this->ui->RGBScalar_Table->setItem(row,0,new QTableWidgetItem(item));
+                    item=this->ui->RGBR_LE->text();
+                    this->ui->RGBScalar_Table->setItem(row,1,new QTableWidgetItem(item));
+                    item=this->ui->RGBG_LE->text();
+                    this->ui->RGBScalar_Table->setItem(row,2,new QTableWidgetItem(item));
+                    item=this->ui->RGBB_LE->text();
+                    this->ui->RGBScalar_Table->setItem(row,3,new QTableWidgetItem(item));
+                    // item=this->ui->RGBA_LE->text();
+                    // this->ui->RGBScalar_Table->setItem(row,4,new QTableWidgetItem(item));
+                    this->ui->RGBScalar_Table->sortItems(0,Qt::AscendingOrder);
+                    break;
+                    
+                case 1:
+                    row=this->ui->RGBVector_Table->rowCount();
+                    qDebug()<<row;
+                    this->ui->RGBVector_Table->insertRow(row);
+                    //      row=row;
+                    item=this->ui->RGBValue_LE->text();
+                    this->ui->RGBVector_Table->setItem(row,0,new QTableWidgetItem(item));
+                    item=this->ui->RGBR_LE->text();
+                    this->ui->RGBVector_Table->setItem(row,1,new QTableWidgetItem(item));
+                    item=this->ui->RGBG_LE->text();
+                    this->ui->RGBVector_Table->setItem(row,2,new QTableWidgetItem(item));
+                    item=this->ui->RGBB_LE->text();
+                    this->ui->RGBVector_Table->setItem(row,3,new QTableWidgetItem(item));
+                    // item=this->ui->RGBA_LE->text();
+                    // this->ui->RGBVector_Table->setItem(row,4,new QTableWidgetItem(item));
+                    this->ui->RGBVector_Table->sortItems(0,Qt::AscendingOrder);
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+        }
     }else{
-        if (this->ui->RGB_Stack->currentIndex()==0){
-            row=this->ui->RGBScalar_Table->rowCount();
-            qDebug()<<row;
-            this->ui->RGBScalar_Table->insertRow(row);
-            //      row=row;
-            item=this->ui->RGBValue_LE->text();
-            this->ui->RGBScalar_Table->setItem(row,0,new QTableWidgetItem(item));
-            item=this->ui->RGBR_LE->text();
-            this->ui->RGBScalar_Table->setItem(row,1,new QTableWidgetItem(item));
-            item=this->ui->RGBG_LE->text();
-            this->ui->RGBScalar_Table->setItem(row,2,new QTableWidgetItem(item));
-            item=this->ui->RGBB_LE->text();
-            this->ui->RGBScalar_Table->setItem(row,3,new QTableWidgetItem(item));
-            // item=this->ui->RGBA_LE->text();
-            // this->ui->RGBScalar_Table->setItem(row,4,new QTableWidgetItem(item));
-            this->ui->RGBScalar_Table->sortItems(0,Qt::AscendingOrder);
-        }else if (this->ui->RGB_Stack->currentIndex()==1){
-            row=this->ui->RGBVector_Table->rowCount();
-            qDebug()<<row;
-            this->ui->RGBVector_Table->insertRow(row);
-            //      row=row;
-            item=this->ui->RGBValue_LE->text();
-            this->ui->RGBVector_Table->setItem(row,0,new QTableWidgetItem(item));
-            item=this->ui->RGBR_LE->text();
-            this->ui->RGBVector_Table->setItem(row,1,new QTableWidgetItem(item));
-            item=this->ui->RGBG_LE->text();
-            this->ui->RGBVector_Table->setItem(row,2,new QTableWidgetItem(item));
-            item=this->ui->RGBB_LE->text();
-            this->ui->RGBVector_Table->setItem(row,3,new QTableWidgetItem(item));
-            // item=this->ui->RGBA_LE->text();
-            // this->ui->RGBVector_Table->setItem(row,4,new QTableWidgetItem(item));
-            this->ui->RGBVector_Table->sortItems(0,Qt::AscendingOrder);
-        }else if (this->ui->RGB_Stack->currentIndex()==2){
+        if ((this->ui->isoValue_Combo->count()<=0) |
+            this->ui->RGBR_LE->text().isEmpty() |
+            this->ui->RGBG_LE->text().isEmpty() |
+            this->ui->RGBB_LE->text().isEmpty()){
+        }else{
             row=this->ui->RGBIso_Table->rowCount();
             qDebug()<<row;
-            this->ui->RGBIso_Table->insertRow(row);
-            //      row=row;
-            item=this->ui->RGBValue_LE->text();
-            this->ui->RGBIso_Table->setItem(row,0,new QTableWidgetItem(item));
-            item=this->ui->RGBR_LE->text();
-            this->ui->RGBIso_Table->setItem(row,1,new QTableWidgetItem(item));
-            item=this->ui->RGBG_LE->text();
-            this->ui->RGBIso_Table->setItem(row,2,new QTableWidgetItem(item));
-            item=this->ui->RGBB_LE->text();
-            this->ui->RGBIso_Table->setItem(row,3,new QTableWidgetItem(item));
-            // item=this->ui->RGBA_LE->text();
-            // this->ui->RGBScalar_Table->setItem(row,4,new QTableWidgetItem(item));
-            this->ui->RGBIso_Table->sortItems(0,Qt::AscendingOrder);
+            item=this->ui->isoValue_Combo->currentText();
+            bool notExist=true;
+            for (int i=0; i<this->ui->RGBIso_Table->rowCount(); i++) {
+                if(this->ui->RGBIso_Table->item(i, 0)->text()==item){
+                    notExist=false;
+                }
+            }
+            if (notExist) {
+                this->ui->RGBIso_Table->insertRow(row);
+                //      row=row;
+                
+                this->ui->RGBIso_Table->setItem(row,0,new QTableWidgetItem(item));
+                item=this->ui->RGBR_LE->text();
+                this->ui->RGBIso_Table->setItem(row,1,new QTableWidgetItem(item));
+                item=this->ui->RGBG_LE->text();
+                this->ui->RGBIso_Table->setItem(row,2,new QTableWidgetItem(item));
+                item=this->ui->RGBB_LE->text();
+                this->ui->RGBIso_Table->setItem(row,3,new QTableWidgetItem(item));
+                // item=this->ui->RGBA_LE->text();
+                // this->ui->RGBScalar_Table->setItem(row,4,new QTableWidgetItem(item));
+                this->ui->RGBIso_Table->sortItems(0,Qt::AscendingOrder);
+            }
+            
         }
         
     }
-    
 }
 
 void SimpleView::on_RGBDelete_PB_released(){
-    if (this->ui->RGB_Stack->currentIndex()==0){
-        this->ui->RGBScalar_Table->removeRow(this->ui->RGBScalar_Table->currentRow());
-    }else if (this->ui->RGB_Stack->currentIndex()==1){
-        this->ui->RGBVector_Table->removeRow(this->ui->RGBVector_Table->currentRow());
+    switch (this->ui->RGB_Stack->currentIndex()) {
+        case 0:
+            this->ui->RGBScalar_Table->removeRow(this->ui->RGBScalar_Table->currentRow());
+            break;
+        case 1:
+            this->ui->RGBVector_Table->removeRow(this->ui->RGBVector_Table->currentRow());
+            break;
+        case 2:{
+            int row=this->ui->RGBIso_Table->currentRow();
+            this->ui->RGBIso_Table->removeRow(row);
+            break;
+        }
+        default:
+            break;
     }
 }
 
 void SimpleView::on_RGB_Combo_currentIndexChanged(int index){
     if (index==0){
+        this->ui->RGBIso_SW->setCurrentIndex(0);
+        this->ui->RGBIso_SW->setEnabled(false);
         this->ui->RGBValue_LE->setEnabled(false);
         this->ui->RGBR_LE->setEnabled(false);
         this->ui->RGBG_LE->setEnabled(false);
@@ -1204,24 +1579,49 @@ void SimpleView::on_RGB_Combo_currentIndexChanged(int index){
         this->ui->RGBVector_Table->setEnabled(false);
         this->ui->RGBIso_Table->setEnabled(false);
         this->ui->RGB_Stack->setEnabled(false);
+        this->ui->isoValue_Combo->setEnabled(false);
     }else{
-        this->ui->RGBValue_LE->setEnabled(true);
-        this->ui->RGBR_LE->setEnabled(true);
-        this->ui->RGBG_LE->setEnabled(true);
-        this->ui->RGBB_LE->setEnabled(true);
-        // this->ui->RGBA_LE->setEnabled(true);
-        this->ui->RGBScalar_Table->setEnabled(true);
-        this->ui->RGBVector_Table->setEnabled(true);
-        this->ui->RGBIso_Table->setEnabled(true);
-        this->ui->RGB_Stack->setEnabled(true);
-        if(index==1){
-            this->ui->RGB_Stack->setCurrentIndex(0);
-        }else if(index==2){
-            this->ui->RGB_Stack->setCurrentIndex(1);
-        }else if (index==3){
+        if (index!=3) {
+            this->ui->RGBIso_SW->setEnabled(true);
+            this->ui->RGBIso_SW->setCurrentIndex(0);
+            this->ui->RGBValue_LE->setEnabled(true);
+            this->ui->RGBR_LE->setEnabled(true);
+            this->ui->RGBG_LE->setEnabled(true);
+            this->ui->RGBB_LE->setEnabled(true);
+            // this->ui->RGBA_LE->setEnabled(true);
+            this->ui->RGBScalar_Table->setEnabled(true);
+            this->ui->RGBVector_Table->setEnabled(true);
+            
+            this->ui->RGB_Stack->setEnabled(true);
+            if(index==1){
+                this->ui->RGB_Stack->setCurrentIndex(0);
+            }else if(index==2){
+                this->ui->RGB_Stack->setCurrentIndex(1);
+            }
+        }else{
+            this->ui->RGBIso_SW->setEnabled(true);
             this->ui->RGB_Stack->setCurrentIndex(2);
+            this->ui->RGBIso_SW->setCurrentIndex(1);
+            if (this->ui->isosurface_CB->isChecked()) {
+                this->ui->isoValue_Combo->setEnabled(true);
+                this->ui->RGBR_LE->setEnabled(true);
+                this->ui->RGBG_LE->setEnabled(true);
+                this->ui->RGBB_LE->setEnabled(true);
+                this->ui->RGBIso_Table->setEnabled(true);
+                this->ui->RGB_Stack->setEnabled(true);
+            }else{
+                this->ui->isoValue_Combo->setEnabled(false);
+                this->ui->RGBR_LE->setEnabled(false);
+                this->ui->RGBG_LE->setEnabled(false);
+                this->ui->RGBB_LE->setEnabled(false);
+                this->ui->RGBIso_Table->setEnabled(false);
+                this->ui->RGB_Stack->setEnabled(false);
+            }
         }
+        
+
     }
+    
 }
 
 void SimpleView::on_alpha_Combo_currentIndexChanged(int index){
@@ -1542,7 +1942,7 @@ void SimpleView::slotOpenFile_domain(){
             printstatus = QString::fromStdString(std::to_string(getAvg(dataHold,rows)));
             this->ui->domain_Table->setItem(this->ui->domain_Table->rowCount()-1,2,new QTableWidgetItem(printstatus));
         }
-        this->ui->information_Tab->setCurrentIndex(2);
+//        this->ui->information_Tab->setCurrentIndex(2);
         qDebug()<<"before vtk part";
         drawDomain("domain.vtk");
         delete this->vtkData;
@@ -1719,24 +2119,27 @@ void SimpleView::saveImage(){
     filedialog.setAcceptMode(QFileDialog::AcceptSave);
     filedialog.setDefaultSuffix("png");
     QString load=filedialog.getSaveFileName(0,tr("Save file"),0,tr("Images (*.png)"));
+    qDebug()<<load;
+    if(this->ui->stackedWidget->currentIndex()==0){
+        VTK_CREATE(vtkWindowToImageFilter, windowToImage);
+        windowToImage->SetInput(this->ui->qvtkWidget->GetRenderWindow());
+        windowToImage->SetMagnification(5);
+        windowToImage->SetInputBufferTypeToRGBA();
+        windowToImage->FixBoundaryOff();
+        windowToImage->ReadFrontBufferOn();
+        windowToImage->Update();
+        VTK_CREATE(vtkPNGWriter, writer);
+        writer->SetFileName(load.toStdString().c_str());
+        writer->SetInputConnection(windowToImage->GetOutputPort());
+        this->ui->qvtkWidget->GetRenderWindow()->Render();
+        windowToImage->Modified();
+        writer->Write();
+        this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCamera();
+        this->ui->qvtkWidget->GetRenderWindow()->Render();
+    }else{
+        this->ui->customPlot->savePng(load);
+    }
     
-    
-    
-    VTK_CREATE(vtkWindowToImageFilter, windowToImage);
-    windowToImage->SetInput(this->ui->qvtkWidget->GetRenderWindow());
-    windowToImage->SetMagnification(3);
-    windowToImage->SetInputBufferTypeToRGBA();
-    windowToImage->FixBoundaryOff();
-    windowToImage->ReadFrontBufferOn();
-    windowToImage->Update();
-    VTK_CREATE(vtkPNGWriter, writer);
-    writer->SetFileName(load.toStdString().c_str());
-    writer->SetInputConnection(windowToImage->GetOutputPort());
-    this->ui->qvtkWidget->GetRenderWindow()->Render();
-    windowToImage->Modified();
-    writer->Write();
-    this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->ResetCamera();
-    this->ui->qvtkWidget->GetRenderWindow()->Render();
 }
 
 void SimpleView::slotUpdateCamera1(){
@@ -1836,4 +2239,392 @@ void SimpleView::updateExtraction(int x,int y, int z){
     this->ui->xmax_LE->setText(QString::fromStdString(std::to_string(xmaxAll)));
     this->ui->ymax_LE->setText(QString::fromStdString(std::to_string(ymaxAll)));
     this->ui->zmax_LE->setText(QString::fromStdString(std::to_string(zmaxAll)));
+}
+
+
+
+
+
+
+void SimpleView::on_plot1DGeneral_LW_currentRowChanged(int index){
+    this->ui->plot1DGeneral_SW->setCurrentIndex(index);
+}
+
+void SimpleView::on_plot1DXGrid_CB_stateChanged(int state){
+    qDebug()<<state;
+    if (state) {
+        this->ui->customPlot->xAxis->grid()->setVisible(true);
+    }else{
+        this->ui->customPlot->xAxis->grid()->setVisible(false);
+    }
+    this->ui->customPlot->replot();
+}
+
+void SimpleView::on_plot1DYGrid_CB_stateChanged(int state){
+    qDebug()<<state;
+    if (state) {
+        this->ui->customPlot->yAxis->grid()->setVisible(true);
+    }else{
+        this->ui->customPlot->yAxis->grid()->setVisible(false);
+    }
+    this->ui->customPlot->replot();
+}
+
+void SimpleView::on_plot1DAutoTickX1_CB_stateChanged(int state){
+    qDebug()<<state;
+    if (state) {
+        this->ui->plot1DTickValueX1_LE->setEnabled(false);
+        this->ui->plot1DTickLabelX1_LE->setEnabled(false);
+    }else{
+        this->ui->plot1DTickValueX1_LE->setEnabled(true);
+        this->ui->plot1DTickLabelX1_LE->setEnabled(true);
+    }
+}
+
+void SimpleView::on_plot1DAutoTickX2_CB_stateChanged(int state){
+    qDebug()<<state;
+    if (state) {
+        this->ui->plot1DTickValueX2_LE->setEnabled(false);
+        this->ui->plot1DTickLabelX2_LE->setEnabled(false);
+    }else{
+        this->ui->plot1DTickValueX2_LE->setEnabled(true);
+        this->ui->plot1DTickLabelX2_LE->setEnabled(true);
+    }
+}
+
+void SimpleView::on_plot1DAutoTickY1_CB_stateChanged(int state){
+    qDebug()<<state;
+    if (state) {
+        this->ui->plot1DTickValueY1_LE->setEnabled(false);
+        this->ui->plot1DTickLabelY1_LE->setEnabled(false);
+    }else{
+        this->ui->plot1DTickValueY1_LE->setEnabled(true);
+        this->ui->plot1DTickLabelY1_LE->setEnabled(true);
+    }
+}
+
+void SimpleView::on_plot1DAutoTickY2_CB_stateChanged(int state){
+    qDebug()<<state;
+    if (state) {
+        this->ui->plot1DTickValueY2_LE->setEnabled(false);
+        this->ui->plot1DTickLabelY2_LE->setEnabled(false);
+    }else{
+        this->ui->plot1DTickValueY2_LE->setEnabled(true);
+        this->ui->plot1DTickLabelY2_LE->setEnabled(true);
+    }
+}
+
+void SimpleView::on_plot1DAxisX1_CB_stateChanged(int state){
+    qDebug()<<state;
+    if (state) {
+        this->ui->customPlot->xAxis->setVisible(true);
+        this->ui->plot1DAutoTickX1_CB->setEnabled(true);
+        this->ui->plot1DRangeMaxX1_LE->setEnabled(true);
+        this->ui->plot1DRangeMinX1_LE->setEnabled(true);
+        this->ui->plot1DLabelX1_LE->setEnabled(true);
+        this->ui->plot1DTickLabelX1_CB->setEnabled(true);
+    }else{
+        this->ui->customPlot->xAxis->setVisible(false);
+        this->ui->plot1DAutoTickX1_CB->setEnabled(false);
+        this->ui->plot1DRangeMaxX1_LE->setEnabled(false);
+        this->ui->plot1DRangeMinX1_LE->setEnabled(false);
+        this->ui->plot1DLabelX1_LE->setEnabled(false);
+        this->ui->plot1DTickLabelX1_CB->setEnabled(false);
+
+    }
+    this->ui->customPlot->replot();
+}
+
+
+void SimpleView::on_plot1DAxisX2_CB_stateChanged(int state){
+    qDebug()<<state;
+    if (state) {
+        this->ui->customPlot->xAxis2->setVisible(true);
+        this->ui->plot1DAutoTickX2_CB->setEnabled(true);
+        this->ui->plot1DRangeMaxX2_LE->setEnabled(true);
+        this->ui->plot1DRangeMinX2_LE->setEnabled(true);
+        this->ui->plot1DLabelX2_LE->setEnabled(true);
+        this->ui->plot1DTickLabelX2_CB->setEnabled(true);
+
+    }else{
+        this->ui->customPlot->xAxis2->setVisible(false);
+        this->ui->plot1DAutoTickX2_CB->setEnabled(false);
+        this->ui->plot1DRangeMaxX2_LE->setEnabled(false);
+        this->ui->plot1DRangeMinX2_LE->setEnabled(false);
+        this->ui->plot1DLabelX2_LE->setEnabled(false);
+        this->ui->plot1DTickLabelX2_CB->setEnabled(false);
+
+    }
+    this->ui->customPlot->replot();
+}
+
+void SimpleView::on_plot1DAxisY1_CB_stateChanged(int state){
+    qDebug()<<state;
+    if (state) {
+        this->ui->customPlot->yAxis->setVisible(true);
+        this->ui->plot1DAutoTickY1_CB->setEnabled(true);
+        this->ui->plot1DRangeMaxY1_LE->setEnabled(true);
+        this->ui->plot1DRangeMinY1_LE->setEnabled(true);
+        this->ui->plot1DLabelY1_LE->setEnabled(true);
+        this->ui->plot1DTickLabelY1_CB->setEnabled(true);
+
+    }else{
+        this->ui->customPlot->yAxis->setVisible(false);
+        this->ui->plot1DAutoTickY1_CB->setEnabled(false);
+        this->ui->plot1DRangeMaxY1_LE->setEnabled(false);
+        this->ui->plot1DRangeMinY1_LE->setEnabled(false);
+        this->ui->plot1DLabelY1_LE->setEnabled(false);
+        this->ui->plot1DTickLabelY1_CB->setEnabled(false);
+
+    }
+    this->ui->customPlot->replot();
+}
+
+void SimpleView::on_plot1DAxisY2_CB_stateChanged(int state){
+    qDebug()<<state;
+    if (state) {
+        this->ui->customPlot->yAxis2->setVisible(true);
+        this->ui->plot1DAutoTickY2_CB->setEnabled(true);
+        this->ui->plot1DRangeMaxY2_LE->setEnabled(true);
+        this->ui->plot1DRangeMinY2_LE->setEnabled(true);
+        this->ui->plot1DLabelY2_LE->setEnabled(true);
+        this->ui->plot1DTickLabelY2_CB->setEnabled(true);
+
+    }else{
+        this->ui->customPlot->yAxis2->setVisible(false);
+        this->ui->plot1DAutoTickY2_CB->setEnabled(false);
+        this->ui->plot1DRangeMaxY2_LE->setEnabled(false);
+        this->ui->plot1DRangeMinY2_LE->setEnabled(false);
+        this->ui->plot1DLabelY2_LE->setEnabled(false);
+        this->ui->plot1DTickLabelY2_CB->setEnabled(false);
+
+    }
+    this->ui->customPlot->replot();
+}
+
+void SimpleView::on_plot1DTickLabelX1_CB_stateChanged(int state){
+    if(state){
+        this->ui->customPlot->xAxis->setTickLabels(true);
+    }else{
+        this->ui->customPlot->xAxis->setTickLabels(false);
+    }
+    this->ui->customPlot->replot();
+}
+
+void SimpleView::on_plot1DTickLabelY1_CB_stateChanged(int state){
+    if(state){
+        this->ui->customPlot->yAxis->setTickLabels(true);
+    }else{
+        this->ui->customPlot->yAxis->setTickLabels(false);
+    }
+    this->ui->customPlot->replot();
+}
+
+void SimpleView::on_plot1DTickLabelX2_CB_stateChanged(int state){
+    if(state){
+        this->ui->customPlot->xAxis2->setTickLabels(true);
+    }else{
+        this->ui->customPlot->xAxis2->setTickLabels(false);
+    }
+    this->ui->customPlot->replot();
+}
+
+void SimpleView::on_plot1DTickLabelY2_CB_stateChanged(int state){
+    if(state){
+        this->ui->customPlot->yAxis2->setTickLabels(true);
+    }else{
+        this->ui->customPlot->yAxis2->setTickLabels(false);
+    }
+    this->ui->customPlot->replot();
+}
+
+void SimpleView::on_plot1DLegend_CB_stateChanged(int state){
+    if(state){
+        this->ui->customPlot->legend->setVisible(true);
+        this->ui->plot1DLegendX_LE->setEnabled(true);
+        this->ui->plot1DLegendY_LE->setEnabled(true);
+        this->ui->plot1DLegendW_LE->setEnabled(true);
+        this->ui->plot1DLegendH_LE->setEnabled(true);
+        this->ui->plot1DLegendX_LB->setEnabled(true);
+        this->ui->plot1DLegendY_LB->setEnabled(true);
+        this->ui->plot1DLegendW_LB->setEnabled(true);
+        this->ui->plot1DLegendH_LB->setEnabled(true);
+        int x=this->ui->plot1DLegendX_LE->text().toDouble();
+        int y=this->ui->plot1DLegendY_LE->text().toDouble();
+        int w=this->ui->plot1DLegendW_LE->text().toDouble();
+        int h=this->ui->plot1DLegendH_LE->text().toDouble();
+        this->ui->customPlot->legend->setOuterRect(QRect(x, y, w, h));
+    }else{
+        this->ui->customPlot->legend->setVisible(false);
+        this->ui->plot1DLegendX_LE->setEnabled(false);
+        this->ui->plot1DLegendY_LE->setEnabled(false);
+        this->ui->plot1DLegendW_LE->setEnabled(false);
+        this->ui->plot1DLegendH_LE->setEnabled(false);
+        this->ui->plot1DLegendX_LB->setEnabled(false);
+        this->ui->plot1DLegendY_LB->setEnabled(false);
+        this->ui->plot1DLegendW_LB->setEnabled(false);
+        this->ui->plot1DLegendH_LB->setEnabled(false);
+    }
+    this->ui->customPlot->replot();
+}
+
+void SimpleView::on_plot1DFont_CB_stateChanged(int state){
+    qDebug()<<"font CB"<<state;
+    if(!state){
+        this->ui->plot1DFont_fontComboBox->setEnabled(true);
+        this->ui->plot1DTitleFontSize_LE->setEnabled(true);
+        this->ui->plot1DAxisFontSize_LE->setEnabled(true);
+        this->ui->plot1DTickFontSize_LE->setEnabled(true);
+        this->ui->plot1DLegendFontSize_LE->setEnabled(true);
+        this->ui->plot1DTitleFontSize_LB->setEnabled(true);
+        this->ui->plot1DAxisFontSize_LB->setEnabled(true);
+        this->ui->plot1DTickFontSize_LB->setEnabled(true);
+        this->ui->plot1DLegendFontSize_LB->setEnabled(true);
+    }else{
+        this->ui->plot1DFont_fontComboBox->setEnabled(false);
+        this->ui->plot1DTitleFontSize_LE->setEnabled(false);
+        this->ui->plot1DAxisFontSize_LE->setEnabled(false);
+        this->ui->plot1DTickFontSize_LE->setEnabled(false);
+        this->ui->plot1DLegendFontSize_LE->setEnabled(false);
+        this->ui->plot1DTitleFontSize_LB->setEnabled(false);
+        this->ui->plot1DAxisFontSize_LB->setEnabled(false);
+        this->ui->plot1DTickFontSize_LB->setEnabled(false);
+        this->ui->plot1DLegendFontSize_LB->setEnabled(false);
+    }
+}
+
+void SimpleView::on_isosurface_CB_stateChanged(int state){
+    if(state){
+        this->ui->isoValue_LE->setEnabled(true);
+        this->ui->isoValue_LB->setEnabled(true);
+        this->ui->isoAdd_PB->setEnabled(true);
+        this->ui->isoDelete_PB->setEnabled(true);
+        this->ui->isosurface_LW->setEnabled(true);
+        
+    }else{
+        this->ui->isoValue_LE->setEnabled(false);
+        this->ui->isoValue_LB->setEnabled(false);
+        this->ui->isoAdd_PB->setEnabled(false);
+        this->ui->isoDelete_PB->setEnabled(false);
+        this->ui->isosurface_LW->setEnabled(false);
+    }
+    int index=this->ui->RGB_Combo->currentIndex();
+    
+    if (index==3){
+        this->ui->RGBIso_SW->setEnabled(true);
+        if (this->ui->isosurface_CB->isChecked()) {
+            this->ui->isoValue_Combo->setEnabled(true);
+            this->ui->RGBValue_LE->setEnabled(true);
+            this->ui->RGBR_LE->setEnabled(true);
+            this->ui->RGBG_LE->setEnabled(true);
+            this->ui->RGBB_LE->setEnabled(true);
+            this->ui->RGBIso_Table->setEnabled(true);
+            this->ui->RGB_Stack->setEnabled(true);
+        }else{
+            this->ui->isoValue_Combo->setEnabled(false);
+            this->ui->RGBValue_LE->setEnabled(false);
+            this->ui->RGBR_LE->setEnabled(false);
+            this->ui->RGBG_LE->setEnabled(false);
+            this->ui->RGBB_LE->setEnabled(false);
+            this->ui->RGBIso_Table->setEnabled(false);
+            this->ui->RGB_Stack->setEnabled(false);
+        }
+    }
+
+}
+
+void SimpleView::on_isoAdd_PB_released(){
+    if (!this->ui->isoValue_LE->text().isEmpty()) {
+        QList<QListWidgetItem *> item=this->ui->isosurface_LW->findItems(this->ui->isoValue_LE->text(), Qt::MatchExactly);
+        if (item.size()==0) {
+            actorIso.push_back(vtkActor::New());
+            int row=this->ui->isosurface_LW->count();
+            QString text=this->ui->isoValue_LE->text();
+            this->ui->isosurface_LW->insertItem(row, text);
+            this->ui->isosurface_LW->item(row)->setFlags(this->ui->isosurface_LW->item(row)->flags() | Qt::ItemIsUserCheckable);
+            this->ui->isosurface_LW->item(row)->setCheckState(Qt::Checked);
+            this->ui->isoValue_Combo->addItem(text);
+        }
+    }
+}
+
+void SimpleView::on_isosurface_LW_itemChanged(QListWidgetItem *item){
+    int i=0;
+    i=this->ui->isosurface_LW->row(item);
+    if(item->checkState()){
+        actorIso[i]->SetVisibility(true);
+    }else{
+        actorIso[i]->SetVisibility(false);
+    }
+    this->ui->qvtkWidget->GetRenderWindow()->Render();
+}
+
+
+void SimpleView::on_isoDelete_PB_released(){
+    if (this->ui->isosurface_LW->selectedItems().count()>0) {
+        this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->RemoveActor(actorIso[this->ui->isosurface_LW->currentRow()]);
+        actorIso.removeAt(this->ui->isosurface_LW->currentRow());
+        QString text=this->ui->isosurface_LW->currentItem()->text();
+        int comboRow=this->ui->isoValue_Combo->findText(text);
+        this->ui->isosurface_LW->takeItem(this->ui->isosurface_LW->currentRow());
+        this->ui->isoValue_Combo->removeItem(comboRow);
+        QList<QTableWidgetItem*> item=this->ui->RGBIso_Table->findItems(text, Qt::MatchExactly);
+        for (int i=0; i<item.size(); i++) {
+            if(this->ui->RGBIso_Table->column(item[i])==0){
+                this->ui->RGBIso_Table->removeRow(this->ui->RGBIso_Table->row(item[i]));
+                break;
+            }else{
+                continue;
+            }
+        }
+    }
+    qDebug()<<"check iso"<<actorIso.count()<<this->ui->isosurface_LW->count();
+    this->ui->qvtkWidget->GetRenderWindow()->Render();
+
+}
+
+void SimpleView::drawIsoSurface(vtkAlgorithmOutput * readerScalarPort){
+    VTK_CREATE(vtkRenderer, isoRenderer);
+//    if (this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems()==0){
+//        this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(isoRenderer);
+//    }else{
+        isoRenderer=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
+//    }
+    int contourNum=0;
+    contourNum=this->ui->isosurface_LW->count();
+    
+    for (int i=0; i<contourNum; i++) {
+        VTK_CREATE(vtkMarchingCubes, contour);
+        VTK_CREATE(vtkDataSetMapper, contourMapper);
+        contour->SetInputConnection(readerScalarPort);
+        contour->SetValue(0,this->ui->isosurface_LW->item(i)->text().toDouble());
+        contour->ComputeNormalsOn();
+        contourMapper->SetInputConnection(contour->GetOutputPort());
+        actorIso[i]->SetMapper(contourMapper);
+        qDebug()<<"actorISo:"<<i;
+        isoRenderer->RemoveActor(actorIso[i]);
+        isoRenderer->AddActor(actorIso[i]);
+        qDebug()<<"isorenderer:"<<isoRenderer->GetNumberOfPropsRendered();
+    }
+    
+    for (int i=0; i<this->ui->RGBIso_Table->rowCount(); i++) {
+        int isoNum=this->ui->isosurface_LW->row(this->ui->isosurface_LW->findItems(this->ui->RGBIso_Table->item(i, 0)->text(), Qt::MatchExactly).first());
+        double r=this->ui->RGBIso_Table->item(i, 1)->text().toDouble();
+        double g=this->ui->RGBIso_Table->item(i, 2)->text().toDouble();
+        double b=this->ui->RGBIso_Table->item(i, 3)->text().toDouble();
+        qDebug()<<"rgbisonum:"<<isoNum<<r<<g<<b<<actorIso.size();
+        actorIso[isoNum]->GetMapper()->ScalarVisibilityOff();
+        actorIso[isoNum]->GetProperty()->SetColor(r, g, b);
+        //        actorIso[isoNum]->GetProperty()->SetRepresentationToSurface();
+    }
+
+    
+
+    if(!reset){isoRenderer->SetActiveCamera(camera);}
+    
+    this->ui->qvtkWidget->GetRenderWindow()->Render();
+    
+    camera=isoRenderer->GetActiveCamera();
+    reset=false;
+
 }

@@ -16,6 +16,7 @@
 #define SimpleView_H
 
 #include "vtkSmartPointer.h"    // Required for smart pointer internal ivars.
+#include <vtkQtTableView.h>
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QFile>
@@ -30,6 +31,8 @@
 #include <vtkScalarBarActor.h>
 #include <vtkActor.h>
 #include <vtkVolume.h>
+#include <vtkExtractVOI.h>
+#include <vtkStreamLine.h>
 #include "qcustomplot.h"
 
 #include <QDesktopWidget>
@@ -69,6 +72,9 @@ public:
     virtual void slotUpdateCamera4();
     virtual void slotUpdateCamera5();
     virtual void slotUpdateCamera6();
+    
+    void figurePlot();
+    
     void on_scalarChoice_currentIndexChanged(int index);
     void on_vectorChoice_activated(int index);
     void on_axis_CB_stateChanged(int state);
@@ -113,15 +119,37 @@ public:
     void slotSwitch1D();
     void setup1DFigure(QCustomPlot *customPlot);
     
-    
-    
+
+
+    void on_plot1DGeneral_LW_currentRowChanged(int index);
+    void on_plot1DXGrid_CB_stateChanged(int state);
+    void on_plot1DYGrid_CB_stateChanged(int state);
+    void on_plot1DAutoTickX1_CB_stateChanged(int state);
+    void on_plot1DAutoTickX2_CB_stateChanged(int state);
+    void on_plot1DAutoTickY1_CB_stateChanged(int state);
+    void on_plot1DAutoTickY2_CB_stateChanged(int state);
+    void on_plot1DAxisX1_CB_stateChanged(int state);
+    void on_plot1DAxisX2_CB_stateChanged(int state);
+    void on_plot1DAxisY1_CB_stateChanged(int state);
+    void on_plot1DAxisY2_CB_stateChanged(int state);
+    void on_plot1DTickLabelX1_CB_stateChanged(int state);
+    void on_plot1DTickLabelY1_CB_stateChanged(int state);
+    void on_plot1DTickLabelX2_CB_stateChanged(int state);
+    void on_plot1DTickLabelY2_CB_stateChanged(int state);
+    void on_plot1DLegend_CB_stateChanged(int state);
+    void on_plot1DFont_CB_stateChanged(int state);
+    void on_isosurface_CB_stateChanged(int state);
+    void on_isoAdd_PB_released();
+    void on_isoDelete_PB_released();
+    void drawIsoSurface(vtkAlgorithmOutput * readerScalarPort);
+    void on_isosurface_LW_itemChanged(QListWidgetItem *item);
 protected:
     
     protected slots:
     
 private:
     
-    vtkSmartPointer<vtkQtTableView>         TableView;
+    vtkSmartPointer<vtkQtTableView> TableView= vtkSmartPointer<vtkQtTableView>::New();
     int columns;
     std::string scalarName,vectorName;
     // Designer form
@@ -146,8 +174,16 @@ private:
 //    vtkSmartPointer<vtkActor> actorCutter = vtkSmartPointer<vtkActor>::New();
     vtkActor *actorCutter = vtkActor::New();
     vtkActor *actorVector = vtkActor::New();
+    vtkActor *actorStream = vtkActor::New();
     vtkVolume *actorScalar = vtkVolume::New();
     std::vector<vtkActor *> actorDomain;
+    QVector<vtkActor*> actorIso;
+    QVector<Qt::PenStyle> lineStyleList;
+    QVector<QCPScatterStyle> scatterStyle;
+    QVector<QPen> lineStyle;
+    QVector< QVector<double> > rgbWidth;
+    QVector<QCPScatterStyle::ScatterShape> scatterStyleList;
+    
 
 };
 
