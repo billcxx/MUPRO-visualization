@@ -107,6 +107,7 @@ SimpleView::SimpleView()
     
     for(int nr = 0; nr < 27; nr++){
         actorDomain.push_back(vtkActor::New());
+        existDomain.push_back(false);
     }
     this->ui->qvtkWidget->setAutomaticImageCacheEnabled(1);
     VTK_CREATE(vtkTransform,transform);
@@ -149,6 +150,48 @@ SimpleView::SimpleView()
     }
     scatterStyle<<QCPScatterStyle::ssNone<<QCPScatterStyle::ssDot <<QCPScatterStyle::ssCross<<QCPScatterStyle::ssPlus<<QCPScatterStyle::ssCircle<<QCPScatterStyle::ssDisc<<QCPScatterStyle::ssSquare<<QCPScatterStyle::ssDiamond<<QCPScatterStyle::ssStar<<QCPScatterStyle::ssTriangle<<QCPScatterStyle::ssTriangleInverted<<QCPScatterStyle::ssCrossSquare<<QCPScatterStyle::ssPlusSquare<<QCPScatterStyle::ssCrossCircle<<QCPScatterStyle::ssPlusCircle;
     lineStyleList<<Qt::PenStyle::SolidLine<<Qt::PenStyle::DashLine<<Qt::PenStyle::DotLine<<Qt::PenStyle::DashDotLine<<Qt::PenStyle::DashDotDotLine;
+    
+    
+    double** domainRGB;
+    
+    domainRGB=new double*[27];
+    for (int i=0;i<27;++i){
+        domainRGB[i] = new double[3];
+    }
+    domainRGB[0][0]=0.752912;domainRGB[0][1]=0.752912;domainRGB[0][2]=0.752912; //sub
+    domainRGB[1][0]=0;domainRGB[1][1]=0;domainRGB[1][2]=1;  //R1+
+    domainRGB[2][0]=0.46;domainRGB[2][1]=0.7175;domainRGB[2][2]=0.8135; //R1-
+    domainRGB[3][0]=0;domainRGB[2][1]=0.1537870;domainRGB[3][2]=0.0; //R2+
+    domainRGB[4][0]=0;domainRGB[4][1]=1;domainRGB[4][2]=0; //R2-
+    domainRGB[5][0]=1;domainRGB[5][1]=0;domainRGB[5][2]=0; //R3+
+    domainRGB[6][0]=1;domainRGB[6][1]=0.566921;domainRGB[6][2]=0.633741; //R3-
+    domainRGB[7][0]=1;domainRGB[7][1]=0.418685;domainRGB[7][2]=0; //R4+
+    domainRGB[8][0]=1;domainRGB[8][1]=1;domainRGB[8][2]=0; //R4-
+    domainRGB[9][0]=1;domainRGB[9][1]=0;domainRGB[9][2]=1; //O1+
+    domainRGB[10][0]=0.64629;domainRGB[10][1]=0.130165;domainRGB[10][2]=0.130165; //O1-
+    domainRGB[11][0]=0.9;domainRGB[11][1]=0.566921;domainRGB[11][2]=0.633741; //O2+
+    domainRGB[12][0]=0.751111;domainRGB[12][1]=0.393695;domainRGB[12][2]=0.751111; //O2-
+    domainRGB[13][0]=0.418685;domainRGB[13][1]=0.027128;domainRGB[13][2]=0.027128; //O3+
+    domainRGB[14][0]=0.678201;domainRGB[14][1]=0.498270;domainRGB[14][2]=0.301423; //O3-
+    domainRGB[15][0]=0.476371;domainRGB[15][1]=0.035432;domainRGB[15][2]=0.14173; //O4+
+    domainRGB[16][0]=0.961169;domainRGB[16][1]=0.251965;domainRGB[16][2]=0.199862; //O4-
+    domainRGB[17][0]=0.355309;domainRGB[17][1]=0.968874;domainRGB[17][2]=0.355309; //O5+
+    domainRGB[18][0]=0.038446;domainRGB[18][1]=0.646290;domainRGB[18][2]=0.038446; //O5-
+    domainRGB[19][0]=0.766921;domainRGB[19][1]=0.766921;domainRGB[19][2]=0.766921; //O6+
+    domainRGB[20][0]=0.169550;domainRGB[20][1]=0.169550;domainRGB[20][2]=0.169550; //O6-
+    domainRGB[21][0]=0.566921;domainRGB[21][1]=0.566921;domainRGB[21][2]=0.566921; //a1+
+    domainRGB[22][0]=0.393695;domainRGB[22][1]=0.015747;domainRGB[22][2]=0.885813; //a1-
+    domainRGB[23][0]=0.0;domainRGB[23][1]=0.0;domainRGB[23][2]=0.0; //a2+
+    domainRGB[24][0]=1.0;domainRGB[24][1]=0.710881;domainRGB[24][2]=0.0; //a2-
+    domainRGB[25][0]=0.885813;domainRGB[25][1]=0.813533;domainRGB[25][2]=0.301423; //c+
+    domainRGB[26][0]=0.8867188;domainRGB[26][1]=0.4335937;domainRGB[26][2]=0.0273438; //c-
+    
+    for (int i=0; i<27; i++) {
+        this->ui->domain_LW->item(i)->setForeground(QColor(domainRGB[i][0]*255,255*domainRGB[i][1],domainRGB[i][2]*255));
+    }
+    
+    
+    
 
 };
 
@@ -850,9 +893,9 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             tableScalar->SetNumberOfColors(this->ui->RGBScalar_Table->rowCount());
             for (int i=0;i<this->ui->RGBScalar_Table->rowCount();i++){
                 RGBValue=this->ui->RGBScalar_Table->item(i,0)->text().toDouble();
-                R=this->ui->RGBScalar_Table->item(i,1)->text().toDouble();
-                G=this->ui->RGBScalar_Table->item(i,2)->text().toDouble();
-                B=this->ui->RGBScalar_Table->item(i,3)->text().toDouble();
+                R=this->ui->RGBScalar_Table->item(i,1)->text().toDouble()/255;
+                G=this->ui->RGBScalar_Table->item(i,2)->text().toDouble()/255;
+                B=this->ui->RGBScalar_Table->item(i,3)->text().toDouble()/255;
                 // A=this->ui->RGBScalar_Table->item(i,4)->text().toDouble();
                 colorScalar->AddRGBPoint(RGBValue,R,G,B);
             }
@@ -865,9 +908,9 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         if (this->ui->RGBVector_Table->rowCount()!=0){
             for (int i=0;i<this->ui->RGBVector_Table->rowCount();i++){
                 RGBValue=this->ui->RGBVector_Table->item(i,0)->text().toDouble();
-                R=this->ui->RGBVector_Table->item(i,1)->text().toDouble();
-                G=this->ui->RGBVector_Table->item(i,2)->text().toDouble();
-                B=this->ui->RGBVector_Table->item(i,3)->text().toDouble();
+                R=this->ui->RGBVector_Table->item(i,1)->text().toDouble()/255;
+                G=this->ui->RGBVector_Table->item(i,2)->text().toDouble()/255;
+                B=this->ui->RGBVector_Table->item(i,3)->text().toDouble()/255;
                 colorVector->AddRGBPoint(RGBValue,R,G,B);
             }
         }else{
@@ -1027,11 +1070,26 @@ void SimpleView::on_volume_CB_stateChanged(int state){
     this->ui->qvtkWidget->GetRenderWindow()->Render();
 }
 
+
+void SimpleView::on_vectorGlyph_CB_stateChanged(int state){
+    if(state==0 || this->ui->vector_CB->checkState()==0){
+        actorVector->SetVisibility(false);
+    }else{
+        actorVector->SetVisibility(true);
+    }
+    this->ui->qvtkWidget->GetRenderWindow()->Render();
+}
+
 void SimpleView::on_scalarBar_CB_stateChanged(int state){
-    if(state!=0){
+    if(state!=0 && this->ui->scalar_CB->isChecked()){
         scalarScaleBarActor->SetVisibility(true);
     }else{
         scalarScaleBarActor->SetVisibility(false);
+    }
+    if(state!=0 && this->ui->vector_CB->isChecked()){
+        vectorScaleBarActor->SetVisibility(true);
+    }else{
+        vectorScaleBarActor->SetVisibility(false);
     }
     this->ui->qvtkWidget->GetRenderWindow()->Render();
 }
@@ -1192,6 +1250,7 @@ void SimpleView::slotOpenFile_vector()
         this->ui->scalar_CB->setCheckState(Qt::Unchecked);
         this->ui->volume_CB->setCheckState(Qt::Unchecked);
         this->ui->vector_CB->setCheckState(Qt::Checked);
+        this->ui->vectorGlyph_CB->setCheckState(Qt::Checked);
         this->ui->domain_CB->setCheckState(Qt::Unchecked);
         QFileInfo filehold(load);
         qDebug()<<columns<<columns/3;
@@ -1245,8 +1304,12 @@ void SimpleView::slotOpenFile_vector()
             printstatus = QString::fromStdString(std::to_string(getAvg(dataHold,rows)));
             this->ui->vector_Table->setItem(this->ui->vector_Table->rowCount()-1,2,new QTableWidgetItem(printstatus));
         }
-        this->ui->vectorValueMin_LE->setText("0");
-        this->ui->vectorValueMax_LE->setText("10000");
+            for (int j=0;j<rows;++j){
+                dataHold[j]=sqrt(pow(vtkData[j][1],2)+pow(vtkData[j][2],2)+pow(vtkData[j][3],2));
+            }
+        this->ui->vectorValueMin_LE->setText(QString::fromStdString(std::to_string(getMin(dataHold,rows))));
+        this->ui->vectorValueMax_LE->setText(QString::fromStdString(std::to_string(getMax(dataHold,rows))));
+        this->ui->vectorScale_LE->setText(QString::fromStdString(std::to_string(2/getMax(dataHold, rows))));
 //        this->ui->information_Tab->setCurrentIndex(1);
         int index=this->ui->vectorChoice->currentIndex();
         vectorName=(std::to_string(3*index+1)+std::to_string(3*index+2)+std::to_string(3*index+3)+".vtk").c_str();
@@ -1832,7 +1895,22 @@ int SimpleView::domainProcessing(QString filedir){
         output << outputData[i] << "\n";
     }
     output.close();
+    for (i=1;i<xmax+2;i++){
+        for (j=1;j<ymax+2;j++){
+            for (k=1;k<nsub+2;k++){
+                hold=k*(xmax+3)*(ymax+3)+j*(xmax+3)+i; //+3
+                existDomain[outputData[hold]]=true;
+            }
+        }
+    }
     
+    for (i=0;i<27;i++){
+        if(existDomain[i]){
+            this->ui->domain_LW->item(i)->setCheckState(Qt::Checked);
+        }else{
+            this->ui->domain_LW->item(i)->setCheckState(Qt::Unchecked);
+        }
+    }
     return columnNumber;
 }
 
@@ -1904,6 +1982,7 @@ void SimpleView::slotOpenFile_domain(){
         qDebug()<<"after domain processing";
         int rows=(xmax+1)*(ymax+1)*(zmax+1);
         double *dataHold= new double[rows];
+        existDomain.fill(false);
         QFileInfo filehold(load);
         this->ui->scalar_CB->setCheckState(Qt::Unchecked);
         this->ui->volume_CB->setCheckState(Qt::Unchecked);
@@ -2169,40 +2248,45 @@ void SimpleView::slotUpdateCamera6(){
 
 void SimpleView::updateCamera(int choice){
     switch (choice) {
+        case -1:
+            camera->SetPosition(3*ymax+ymax+zmax, 3*xmax+ymax+zmax, zmax+xmax+ymax);
+            camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
+            camera->SetViewUp(0, 0, 1);
+            break;
         case 0:
             break;
         case 1:
-            camera->SetPosition(-3*xmax-ymax/2-zmax/2, ymax/2, zmax/2);
+            camera->SetPosition(-3*xmax-ymax*2-zmax*2, ymax/2, zmax/2);
             camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
             camera->SetViewUp(0, 0, 1);
             break;
         case 2:
-            camera->SetPosition(3*xmax+ymax/2+zmax/2, ymax/2, zmax/2);
+            camera->SetPosition(3*xmax+ymax*2+zmax*2, ymax/2, zmax/2);
             camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
             camera->SetViewUp(0, 0, 1);
             break;
         case 3:
-            camera->SetPosition(xmax/2, -3*ymax-xmax/2-zmax/2, zmax/2);
+            camera->SetPosition(xmax/2, -3*ymax-xmax*2-zmax*2, zmax/2);
             camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
             camera->SetViewUp(0, 0, 1);
             break;
         case 4:
-            camera->SetPosition(xmax/2, 3*ymax+xmax/2+zmax/2, zmax/2);
+            camera->SetPosition(xmax/2, 3*ymax+xmax*2+zmax*2, zmax/2);
             camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
             camera->SetViewUp(0, 0, 1);
             break;
         case 5:
-            camera->SetPosition(xmax/2, ymax/2, -3*zmax-ymax/2-xmax/2);
+            camera->SetPosition(xmax/2, ymax/2, -3*zmax-ymax*2-xmax*2);
             camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
             camera->SetViewUp(0, 1, 0);
             break;
         case 6:
-            camera->SetPosition(xmax/2, ymax/2, 3*zmax+ymax/2+xmax/2);
+            camera->SetPosition(xmax/2, ymax/2, 3*zmax+ymax*2+xmax*2);
             camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
             camera->SetViewUp(0, 1, 0);
             break;
         default:
-            camera->SetPosition(xmax/2, 3*ymax+xmax/2+zmax/2, zmax/2);
+            camera->SetPosition(xmax/2, 3*ymax+xmax*2+zmax*2, zmax/2);
             camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
             camera->SetViewUp(0, 0, 1);
             break;
@@ -2609,9 +2693,9 @@ void SimpleView::drawIsoSurface(vtkAlgorithmOutput * readerScalarPort){
     
     for (int i=0; i<this->ui->RGBIso_Table->rowCount(); i++) {
         int isoNum=this->ui->isosurface_LW->row(this->ui->isosurface_LW->findItems(this->ui->RGBIso_Table->item(i, 0)->text(), Qt::MatchExactly).first());
-        double r=this->ui->RGBIso_Table->item(i, 1)->text().toDouble();
-        double g=this->ui->RGBIso_Table->item(i, 2)->text().toDouble();
-        double b=this->ui->RGBIso_Table->item(i, 3)->text().toDouble();
+        double r=this->ui->RGBIso_Table->item(i, 1)->text().toDouble()/255;
+        double g=this->ui->RGBIso_Table->item(i, 2)->text().toDouble()/255;
+        double b=this->ui->RGBIso_Table->item(i, 3)->text().toDouble()/255;
         qDebug()<<"rgbisonum:"<<isoNum<<r<<g<<b<<actorIso.size();
         actorIso[isoNum]->GetMapper()->ScalarVisibilityOff();
         actorIso[isoNum]->GetProperty()->SetColor(r, g, b);

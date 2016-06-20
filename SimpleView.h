@@ -143,6 +143,9 @@ public:
     void on_isoDelete_PB_released();
     void drawIsoSurface(vtkAlgorithmOutput * readerScalarPort);
     void on_isosurface_LW_itemChanged(QListWidgetItem *item);
+    void on_vectorGlyph_CB_stateChanged(int state);
+
+    
 protected:
     
     protected slots:
@@ -177,6 +180,7 @@ private:
     vtkActor *actorStream = vtkActor::New();
     vtkVolume *actorScalar = vtkVolume::New();
     std::vector<vtkActor *> actorDomain;
+    QVector<bool> existDomain;
     QVector<vtkActor*> actorIso;
     QVector<Qt::PenStyle> lineStyleList;
     QVector<QCPScatterStyle> scatterStyle;

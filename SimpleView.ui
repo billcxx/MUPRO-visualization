@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1440</width>
-    <height>851</height>
+    <width>1292</width>
+    <height>745</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -427,7 +427,7 @@ qproperty-alignment: AlignCenter;*/
 </string>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
             <property name="iconSize">
              <size>
@@ -1619,7 +1619,7 @@ border-right:1px solid rgb(153, 153, 153);
                    <property name="minimumSize">
                     <size>
                      <width>269</width>
-                     <height>100</height>
+                     <height>130</height>
                     </size>
                    </property>
                    <property name="maximumSize">
@@ -2353,6 +2353,24 @@ border-right:1px solid rgb(153, 153, 153);
                     <item>
                      <property name="text">
                       <string>Substrate</string>
+                     </property>
+                     <property name="background">
+                      <brush brushstyle="NoBrush">
+                       <color alpha="255">
+                        <red>0</red>
+                        <green>0</green>
+                        <blue>0</blue>
+                       </color>
+                      </brush>
+                     </property>
+                     <property name="foreground">
+                      <brush brushstyle="NoBrush">
+                       <color alpha="255">
+                        <red>0</red>
+                        <green>0</green>
+                        <blue>0</blue>
+                       </color>
+                      </brush>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -3336,7 +3354,7 @@ qproperty-alignment: AlignCenter;*/
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>20</width>
-                 <height>43</height>
+                 <height>7</height>
                 </size>
                </property>
               </spacer>
@@ -3814,7 +3832,7 @@ background: rgb(255, 213, 205);
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>20</width>
-                 <height>42</height>
+                 <height>8</height>
                 </size>
                </property>
               </spacer>
@@ -4124,7 +4142,7 @@ background: rgb(255, 213, 205);
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>20</width>
-                 <height>43</height>
+                 <height>7</height>
                 </size>
                </property>
               </spacer>
@@ -5750,6 +5768,7 @@ qproperty-alignment: AlignCenter;*/
    <addaction name="actionOpenFile_scalar"/>
    <addaction name="actionOpenFile_vector"/>
    <addaction name="actionOpenFile_domain"/>
+   <addaction name="actionClear"/>
    <addaction name="separator"/>
    <addaction name="actionRotateToXP"/>
    <addaction name="actionRotateToXN"/>
@@ -5758,7 +5777,6 @@ qproperty-alignment: AlignCenter;*/
    <addaction name="actionRotateToZP"/>
    <addaction name="actionRotateToZN"/>
    <addaction name="separator"/>
-   <addaction name="actionClear"/>
    <addaction name="actionRefresh"/>
    <addaction name="actionSave"/>
    <addaction name="action3D"/>
