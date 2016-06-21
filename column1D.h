@@ -54,9 +54,9 @@ private:
     double **vtkData;
     QVector<double*> dataFiltered;
     QString printstatus;
-    double xmin=0,xmax=0,ymin=0,ymax=0,zmin=0,zmax=0;
+//    double xmin=0,xmax=0,ymin=0,ymax=0,zmin=0,zmax=0;
     double xmin1D=1,xmax1D=0,ymin1D=1,ymax1D=0;
-    int columns;
+    int columns,rows;
     
     QVector<Qt::PenStyle> lineStyleList;
     QVector<int> scatterStyle;

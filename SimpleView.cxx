@@ -1018,6 +1018,7 @@ void SimpleView::on_axis_CB_stateChanged(int state){
         axes->SetVisibility(false);
     }
     this->ui->qvtkWidget->GetRenderWindow()->Render();
+    this->ui->qvtkWidget->update();
 }
 
 void SimpleView::on_outline_CB_stateChanged(int state){
@@ -1304,9 +1305,9 @@ void SimpleView::slotOpenFile_vector()
             printstatus = QString::fromStdString(std::to_string(getAvg(dataHold,rows)));
             this->ui->vector_Table->setItem(this->ui->vector_Table->rowCount()-1,2,new QTableWidgetItem(printstatus));
         }
-            for (int j=0;j<rows;++j){
-                dataHold[j]=sqrt(pow(vtkData[j][1],2)+pow(vtkData[j][2],2)+pow(vtkData[j][3],2));
-            }
+        for (int j=0;j<rows;++j){
+            dataHold[j]=sqrt(pow(vtkData[j][1],2.0)+pow(vtkData[j][2],2.0)+pow(vtkData[j][3],2.0));
+        }
         this->ui->vectorValueMin_LE->setText(QString::fromStdString(std::to_string(getMin(dataHold,rows))));
         this->ui->vectorValueMax_LE->setText(QString::fromStdString(std::to_string(getMax(dataHold,rows))));
         this->ui->vectorScale_LE->setText(QString::fromStdString(std::to_string(2/getMax(dataHold, rows))));
@@ -1443,8 +1444,10 @@ int SimpleView::loadData(QString filedir){
     while(iss2 >> a){
         count2++;
     }
-    input.close();
-    
+//    input.open(dir);
+//    for (rowNumber=0; std::getline(input, line); rowNumber++) {
+//    }
+//    input.close();
     
     if (count1!=count2){
         input.open(dir);
@@ -1897,7 +1900,7 @@ int SimpleView::domainProcessing(QString filedir){
     output.close();
     for (i=1;i<xmax+2;i++){
         for (j=1;j<ymax+2;j++){
-            for (k=1;k<nsub+2;k++){
+            for (k=1;k<nfs+2;k++){
                 hold=k*(xmax+3)*(ymax+3)+j*(xmax+3)+i; //+3
                 existDomain[outputData[hold]]=true;
             }
@@ -1905,6 +1908,7 @@ int SimpleView::domainProcessing(QString filedir){
     }
     
     for (i=0;i<27;i++){
+        qDebug()<<i<<existDomain[i];
         if(existDomain[i]){
             this->ui->domain_LW->item(i)->setCheckState(Qt::Checked);
         }else{
@@ -2158,6 +2162,7 @@ void SimpleView::drawDomain(std::string domainName){
     if(!reset){domainRenderer->SetActiveCamera(camera);}
     
     this->ui->qvtkWidget->GetRenderWindow()->Render();
+    this->ui->qvtkWidget->update();
     
     camera=domainRenderer->GetActiveCamera();
     reset=false;
@@ -2173,6 +2178,8 @@ void SimpleView::on_domain_LW_itemChanged(QListWidgetItem *item){
         actorDomain[i]->SetVisibility(false);
     }
     this->ui->qvtkWidget->GetRenderWindow()->Render();
+    this->ui->qvtkWidget->update();
+
 }
 
 void SimpleView::on_domain_CB_stateChanged(int state){
@@ -2190,6 +2197,8 @@ void SimpleView::on_domain_CB_stateChanged(int state){
         }
     }
     this->ui->qvtkWidget->GetRenderWindow()->Render();
+    this->ui->qvtkWidget->update();
+
 }
 
 
@@ -2218,6 +2227,8 @@ void SimpleView::saveImage(){
     }else{
         this->ui->customPlot->savePng(load);
     }
+    this->ui->qvtkWidget->update();
+
     
 }
 
@@ -2294,6 +2305,7 @@ void SimpleView::updateCamera(int choice){
     qDebug()<<"updateCamera"<<choice;
     this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->SetActiveCamera(camera);
     this->ui->qvtkWidget->GetRenderWindow()->Render();
+    this->ui->qvtkWidget->update();
     camera=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
     reset=false;
 }
@@ -2641,6 +2653,8 @@ void SimpleView::on_isosurface_LW_itemChanged(QListWidgetItem *item){
         actorIso[i]->SetVisibility(false);
     }
     this->ui->qvtkWidget->GetRenderWindow()->Render();
+    this->ui->qvtkWidget->update();
+
 }
 
 
@@ -2664,6 +2678,8 @@ void SimpleView::on_isoDelete_PB_released(){
     }
     qDebug()<<"check iso"<<actorIso.count()<<this->ui->isosurface_LW->count();
     this->ui->qvtkWidget->GetRenderWindow()->Render();
+    this->ui->qvtkWidget->update();
+
 
 }
 
@@ -2707,7 +2723,8 @@ void SimpleView::drawIsoSurface(vtkAlgorithmOutput * readerScalarPort){
     if(!reset){isoRenderer->SetActiveCamera(camera);}
     
     this->ui->qvtkWidget->GetRenderWindow()->Render();
-    
+    this->ui->qvtkWidget->update();
+
     camera=isoRenderer->GetActiveCamera();
     reset=false;
 

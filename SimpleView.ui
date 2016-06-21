@@ -263,7 +263,7 @@ background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8DAEBE, 
        <number>0</number>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page_6">
        <property name="sizePolicy">
@@ -1198,9 +1198,9 @@ border-right:1px solid rgb(153, 153, 153);
                    <widget class="QLabel" name="label_29">
                     <property name="geometry">
                      <rect>
-                      <x>30</x>
+                      <x>10</x>
                       <y>90</y>
-                      <width>71</width>
+                      <width>91</width>
                       <height>21</height>
                      </rect>
                     </property>
@@ -1221,9 +1221,9 @@ border-right:1px solid rgb(153, 153, 153);
                    <widget class="QLabel" name="label_24">
                     <property name="geometry">
                      <rect>
-                      <x>30</x>
+                      <x>10</x>
                       <y>30</y>
-                      <width>71</width>
+                      <width>91</width>
                       <height>21</height>
                      </rect>
                     </property>
@@ -1244,9 +1244,9 @@ border-right:1px solid rgb(153, 153, 153);
                    <widget class="QLabel" name="label_26">
                     <property name="geometry">
                      <rect>
-                      <x>30</x>
+                      <x>10</x>
                       <y>50</y>
-                      <width>71</width>
+                      <width>91</width>
                       <height>21</height>
                      </rect>
                     </property>
@@ -1267,9 +1267,9 @@ border-right:1px solid rgb(153, 153, 153);
                    <widget class="QLabel" name="label_30">
                     <property name="geometry">
                      <rect>
-                      <x>30</x>
+                      <x>10</x>
                       <y>110</y>
-                      <width>71</width>
+                      <width>91</width>
                       <height>21</height>
                      </rect>
                     </property>
@@ -1332,9 +1332,9 @@ border-right:1px solid rgb(153, 153, 153);
                    <widget class="QLabel" name="label_28">
                     <property name="geometry">
                      <rect>
-                      <x>30</x>
+                      <x>10</x>
                       <y>70</y>
-                      <width>71</width>
+                      <width>91</width>
                       <height>21</height>
                      </rect>
                     </property>
@@ -4251,6 +4251,18 @@ background-color:rgb(242, 242, 242);
           </item>
           <item row="1" column="1">
            <widget class="QWidget" name="hori" native="true">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>210</height>
+             </size>
+            </property>
             <property name="styleSheet">
              <string notr="true">#hori{
 	border-top:1px solid rgb(153, 153, 153);

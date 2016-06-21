@@ -89,7 +89,6 @@ double column1D::returnYMax(){
 
 
 int column1D::filter(){
-    int rows=(xmax)*(ymax)*(zmax);
     if(dataFiltered.count()!=0){
         dataFiltered.clear();
     }
@@ -114,13 +113,12 @@ void column1D::on_load1DFile_PB_clicked(){
     qDebug()<<"Filename:"<<load;
     if (!load.isEmpty()) {
         columns=loadData1D(load);
-        int rows=(xmax)*(ymax)*(zmax);
         double *dataHold= new double[rows];
         QFileInfo filehold(load);
         // outputScalar(0,xmax,ymax,zmax);
-        this->ui->plot1DFileX_Combo->addItem(QString::fromStdString("X"));
-        this->ui->plot1DFileX_Combo->addItem(QString::fromStdString("Y"));
-        this->ui->plot1DFileX_Combo->addItem(QString::fromStdString("Z"));
+        for (int i=0; i<columns; i++) {
+            this->ui->plot1DFileX_Combo->addItem(QString::fromStdString(std::to_string(i+1)));
+        }
         int current=this->ui->plot1DFileY_LW->count();
         if(current!=0){
             for(int i=0;i<current+1;++i){
@@ -178,14 +176,17 @@ void column1D::on_load1DFile_PB_clicked(){
             }
             this->ui->plot1DFile_Table->insertRow(this->ui->plot1DFile_Table->rowCount());
             printstatus = QString::fromStdString(std::to_string(getMin(dataHold,rows)));
+            qDebug()<<"column:"<<i<<rows<<this->ui->plot1DFile_Table->rowCount();
             qDebug()<<"min:"<<printstatus;
             this->ui->plot1DFile_Table->setItem(this->ui->plot1DFile_Table->rowCount()-1,0,new QTableWidgetItem(printstatus));
             printstatus = QString::fromStdString(std::to_string(getMax(dataHold,rows)));
+            qDebug()<<"max:"<<printstatus;
             this->ui->plot1DFile_Table->setItem(this->ui->plot1DFile_Table->rowCount()-1,1,new QTableWidgetItem(printstatus));
             printstatus = QString::fromStdString(std::to_string(getAvg(dataHold,rows)));
+            qDebug()<<"avg:"<<printstatus;
             this->ui->plot1DFile_Table->setItem(this->ui->plot1DFile_Table->rowCount()-1,2,new QTableWidgetItem(printstatus));
         }
-        this->ui->plot1DFile_Table->sortItems(0);
+//        this->ui->plot1DFile_Table->sortItems(0);
         
     }
     
@@ -214,6 +215,7 @@ int column1D::loadData1D(QString filedir){
     std::istringstream iss1(line1);
     std::istringstream iss2(line2);
     input.close();
+
     
     
     
@@ -223,45 +225,56 @@ int column1D::loadData1D(QString filedir){
     while(iss2 >> a){
         count2++;
     }
-    input.close();
+
     
+    columnNumber=count2;
+    input.open(dir);
+    for (rowNumber=0; std::getline(input, line); rowNumber++) {
+    }
+    input.close();
+    qDebug()<<"Rownumber"<<rowNumber<<count1<<count2;
     
     if (count1!=count2){
-        input.open(dir);
-        std::getline(input,line1);
-        std::istringstream iss1(line1);
-        iss1 >> x >> y >> z;
-        
-        input.close();
+//        input.open(dir);
+//        std::getline(input,line1);
+//        std::istringstream iss1(line1);
+//        iss1 >> x >> y >> z;
+//        
+//        input.close();
+        rowNumber--;
     }else{
-        std::ifstream read(dir, std::ios_base::ate );//open file
-        int length = 0;
-        
-        char c = '\0';
-        
-        if( read )
-        {
-            length = read.tellg();//Get file size
-            
-            // loop backward over the file
-            
-            for(int i = length-2; i > 0; i-- )
-            {
-                read.seekg(i);
-                c = read.get();
-                if( c == '\r' || c == '\n' )//new line?
-                    break;
-            }
-            std::getline(read, line1);//read last line
-            std::istringstream iss1(line1);
-            iss1 >> x >> y >> z;
-            read.close();
-            
+        iss1 >> x;
+        qDebug()<<"x:"<<x;
+        if(isnan(x)){
+            rowNumber--;
         }
+//        std::ifstream read(dir, std::ios_base::ate );//open file
+//        int length = 0;
+//        
+//        char c = '\0';
+//        
+//        if( read )
+//        {
+//            length = read.tellg();//Get file size
+//            
+//            // loop backward over the file
+//            
+//            for(int i = length-2; i > 0; i-- )
+//            {
+//                read.seekg(i);
+//                c = read.get();
+//                if( c == '\r' || c == '\n' )//new line?
+//                    break;
+//            }
+//            std::getline(read, line1);//read last line
+//            std::istringstream iss1(line1);
+//            iss1 >> x >> y >> z;
+//            read.close();
+//            
+//        }
         
     }
-    columnNumber=count2;
-    rowNumber=x*y*z;
+
     
     vtkData= new double*[rowNumber];
     for (i=0;i<rowNumber;++i){
@@ -274,6 +287,12 @@ int column1D::loadData1D(QString filedir){
         std::istringstream iss1(line1);
         
     }else{
+        iss1 >> x;
+        qDebug()<<"x:"<<x;
+        if(isnan(x)){
+            std::getline(input,line1);
+            std::istringstream iss1(line1);
+        }
         
     }
     for (int j=0;j<rowNumber;++j){
@@ -285,9 +304,10 @@ int column1D::loadData1D(QString filedir){
         }
     }
     input.close();
-    xmax=x;
-    ymax=y;
-    zmax=z;
+//    xmax=x;
+//    ymax=y;
+//    zmax=z;
+    rows = rowNumber;
     return columnNumber;
 }
 
@@ -487,6 +507,6 @@ void column1D::paintEvent(QPaintEvent *)
     opt.init(this);
     QPainter p(this);
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &p, this);
-    qDebug()<<"painting border";
+//    qDebug()<<"painting border";
 }
 

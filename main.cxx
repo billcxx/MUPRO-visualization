@@ -20,6 +20,7 @@ int main( int argc, char** argv )
 {
 
   // QT Stuff
+//    QApplication::setLibraryPaths(QStringList()<<"../Frameworks");
   QApplication app( argc, argv );
 
   #if QT_VERSION >= 0x050000
