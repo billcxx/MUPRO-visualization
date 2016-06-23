@@ -109,8 +109,8 @@ public:
     double getMin(double *list,int length);
     double getMax(double *list,int length);
     double getAvg(double *list,int length);
-    void outputScalar(int columnNumber,int x,int y, int z);
-    void outputVector(int colX,int colY,int colZ,int x,int y,int z);
+    void outputScalar(QFileInfo path,int columnNumber,int x,int y, int z);
+    void outputVector(QFileInfo path,int colX,int colY,int colZ,int x,int y,int z);
     
     void updateCamera(int choice);
     void updateExtraction(int x,int y, int z);
@@ -144,6 +144,8 @@ public:
     void drawIsoSurface(vtkAlgorithmOutput * readerScalarPort);
     void on_isosurface_LW_itemChanged(QListWidgetItem *item);
     void on_vectorGlyph_CB_stateChanged(int state);
+    void on_cameraSet_PB_released();
+    void outputStatus(QFileInfo filedir);
 
     
 protected:
@@ -155,16 +157,19 @@ private:
     vtkSmartPointer<vtkQtTableView> TableView= vtkSmartPointer<vtkQtTableView>::New();
     int columns;
     std::string scalarName,vectorName;
+    QFileInfo scalarDir,vectorDir,domainDir;
     // Designer form
     Ui_SimpleView *ui;
     QString printstatus;
     double cameraPosition[3],cameraFocal[3];
     int xmin=0,xmax=0,ymin=0,ymax=0,zmin=0,zmax=0;
+    int tempX=0,tempY=0,tempZ=0;
     int xminAll=0,xmaxAll=0,yminAll=0,ymaxAll=0,zminAll=0,zmaxAll=0;
     vtkSmartPointer<vtkCamera> camera = vtkSmartPointer<vtkCamera>::New();
     double **vtkData;
     double RGBPoint;
     bool reset=true;
+    bool data2Dx=false,data2Dy=false,data2Dz=false;
     vtkSmartPointer<vtkAxesActor> axes = vtkSmartPointer<vtkAxesActor>::New();
     vtkSmartPointer<vtkActor> outlineScalarActor = vtkSmartPointer<vtkActor>::New();
     vtkSmartPointer<vtkActor> outlineVectorActor = vtkSmartPointer<vtkActor>::New();

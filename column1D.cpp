@@ -92,13 +92,45 @@ int column1D::filter(){
     if(dataFiltered.count()!=0){
         dataFiltered.clear();
     }
+    std::ofstream output1;
+    std::ofstream output2;
+
+    std::ofstream output3;
+
+    std::string str;
+    
+    str="filter_before.txt";
+    const char *outdir1=str.c_str();
+    
+    output1.open(outdir1);
+    output1 << "size" << "\n";
+    output1 << sizeof(vtkData)<<"\n";
     for(int i=0;i<rows;i++){
+        output1 << "i:" << i << ", vtkData:"<<vtkData[i][0] << "\n";
+    }
+    output1.close();
+    
+    str="filter.txt";
+    const char *outdir=str.c_str();
+    
+    output2.open(outdir);
+    for(int i=0;i<rows;i++){
+        output2 << "i:" << i << ", vtkData:"<<vtkData[i][1] << "\n";
         if(filter1DData(vtkData[i])){
             dataFiltered.append(vtkData[i]);
         }
     }
+    output2.close();
     qDebug()<<"rows:"<<rows;
     return dataFiltered.count();
+}
+
+int column1D::getFilteredCount(){
+    if (loaded) {
+        filter();
+        return dataFiltered.count();
+    }
+    return 0;
 }
 
 
@@ -113,6 +145,7 @@ void column1D::on_load1DFile_PB_clicked(){
     qDebug()<<"Filename:"<<load;
     if (!load.isEmpty()) {
         columns=loadData1D(load);
+        loaded = true;
         double *dataHold= new double[rows];
         QFileInfo filehold(load);
         // outputScalar(0,xmax,ymax,zmax);
@@ -304,6 +337,17 @@ int column1D::loadData1D(QString filedir){
         }
     }
     input.close();
+    
+    str="load.txt";
+    const char *outdir=str.c_str();
+    
+    output.open(outdir);
+    for(int i=0;i<rowNumber;i++){
+        output << "i:" << i << ", vtkData:"<<vtkData[i][0] << "\n";
+    }
+    output.close();
+    
+    
 //    xmax=x;
 //    ymax=y;
 //    zmax=z;
@@ -314,7 +358,7 @@ int column1D::loadData1D(QString filedir){
 
 bool column1D::filter1DData(double *data){
     bool flagHolder=true;
-    //    qDebug()<<"data:"<<*data<<data[0]<<data[1]<<data[2];
+        qDebug()<<"data:"<<*data<<data[0]<<data[1]<<data[2];
     for(int i=0;i<this->ui->plot1DRelationFile_Table->rowCount();i++){
         int relationCol=this->ui->plot1DRelationFile_Table->item(i, 0)->text().toInt()-1;
         double value=this->ui->plot1DRelationFile_Table->item(i, 2)->text().toDouble();
@@ -322,33 +366,33 @@ bool column1D::filter1DData(double *data){
         //        qDebug()<<"relation:"<<relationCol<<relation.c_str()<<value;
         if(relation=="="){
             if (data[relationCol]==value) {
-                flagHolder*=true;
+//                flagHolder*=true;
             }else{
-                flagHolder*=false;
+                flagHolder=false;
             }
         }else if(relation==">"){
             if (data[relationCol]>value) {
-                flagHolder*=true;
+//                flagHolder*=true;
             }else{
-                flagHolder*=false;
+                flagHolder=false;
             }
         }else if(relation==">="){
             if (data[relationCol]>=value) {
-                flagHolder*=true;
+//                flagHolder*=true;
             }else{
-                flagHolder*=false;
+                flagHolder=false;
             }
         }else if(relation=="<"){
             if (data[relationCol]<value) {
-                flagHolder*=true;
+//                flagHolder*=true;
             }else{
-                flagHolder*=false;
+                flagHolder=false;
             }
         }else if(relation=="<="){
             if (data[relationCol]<=value) {
-                flagHolder*=true;
+//                flagHolder*=true;
             }else{
-                flagHolder*=false;
+                flagHolder=false;
             }
         }
     }

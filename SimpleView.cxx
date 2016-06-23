@@ -80,6 +80,8 @@
 #include <vtkMarchingCubes.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkStreamLine.h>
+#include <vtkHAVSVolumeMapper.h>
+#include <vtkUnstructuredGridVolumeZSweepMapper.h>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -100,6 +102,7 @@ SimpleView::SimpleView()
 //    this->setStyleSheet(styleSheet);
     this->ui = new Ui_SimpleView;
     this->ui->setupUi(this);
+    this->ui->vectorChoice->setView(new QListView());
     this->ui->RGB_Combo->setView(new QListView());
     this->ui->alpha_Combo->setView(new QListView());
     this->ui->scalarChoice->setView(new QListView());
@@ -252,8 +255,8 @@ void SimpleView::setup1DFigure(QCustomPlot *customPlot){
     this->ui->customPlot->clearGraphs();
     this->ui->customPlot->clearItems();
     this->ui->customPlot->clearPlottables();
-    dataRows1=this->ui->file1_Widget->filter();
-    dataRows2=this->ui->file2_Widget->filter();
+    dataRows1=this->ui->file1_Widget->getFilteredCount();
+    dataRows2=this->ui->file2_Widget->getFilteredCount();
 
     double xmin1D1=1;
     double xmax1D1=0;
@@ -281,7 +284,7 @@ void SimpleView::setup1DFigure(QCustomPlot *customPlot){
             if(!std::getline(iss1, num, ',')) break;
             convert.str(num+" ");
             convert >> number;
-            qDebug()<< QString::fromStdString(num) << number << convert;
+            qDebug()<< QString::fromStdString(num) << number ;//<< convert;
             
             piTicks.push_back(number);
         }
@@ -614,7 +617,8 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     VTK_CREATE(vtkDataSetMapper,streamMapper);
     VTK_CREATE(vtkThresholdPoints,thresholdVector);
     VTK_CREATE(vtkPlane, plane);
-    VTK_CREATE(vtkCutter, cutter);
+    VTK_CREATE(vtkCutter, cutterScalar);
+    VTK_CREATE(vtkCutter, cutterVector);
     VTK_CREATE(vtkPolyDataNormals, isoNormals);
     
     
@@ -649,14 +653,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     
     double planeOX=0,planeOY=0,planeOZ=0;
     double planeNX=0,planeNY=0,planeNZ=0;
-    planeOX=this->ui->sliceOriginX->text().toDouble();
-    planeOY=this->ui->sliceOriginY->text().toDouble();
-    planeOZ=this->ui->sliceOriginZ->text().toDouble();
-    planeNX=this->ui->sliceNormalX->text().toDouble();
-    planeNY=this->ui->sliceNormalY->text().toDouble();
-    plane->SetOrigin(planeOX, planeOY, planeOZ);
-    plane->SetNormal(planeNX, planeNY, planeNZ);
-    cutter->SetCutFunction(plane);
+
     
     if (scalarFile && this->ui->scalar_CB->isChecked()){
         readerScalarOrigin->SetFileName(fileNameScalar);
@@ -706,7 +703,6 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
 //        }
         //        }
         
-        VTK_CREATE(vtkSmartVolumeMapper,mapperScalar);
         if (this->ui->scalarRange_CB->checkState()){
             vmin=this->ui->scalarValueMin_LE->text().toDouble();
             vmax=this->ui->scalarValueMax_LE->text().toDouble();
@@ -718,6 +714,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             VTK_CREATE(vtkDataSetTriangleFilter,tetra);
             tetra->SetInputConnection(0,thresholdScalar->GetOutputPort(0));
             VTK_CREATE(vtkUnstructuredGridVolumeRayCastMapper,mapperScalar1);
+//            VTK_CREATE(vtkUnstructuredGridVolumeZSweepMapper,mapperScalar1);
             mapperScalar1->SetInputConnection(0,tetra->GetOutputPort(0));
             mapperScalar1->Update();
             actorScalar->SetMapper(mapperScalar1);
@@ -727,6 +724,8 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             range->InsertNextValue(scalar_range[1]);
             vmin=scalar_range[0];
             vmax=scalar_range[1];
+            VTK_CREATE(vtkSmartVolumeMapper,mapperScalar);
+//            VTK_CREATE(vtkVolumeMapper,mapperScalar);
             mapperScalar->SetInputConnection(0,readerScalar->GetOutputPort(0));
             // mapperScalar->SetLookupTable(tableScalar);
             actorScalar->SetMapper(mapperScalar);
@@ -744,14 +743,38 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         
         
         VTK_CREATE(vtkPolyDataMapper, cutterMapper);
-        cutter->SetInputConnection(0, readerScalar->GetOutputPort(0));
-        cutterMapper->SetInputConnection(0, cutter->GetOutputPort(0));
+        cutterScalar->SetInputConnection(0, readerScalar->GetOutputPort(0));
+        cutterMapper->SetInputConnection(0, cutterScalar->GetOutputPort(0));
         actorCutter->SetMapper(cutterMapper);
         renderer->AddActor(actorCutter);
-        if (this->ui->slice_CB->checkState()) {
+        
+        if (data2Dx||data2Dy||data2Dz) {
+            plane->SetOrigin(0, 0, 0);
+            if (data2Dx) {
+                plane->SetNormal(1, 0, 0);
+            }else if(data2Dy){
+                plane->SetNormal(0, 1, 0);
+            }else if(data2Dz){
+                plane->SetNormal(0, 0, 1);
+            }
+            cutterScalar->SetCutFunction(plane);
             actorCutter->SetVisibility(true);
+
         }else{
-            actorCutter->SetVisibility(false);
+            planeOX=this->ui->sliceOriginX->text().toDouble();
+            planeOY=this->ui->sliceOriginY->text().toDouble();
+            planeOZ=this->ui->sliceOriginZ->text().toDouble();
+            planeNX=this->ui->sliceNormalX->text().toDouble();
+            planeNY=this->ui->sliceNormalY->text().toDouble();
+            plane->SetOrigin(planeOX, planeOY, planeOZ);
+            plane->SetNormal(planeNX, planeNY, planeNZ);
+            cutterScalar->SetCutFunction(plane);
+
+            if (this->ui->slice_CB->checkState()) {
+                actorCutter->SetVisibility(true);
+            }else{
+                actorCutter->SetVisibility(false);
+            }
         }
         
         valueRange[0]=scalar_range[0];
@@ -795,7 +818,41 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         vector_range[0]=this->ui->vectorValueMin_LE->text().toDouble();
         vector_range[1]=this->ui->vectorValueMax_LE->text().toDouble();
         
+//        
+//
+//        cutterVector->SetInputConnection(0, readerVector->GetOutputPort(0));
+//
+//        if (data2Dx||data2Dy||data2Dz) {
+//            plane->SetOrigin(0, 0, 0);
+//            if (data2Dx) {
+//                plane->SetNormal(1, 0, 0);
+//            }else if(data2Dy){
+//                plane->SetNormal(0, 1, 0);
+//            }else if(data2Dz){
+//                plane->SetNormal(0, 0, 1);
+//            }
+//            cutterVector->SetCutFunction(plane);
+//            thresholdVector->SetInputData(cutterVector->GetOutput());
+//
+//        }else{
+//            planeOX=this->ui->sliceOriginX->text().toDouble();
+//            planeOY=this->ui->sliceOriginY->text().toDouble();
+//            planeOZ=this->ui->sliceOriginZ->text().toDouble();
+//            planeNX=this->ui->sliceNormalX->text().toDouble();
+//            planeNY=this->ui->sliceNormalY->text().toDouble();
+//            plane->SetOrigin(planeOX, planeOY, planeOZ);
+//            plane->SetNormal(planeNX, planeNY, planeNZ);
+//            cutterVector->SetCutFunction(plane);
+//            if (this->ui->slice_CB->checkState()) {
+//                thresholdVector->SetInputData(cutterVector->GetOutput());
+//            }else{
+//                thresholdVector->SetInputData(readerVector->GetOutput());
+//            }
+//        }
+
         thresholdVector->SetInputData(readerVector->GetOutput());
+
+        
         thresholdVector->ThresholdBetween(vector_range[0],vector_range[1]);
         thresholdVector->Update();
         glyphVector->SetSourceConnection(0,arrowVector->GetOutputPort(0));
@@ -1168,6 +1225,24 @@ void SimpleView::slotOpenFile_scalar()
     qDebug()<<"Filename:"<<load;
     if (!load.isEmpty()) {
         columns=loadData(load);
+        
+        if(tempX==1){
+            data2Dx=true;
+        }else{
+            data2Dx=false;
+        }
+        if(tempY==1){
+            data2Dy=true;
+        }else{
+            data2Dy=false;
+        }
+        if(tempZ==1){
+            data2Dz=true;
+        }else{
+            data2Dz=false;
+        }
+        
+        
         this->ui->scalar_CB->setCheckState(Qt::Checked);
         this->ui->volume_CB->setCheckState(Qt::Checked);
         this->ui->vector_CB->setCheckState(Qt::Unchecked);
@@ -1179,14 +1254,16 @@ void SimpleView::slotOpenFile_scalar()
         int current=this->ui->scalarChoice->count();
         if(current!=0){
             for(int i=0;i<current+1;++i){
-                this->ui->scalarChoice->removeItem(i);
+                this->ui->scalarChoice->removeItem(0);
             }
         }else{
             
         }
+        qDebug()<<"output scalar:"<<filehold.absolutePath()+"/"+filehold.baseName();
+        scalarDir=QFileInfo(filehold.absolutePath()+"/"+filehold.baseName());
         for (int i = 0; i < columns; ++i)
         {
-            outputScalar(i,xmax,ymax,zmax);
+            outputScalar(scalarDir,i,xmax,ymax,zmax);
             this->ui->scalarChoice->addItem(QString::fromStdString(std::to_string(i+1)));
         }
         
@@ -1206,7 +1283,7 @@ void SimpleView::slotOpenFile_scalar()
         
         this->ui->scalar_Table->clearContents();
         for (int i=0; i<this->ui->scalar_Table->rowCount(); i++) {
-            this->ui->scalar_Table->removeRow(i);
+            this->ui->scalar_Table->removeRow(0);
         }
         for(int i=0;i<columns;++i){
             for (int j=0;j<rows;++j){
@@ -1222,7 +1299,7 @@ void SimpleView::slotOpenFile_scalar()
         }
         
 //        this->ui->information_Tab->setCurrentIndex(0);
-        scalarName=(std::to_string(this->ui->scalarChoice->currentIndex()+1)+".vtk").c_str();
+        scalarName=(scalarDir.absoluteFilePath().toStdString()+std::to_string(this->ui->scalarChoice->currentIndex()+1)+".vtk").c_str();
         updateVTK(scalarName,vectorName);
         delete this->vtkData;
     }
@@ -1230,7 +1307,7 @@ void SimpleView::slotOpenFile_scalar()
 
 void SimpleView::on_scalarChoice_currentIndexChanged(int index){
 //    if (index!=this->ui->scalarChoice->currentIndex()){
-        scalarName=(std::to_string(index+1)+".vtk").c_str();
+        scalarName=(scalarDir.absolutePath().toStdString()+std::to_string(index+1)+".vtk").c_str();
         qDebug()<<"scalar"<<scalarName.c_str();
         updateVTK(scalarName,vectorName);
 //    }
@@ -1259,21 +1336,23 @@ void SimpleView::slotOpenFile_vector()
         int current=this->ui->vectorChoice->count();
         if(current!=0){
             for(i=0;i<current+1;++i){
-                this->ui->vectorChoice->removeItem(i);
+                this->ui->vectorChoice->removeItem(0);
             }
         }else{
             
         }
+        vectorDir=QFileInfo(filehold.absolutePath()+"/"+filehold.baseName());
         for (i = 0; i < columns/3; ++i)
         {
             qDebug()<<"not sure why nothing shows up";
             qDebug()<<QString::fromStdString(std::to_string(3*i+1)+std::to_string(3*i+2)+std::to_string(3*i+3));
-            outputVector(3*i,3*i+1,3*i+2,xmax,ymax,zmax);
+            outputVector(vectorDir,3*i,3*i+1,3*i+2,xmax,ymax,zmax);
             this->ui->vectorChoice->addItem(QString::fromStdString(std::to_string(3*i+1)+std::to_string(3*i+2)+std::to_string(3*i+3)));
             qDebug()<<"not sure why nothing shows up";
             qDebug()<<xmax<<ymax<<zmax;
             qDebug()<<"not sure why nothing shows up";
             qDebug()<<"not sure why nothing shows up";
+            qDebug()<<filehold.absolutePath().append(filehold.baseName());
         }
         this->ui->inputFileVector->setText(filehold.fileName());
         
@@ -1291,7 +1370,7 @@ void SimpleView::slotOpenFile_vector()
         
         this->ui->vector_Table->clearContents();
         for (int i=0; i<this->ui->vector_Table->rowCount(); i++) {
-            this->ui->vector_Table->removeRow(i);
+            this->ui->vector_Table->removeRow(0);
         }
         for(i=0;i<columns;++i){
             for (int j=0;j<rows;++j){
@@ -1313,7 +1392,7 @@ void SimpleView::slotOpenFile_vector()
         this->ui->vectorScale_LE->setText(QString::fromStdString(std::to_string(2/getMax(dataHold, rows))));
 //        this->ui->information_Tab->setCurrentIndex(1);
         int index=this->ui->vectorChoice->currentIndex();
-        vectorName=(std::to_string(3*index+1)+std::to_string(3*index+2)+std::to_string(3*index+3)+".vtk").c_str();
+        vectorName=(vectorDir.absoluteFilePath().toStdString()+std::to_string(3*index+1)+std::to_string(3*index+2)+std::to_string(3*index+3)+".vtk").c_str();
         
         updateVTK(scalarName,vectorName);
         delete this->vtkData;
@@ -1323,20 +1402,33 @@ void SimpleView::slotOpenFile_vector()
 
 void SimpleView::on_vectorChoice_activated(int index){
     if(index!=this->ui->vectorChoice->currentIndex()){
-        vectorName=(std::to_string(3*index+1)+std::to_string(3*index+2)+std::to_string(3*index+3)+".vtk").c_str();
+        vectorName=(vectorDir.absolutePath().toStdString()+std::to_string(3*index+1)+std::to_string(3*index+2)+std::to_string(3*index+3)+".vtk").c_str();
         updateVTK(scalarName,vectorName);
     }
 }
 
-void SimpleView::outputScalar(int columnNumber,int x, int y, int z){
+void SimpleView::outputScalar(QFileInfo path,int columnNumber,int x, int y, int z){
     long rowNumber;
-    x=x+1;
-    y=y+1;
-    z=z+1;
+
+    if (data2Dx) {
+        x=x+2;
+    }else{
+        x=x+1;
+    }
+    if (data2Dy) {
+        y=y+2;
+    }else{
+        y=y+1;
+    }
+    if (data2Dz) {
+        z=z+2;
+    }else{
+        z=z+1;
+    }
     rowNumber=x*y*z;
     std::ofstream output;
     std::string str;
-    str=std::to_string(columnNumber+1)+".vtk";
+    str=path.absoluteFilePath().toStdString()+std::to_string(columnNumber+1)+".vtk";
     const char *outdir=str.c_str();
     output.open(outdir);
     output << "# vtk DataFile Version 3.0\n";
@@ -1356,7 +1448,17 @@ void SimpleView::outputScalar(int columnNumber,int x, int y, int z){
     for (int m=0;m<z;++m){
         for (int n=0;n<y;++n){
             for (int w=0;w<x;++w){
-                output << setw(14) << vtkData[w*y*z+n*z+m][columnNumber] << "\n";
+                if (data2Dx||data2Dy||data2Dz) {
+                    if (data2Dx) {
+                        output << setw(14) << vtkData[0*y*z+n*z+m][columnNumber] << "\n";
+                    }else if(data2Dy){
+                        output << setw(14) << vtkData[w*(y-1)*z+0*z+m][columnNumber] << "\n";
+                    }else if(data2Dz){
+                        output << setw(14) << vtkData[w*y*(z-1)+n*(z-1)+0][columnNumber] << "\n";
+                    }
+                }else{
+                    output << setw(14) << vtkData[w*y*z+n*z+m][columnNumber] << "\n";
+                }
             }
         }
     }
@@ -1364,7 +1466,7 @@ void SimpleView::outputScalar(int columnNumber,int x, int y, int z){
     scalarName=str;
 }
 
-void SimpleView::outputVector(int colX,int colY,int colZ, int x, int y, int z){
+void SimpleView::outputVector(QFileInfo path,int colX,int colY,int colZ, int x, int y, int z){
     long rowNumber;
     x=x+1;
     y=y+1;
@@ -1372,7 +1474,7 @@ void SimpleView::outputVector(int colX,int colY,int colZ, int x, int y, int z){
     rowNumber=x*y*z;
     std::ofstream output;
     std::string str;
-    str=std::to_string(colX+1)+std::to_string(colY+1)+std::to_string(colZ+1)+".vtk";
+    str=path.absoluteFilePath().toStdString()+std::to_string(colX+1)+std::to_string(colY+1)+std::to_string(colZ+1)+".vtk";
     const char *outdir=str.c_str();
     output.open(outdir);
     output << "# vtk DataFile Version 3.0\n";
@@ -1419,7 +1521,7 @@ int SimpleView::loadData(QString filedir){
     std::ifstream input;
     std::ofstream output;
     float a;
-    int i=0,x=0,y=0,z=0,columnNumber=0;
+    int i=0,x=0,y=0,z=0,hold=0,columnNumber=0;
     long rowNumber=0;
     int count1=0;
     int count2=0;
@@ -1483,8 +1585,10 @@ int SimpleView::loadData(QString filedir){
         }
         
     }
+
+    
     columnNumber=count2-3;
-    rowNumber=x*y*z;
+    rowNumber=(x)*(y)*(z);
     
     vtkData= new double*[rowNumber];
     for (i=0;i<rowNumber;++i){
@@ -1502,7 +1606,7 @@ int SimpleView::loadData(QString filedir){
     for (int j=0;j<rowNumber;++j){
         std::getline(input,line);
         std::istringstream iss(line);
-        iss >> x>>y>>z;
+        iss >> hold>>hold>>hold;
         for (int k=0;k<columnNumber;++k){
             iss >> std::scientific;
             iss >>  vtkData[j][k];
@@ -1510,8 +1614,11 @@ int SimpleView::loadData(QString filedir){
     }
     input.close();
 
-    updateExtraction(x,y , z);
-
+    updateExtraction(x,y,z);
+    tempX=x;
+    tempY=y;
+    tempZ=z;
+    
 
     return columnNumber;
 }
@@ -1879,7 +1986,9 @@ int SimpleView::domainProcessing(QString filedir){
     rowNumber=(xmax+3)*(ymax+3)*(zmax+3); //+3
     std::ofstream output;
     std::string str;
-    str="domain.vtk";
+    QFileInfo filehold(filedir);
+    domainDir= QFileInfo(filehold.absolutePath()+"/"+filehold.baseName());
+    str=domainDir.absoluteFilePath().toStdString()+"-domain.vtk";
     const char *outdir=str.c_str();
     output.open(outdir);
     output << "# vtk DataFile Version 3.0\n";
@@ -2027,7 +2136,7 @@ void SimpleView::slotOpenFile_domain(){
         }
 //        this->ui->information_Tab->setCurrentIndex(2);
         qDebug()<<"before vtk part";
-        drawDomain("domain.vtk");
+        drawDomain(domainDir.absoluteFilePath().toStdString()+"-domain.vtk");
         delete this->vtkData;
     }
 }
@@ -2305,7 +2414,9 @@ void SimpleView::updateCamera(int choice){
     qDebug()<<"updateCamera"<<choice;
     this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->SetActiveCamera(camera);
     this->ui->qvtkWidget->GetRenderWindow()->Render();
+    this->ui->qvtkWidget->GetRenderWindow()->GetInteractor()->Render();
     this->ui->qvtkWidget->update();
+    this->update();
     camera=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActiveCamera();
     reset=false;
 }
@@ -2728,4 +2839,34 @@ void SimpleView::drawIsoSurface(vtkAlgorithmOutput * readerScalarPort){
     camera=isoRenderer->GetActiveCamera();
     reset=false;
 
+}
+
+void SimpleView::on_cameraSet_PB_released(){
+    double positionX,positionY,positionZ;
+    double focalX,focalY,focalZ;
+    double viewX,viewY,viewZ;
+    positionX=this->ui->cameraPositionX_LE->text().toDouble();
+    positionY=this->ui->cameraPositionY_LE->text().toDouble();
+    positionZ=this->ui->cameraPositionZ_LE->text().toDouble();
+    focalX=this->ui->cameraFocalX_LE->text().toDouble();
+    focalY=this->ui->cameraFocalY_LE->text().toDouble();
+    focalZ=this->ui->cameraFocalZ_LE->text().toDouble();
+    viewX=this->ui->cameraViewUpX_LE->text().toDouble();
+    viewY=this->ui->cameraViewUpY_LE->text().toDouble();
+    viewZ=this->ui->cameraViewUpZ_LE->text().toDouble();
+    camera->SetPosition(positionX, positionY, positionZ);
+    camera->SetFocalPoint(focalX, focalY, focalZ);
+    camera->SetViewUp(viewX, viewY, viewZ);
+    updateCamera(0);
+}
+
+void SimpleView::outputStatus(QFileInfo filedir){
+    std::ofstream output;
+    std::string str;
+    const char *dir=filedir.absoluteFilePath().toStdString().c_str();
+    qDebug()<<dir;
+    output.open(dir);
+    output << "# vtk DataFile Version 3.0\n";
+
+    output.close();
 }

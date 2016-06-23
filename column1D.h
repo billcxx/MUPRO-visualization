@@ -15,8 +15,8 @@ class column1D : public QWidget
     
 public:
     explicit column1D(QWidget *parent = 0);
+    int getFilteredCount();
     ~column1D();
-    int filter();
     QVector<double> returnX();
     double returnXMin();
     double returnXMax();
@@ -50,7 +50,8 @@ private:
     double getMin(double *list,int length);
     double getMax(double *list,int length);
     double getAvg(double *list,int length);
-
+    int filter();
+    bool loaded=false;
     double **vtkData;
     QVector<double*> dataFiltered;
     QString printstatus;
