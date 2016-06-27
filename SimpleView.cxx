@@ -679,7 +679,8 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     if (scalarFile && this->ui->scalar_CB->isChecked()){
         readerScalarOrigin->SetFileName(fileNameScalar);
         qDebug() << readerScalarOrigin;
-        readerScalarOrigin->Update();
+        readerScalarOrigin->UpdateWholeExtent();
+//        readerScalarOrigin->Update();
         readerScalarOrigin->GetOutput()->GetPointData()->GetScalars()->GetRange(scalar_range);
         readerScalar->SetInputConnection(readerScalarOrigin->GetOutputPort());
         if (this->ui->extract_CB->checkState()!=0){
@@ -690,10 +691,9 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             ymaxAll=this->ui->ymax_LE->text().toInt();
             zmaxAll=this->ui->zmax_LE->text().toInt();
             readerScalar->SetVOI(xminAll,xmaxAll,yminAll,ymaxAll,zminAll,zmaxAll);
-            readerScalar->Update();
         }else{
-            readerScalar->Update();
         }
+        readerScalar->UpdateWholeExtent();
 //        isosurface->SetInputConnection(readerScalar->GetOutputPort());
 //        isosurface->ComputeScalarsOn();
 //        isosurface->ComputeNormalsOn();
@@ -737,7 +737,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             VTK_CREATE(vtkUnstructuredGridVolumeRayCastMapper,mapperScalar1);
 //            VTK_CREATE(vtkUnstructuredGridVolumeZSweepMapper,mapperScalar1);
             mapperScalar1->SetInputConnection(0,tetra->GetOutputPort(0));
-            mapperScalar1->Update();
+            mapperScalar1->UpdateWholeExtent();
             actorScalar->SetMapper(mapperScalar1);
             qDebug()<<actorScalar;
         }else{
@@ -811,7 +811,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     if (vectorFile && this->ui->vector_CB->isChecked()){
         //Then is the vector part
         readerVectorOrigin->SetFileName(fileNameVector);
-        readerVectorOrigin->Update();
+        readerVectorOrigin->UpdateWholeExtent();
         
         readerVectorOrigin->GetOutput()->GetPointData()->GetVectors()->GetRange(vector_range,-1);
         
@@ -829,15 +829,15 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             ymaxAll=this->ui->ymax_LE->text().toInt();
             zmaxAll=this->ui->zmax_LE->text().toInt();
             readerVector->SetVOI(xminAll,xmaxAll,yminAll,ymaxAll,zminAll,zmaxAll);
-            readerVector->Update();
+            readerVector->UpdateWholeExtent();
         }else{
             qDebug()<<xmin<<xmax;
             // readerVector->GetVOI(extent);
             // readerVector->SetVOI(extent);
-            readerVector->Update();
+            readerVector->UpdateWholeExtent();
         }
         
-        arrowVector->Update();
+        arrowVector->UpdateWholeExtent();
         
         vector_range[0]=this->ui->vectorValueMin_LE->text().toDouble();
         vector_range[1]=this->ui->vectorValueMax_LE->text().toDouble();
@@ -847,14 +847,14 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
 
         
         thresholdVector->ThresholdBetween(vector_range[0],vector_range[1]);
-        thresholdVector->Update();
+        thresholdVector->UpdateWholeExtent();
         glyphVector->SetSourceConnection(0,arrowVector->GetOutputPort(0));
         glyphVector->SetInputConnection(thresholdVector->GetOutputPort());
         glyphVector->SetVectorModeToUseVector();
         glyphVector->SetColorModeToColorByVector();
         glyphVector->SetScaleModeToScaleByVector();
         glyphVector->SetScaleFactor(this->ui->vectorScale_LE->text().toDouble());
-        glyphVector->Update();
+        glyphVector->UpdateWholeExtent();
         
         mapperVector->SetInputConnection(glyphVector->GetOutputPort());
         mapperVector->SetScalarRange(vector_range);
@@ -2210,12 +2210,12 @@ void SimpleView::drawDomain(std::string domainName){
     
     readerDomainOrigin->SetFileName(fileNameDomain);
     qDebug() << readerDomainOrigin << fileNameDomain;
-    readerDomainOrigin->Update();
+    readerDomainOrigin->UpdateWholeExtent();
 //    readerDomainOrigin->GetOutput()->GetPointData()->GetScalars()->GetRange(domain_range);
 //    qDebug()<<domain_range;
     readerDomain->SetInputConnection(readerDomainOrigin->GetOutputPort());
     readerDomain->SetVOI(0,xmax+2,0,ymax+2,0,zmax+2);
-    readerDomain->Update();
+    readerDomain->UpdateWholeExtent();
     
     double R[3];
     
@@ -2234,27 +2234,27 @@ void SimpleView::drawDomain(std::string domainName){
         VTK_CREATE(vtkPolyDataNormals,normalGenerator);
         VTK_CREATE(vtkDataSetMapper,domainMapper);
 //        qDebug()<<"create the domain"<<i;
-        readerDomain->Update();
+        readerDomain->UpdateWholeExtent();
         domainThreshold->SetInputConnection(readerDomain->GetOutputPort());
         domainThreshold->AllScalarsOff();
         domainThreshold->ThresholdBetween(i-0.5,i+0.5);
-        domainThreshold->Update();
+        domainThreshold->UpdateWholeExtent();
 //        qDebug()<<"before surface"<<i;
         domainSurface->SetInputData(domainThreshold->GetOutput());
-        domainSurface->Update();
+        domainSurface->UpdateWholeExtent();
         domainSmooth->SetInputConnection(domainSurface->GetOutputPort());
         domainSmooth->SetNumberOfIterations(30);
         domainSmooth->SetRelaxationFactor(0.1);
         domainSmooth->FeatureEdgeSmoothingOff();
         domainSmooth->BoundarySmoothingOn();
-        domainSmooth->Update();
+        domainSmooth->UpdateWholeExtent();
         normalGenerator->SetInputData(domainSmooth->GetOutput());
         normalGenerator->ComputePointNormalsOn();
         normalGenerator->ComputeCellNormalsOn();
-        normalGenerator->Update();
+        normalGenerator->UpdateWholeExtent();
         domainMapper->SetInputConnection(normalGenerator->GetOutputPort());
         domainMapper->ScalarVisibilityOff();
-        domainMapper->Update();
+        domainMapper->UpdateWholeExtent();
         actorDomain[i]->SetMapper(domainMapper);
 //        qDebug()<<domainRGB[i][0]<<" "<<domainRGB[i][1]<<" "<<domainRGB[i][2];
         actorDomain[i]->GetProperty()->SetColor(domainRGB[i][0],domainRGB[i][1],domainRGB[i][2]);
@@ -2351,7 +2351,7 @@ void SimpleView::outputImage(QString load){
     windowToImage->SetInputBufferTypeToRGBA();
     windowToImage->FixBoundaryOff();
     windowToImage->ReadFrontBufferOn();
-    windowToImage->Update();
+    windowToImage->UpdateWholeExtent();
     VTK_CREATE(vtkPNGWriter, writer);
     writer->SetFileName(load.toStdString().c_str());
     writer->SetInputConnection(windowToImage->GetOutputPort());

@@ -278,9 +278,11 @@ int column1D::loadData1D(QString filedir){
     }else{
         iss1 >> x;
         qDebug()<<"x:"<<x;
-        if(isnan(x)){
-            rowNumber--;
-        }
+//        if(isnan(x)){
+//            rowNumber--;
+//        }
+        
+        
 //        std::ifstream read(dir, std::ios_base::ate );//open file
 //        int length = 0;
 //        
@@ -322,10 +324,10 @@ int column1D::loadData1D(QString filedir){
     }else{
         iss1 >> x;
         qDebug()<<"x:"<<x;
-        if(isnan(x)){
-            std::getline(input,line1);
-            std::istringstream iss1(line1);
-        }
+//        if(isnan(x)){
+//            std::getline(input,line1);
+//            std::istringstream iss1(line1);
+//        }
         
     }
     for (int j=0;j<rowNumber;++j){
