@@ -2792,15 +2792,23 @@ void SimpleView::on_isosurface_LW_itemChanged(QListWidgetItem *item){
 
 
 void SimpleView::on_isoDelete_PB_released(){
-    if (this->ui->isosurface_LW->selectedItems().count()>0) {
-        this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->RemoveActor(actorIso[this->ui->isosurface_LW->currentRow()]);
-        actorIso.removeAt(this->ui->isosurface_LW->currentRow());
+    if (this->ui->isosurface_LW->selectedItems().count()>0 ) {
+        qDebug()<<"actorISO:"<<actorIso.isEmpty()<<actorIso.last();
+        if (this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems()!=0) {
+            this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->RemoveActor(actorIso[this->ui->isosurface_LW->currentRow()]);
+        }
+        
+        if (!actorIso.isEmpty()) {
+            actorIso.removeAt(this->ui->isosurface_LW->currentRow());
+        }
         QString text=this->ui->isosurface_LW->currentItem()->text();
         int comboRow=this->ui->isoValue_Combo->findText(text);
+        qDebug()<<"comboRow"<<comboRow;
         this->ui->isosurface_LW->takeItem(this->ui->isosurface_LW->currentRow());
         this->ui->isoValue_Combo->removeItem(comboRow);
         QList<QTableWidgetItem*> item=this->ui->RGBIso_Table->findItems(text, Qt::MatchExactly);
         for (int i=0; i<item.size(); i++) {
+            qDebug()<<"i:"<<i<<item.size();
             if(this->ui->RGBIso_Table->column(item[i])==0){
                 this->ui->RGBIso_Table->removeRow(this->ui->RGBIso_Table->row(item[i]));
                 break;
@@ -3013,22 +3021,24 @@ void SimpleView::loadStatus(QFileInfo filedir){
     this->ui->cameraViewUpY_LE->setText(QString::fromStdString(y));
     this->ui->cameraViewUpZ_LE->setText(QString::fromStdString(z));
     input >> count;
+
     while (this->ui->RGBScalar_Table->rowCount()>count) {
         this->ui->RGBScalar_Table->removeRow(0);
     }
+
     while (this->ui->RGBScalar_Table->rowCount()<count) {
         this->ui->RGBScalar_Table->insertRow(0);
     }
     for (int i=0; i<count; i++) {
         input >> value >> r >> g >> b;
-        this->ui->RGBScalar_Table->item(i, 0)->setText(QString::fromStdString(value));
-        this->ui->RGBScalar_Table->item(i, 1)->setText(QString::fromStdString(r));
-        this->ui->RGBScalar_Table->item(i, 2)->setText(QString::fromStdString(g));
-        this->ui->RGBScalar_Table->item(i, 3)->setText(QString::fromStdString(b));
+        this->ui->RGBScalar_Table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(value)));
+        this->ui->RGBScalar_Table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(r)));
+        this->ui->RGBScalar_Table->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(g)));
+        this->ui->RGBScalar_Table->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(b)));
         
     }
     
-    
+    qDebug()<<"vector";
     input >> count;
     while (this->ui->RGBVector_Table->rowCount()>count) {
         this->ui->RGBVector_Table->removeRow(0);
@@ -3038,14 +3048,14 @@ void SimpleView::loadStatus(QFileInfo filedir){
     }
     for (int i=0; i<count; i++) {
         input >> value >> r >> g >> b;
-        this->ui->RGBVector_Table->item(i, 0)->setText(QString::fromStdString(value));
-        this->ui->RGBVector_Table->item(i, 1)->setText(QString::fromStdString(r));
-        this->ui->RGBVector_Table->item(i, 2)->setText(QString::fromStdString(g));
-        this->ui->RGBVector_Table->item(i, 3)->setText(QString::fromStdString(b));
+        this->ui->RGBVector_Table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(value)));
+        this->ui->RGBVector_Table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(r)));
+        this->ui->RGBVector_Table->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(g)));
+        this->ui->RGBVector_Table->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(b)));
         
     }
     
-    
+    qDebug()<<"Iso";
     input >> count;
     while (this->ui->RGBIso_Table->rowCount()>count) {
         this->ui->RGBIso_Table->removeRow(0);
@@ -3055,10 +3065,10 @@ void SimpleView::loadStatus(QFileInfo filedir){
     }
     for (int i=0; i<count; i++) {
         input >> value >> r >> g >> b;
-        this->ui->RGBIso_Table->item(i, 0)->setText(QString::fromStdString(value));
-        this->ui->RGBIso_Table->item(i, 1)->setText(QString::fromStdString(r));
-        this->ui->RGBIso_Table->item(i, 2)->setText(QString::fromStdString(g));
-        this->ui->RGBIso_Table->item(i, 3)->setText(QString::fromStdString(b));
+        this->ui->RGBIso_Table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(value)));
+        this->ui->RGBIso_Table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(r)));
+        this->ui->RGBIso_Table->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(g)));
+        this->ui->RGBIso_Table->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(b)));
         
     }
     
@@ -3071,8 +3081,8 @@ void SimpleView::loadStatus(QFileInfo filedir){
     }
     for (int i=0; i<count; i++) {
         input >> value >> a;
-        this->ui->alphaScalar_Table->item(i, 0)->setText(QString::fromStdString(value));
-        this->ui->alphaScalar_Table->item(i, 1)->setText(QString::fromStdString(a));
+        this->ui->alphaScalar_Table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(value)));
+        this->ui->alphaScalar_Table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(a)));
     }
     
     input >> checkstate;
