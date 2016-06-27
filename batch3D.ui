@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Batch3D</class>
+ <widget class="QDialog" name="Batch3D">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>462</width>
+    <height>391</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <item row="0" column="0">
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>0</number>
+     </property>
+     <item>
+      <widget class="QWidget" name="widget" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>450</width>
+         <height>350</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">
+
+.QWidget{
+	background-color:rgb(242,242,242);
+	/*font: 15pt &quot;Arial&quot;;*/
+}
+
+QPushButton{
+	    border:1px solid rgb(220,220,220);
+
+	height:38px;
+}
+
+QPushButton:hover{
+	background-color:rgb(150, 188, 201);
+border-radius:0px;
+color:white;
+}
+
+QTabWidget{
+	background-color:rgb(0,0,100);
+	border:none;
+}
+
+/*QTabWidget::tab-bar{
+background:#FFFFFF;
+alignment:center;
+
+}*/
+
+QTabWidget::pane{
+	
+	background-color:rgb(0,0,255);
+border: 0px solid black;
+}
+
+QTabBar::tab{
+background: #018FBF;
+	padding: 0px 10px;
+  color:#ffffff;
+margin: 0px 0px;
+height:30px;
+width:70px;
+}
+QTabBar::tab:last{
+border-right:1px solid rgb(153,153,153);
+width:69px;
+}
+
+QTabBar::tab:selected, QTabBar::tab:hover {
+    background: #015B8D;
+}
+
+QTabBar::tab:selected {
+    border-color: #F1F1F1;
+    border-bottom-color: #F1F1F1; /* same as pane color */
+}
+
+QTabBar::tab:!selected {
+    margin-top: 0px; /* make non-selected tabs look smaller */
+}
+
+QTabBar::tear{
+	width:0px;
+border:none;
+}
+
+QTabBar::scroller{
+	width:0px;
+border:none;
+}
+
+QGroupBox{
+	/*background-color: rgb(230,230,230);*/
+	/*border: 2px solid rgb(210,210,210);*/
+border-radius:0px;
+border: 1px solid black;
+margin-top:26px;
+}
+
+QGroupBox::title{
+subcontrol-origin:margin;
+	background-color:rgb(210,210,210);
+
+padding: 5px 10px;
+}
+
+
+QLineEdit{
+	background-color:rgb(255,255,255);
+/*border:1px solid rgb(220,220,220);
+min-width:58px;
+min-height:38px;
+qproperty-alignment: AlignCenter;*/
+}
+
+QLineEdit::hover, QLineEdit:focus{
+	background-color:rgb(255,255,255);
+}
+
+QLineEdit:focus{
+	background-color:rgb(255,255,255);
+}
+
+/*QLabel{
+background-color:rgb(230, 230, 230);
+qproperty-alignment: AlignCenter;
+}*/
+
+
+
+
+QComboBox {
+    border:1px solid rgb(220,220,220);
+}
+
+
+QComboBox:!editable {
+
+
+     background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                 stop: 0 #E1E1E1, stop: 0.4 #DDDDDD,
+                                 stop: 0.5 #D8D8D8, stop: 1.0 #D3D3D3);
+}
+
+/* QComboBox gets the &quot;on&quot; state when the popup is open */
+QComboBox:!editable:on {
+    background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                stop: 0 #D3D3D3, stop: 0.4 #D8D8D8,
+                                stop: 0.5 #DDDDDD, stop: 1.0 #E1E1E1);
+
+
+border-radius:0px;
+
+}
+
+QComboBox:on { /* shift the text when the popup opens */
+    padding-top: 0px;
+    padding-left: 20px;
+
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+		qproperty-alignment: AlignCenter;
+	border-left-width: 0px;
+    border-left-color: darkgray;
+    border-left-style: solid; /* just a single line */
+	padding-right:2px;
+
+}
+
+QComboBox::down-arrow {
+
+   image:url(:/Icons/dropdown.png);
+	width:12px;
+}
+
+QComboBox::down-arrow:on { /* shift the arrow when popup is open */
+    top: 1px;
+    left: 1px;
+}
+
+QComboBox QListView
+{
+	border-radius:0px;
+    selection-background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8DAEBE, stop: 1 #678EA3);
+
+	background-color:rgb(220,220,220);
+outline: 0;
+}
+
+QComboBox QListView::item{
+	color:rgb(0,0,0);
+height:31px;
+}
+
+QComboBox QListView::item:selected{
+	color:rgb(0,0,0);
+background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8DAEBE, stop: 1 #678EA3);
+	height:31px;
+
+}
+</string>
+       </property>
+       <widget class="QPushButton" name="loadScalar_PB">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>90</y>
+          <width>211</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Load example scalar data</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="timeInterval_LE">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>260</y>
+          <width>113</width>
+          <height>20</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="loadStatusFile_LB">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>50</y>
+          <width>191</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>(default is the current one)</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_4">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>290</y>
+          <width>131</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Time step ending:</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="loadVector_PB">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>120</y>
+          <width>211</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Load example vector data</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="timeEnd_LE">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>290</y>
+          <width>113</width>
+          <height>20</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_2">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>10</y>
+          <width>331</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Batch through same data for a series of time steps</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="loadStatusFile_PB">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>50</y>
+          <width>131</width>
+          <height>32</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Load status file</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="loadDomain_PB">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>150</y>
+          <width>211</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Load example domain data</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_3">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>230</y>
+          <width>131</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Time step beginning:</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_5">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>260</y>
+          <width>121</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Time step interval:</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="timeBegin_LE">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>230</y>
+          <width>113</width>
+          <height>20</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="scalarName_LB">
+        <property name="geometry">
+         <rect>
+          <x>250</x>
+          <y>90</y>
+          <width>181</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Scalar data</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="vectorName_LB">
+        <property name="geometry">
+         <rect>
+          <x>250</x>
+          <y>120</y>
+          <width>181</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Vector data</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="domainName_LB">
+        <property name="geometry">
+         <rect>
+          <x>250</x>
+          <y>150</y>
+          <width>181</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Domain data</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>320</y>
+          <width>131</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Output image name:</string>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="outputName_LE">
+        <property name="geometry">
+         <rect>
+          <x>160</x>
+          <y>320</y>
+          <width>113</width>
+          <height>21</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="exportDir_PB">
+        <property name="geometry">
+         <rect>
+          <x>10</x>
+          <y>180</y>
+          <width>211</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Set output path</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_6">
+        <property name="geometry">
+         <rect>
+          <x>250</x>
+          <y>180</y>
+          <width>181</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Output directory</string>
+        </property>
+       </widget>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>18</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QDialogButtonBox" name="buttonBox">
+       <property name="minimumSize">
+        <size>
+         <width>400</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="standardButtons">
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <tabstops>
+  <tabstop>loadStatusFile_PB</tabstop>
+  <tabstop>loadScalar_PB</tabstop>
+  <tabstop>loadVector_PB</tabstop>
+  <tabstop>loadDomain_PB</tabstop>
+  <tabstop>exportDir_PB</tabstop>
+  <tabstop>timeBegin_LE</tabstop>
+  <tabstop>timeInterval_LE</tabstop>
+  <tabstop>timeEnd_LE</tabstop>
+  <tabstop>outputName_LE</tabstop>
+ </tabstops>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>Batch3D</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>Batch3D</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

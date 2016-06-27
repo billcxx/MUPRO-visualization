@@ -52,13 +52,13 @@ include_directories(
 )
 
 # Set your files and resources here
-set( Srcs main.cxx SimpleView.cxx qcustomplot.cpp column1D.cpp)
+set( Srcs main.cxx SimpleView.cxx qcustomplot.cpp column1D.cpp batch3D.cpp)
 
-set( Hdrs SimpleView.h qcustomplot.h column1D.h)
+set( Hdrs SimpleView.h qcustomplot.h column1D.h batch3D.h)
 
-set( MOC_Hdrs SimpleView.h column1D.h)
+set( MOC_Hdrs SimpleView.h column1D.h batch3D.h)
 
-set( UIs SimpleView.ui column1D.ui)
+set( UIs SimpleView.ui column1D.ui batch3D.ui)
 
 set( QRCs Icons/icons.qrc )
 

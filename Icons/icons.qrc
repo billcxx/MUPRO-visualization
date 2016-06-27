@@ -1,6 +1,11 @@
 <RCC>
   <qresource prefix="/Icons">
+    <file>batch3D.png</file>
+    <file>batch3D.png</file>
+    <file>outputStatus.png</file>
     <file>mupro-logo-new.png</file>
+    <file>outputStatus.png</file>
+    <file>loadStatus.png</file>
     <file>dropdown.png</file>
     <file>3d.png</file>
     <file>2D.png</file>

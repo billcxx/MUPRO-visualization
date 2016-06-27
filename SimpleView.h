@@ -57,7 +57,10 @@ public:
     // Constructor/Destructor
     SimpleView();
     ~SimpleView();
-    
+    bool scalar,vector,domain;
+    int tempX=0,tempY=0,tempZ=0;
+    int scalarColumn,vectorColumn;
+
     public slots:
     
     virtual void slotOpenFile_scalar();
@@ -109,14 +112,17 @@ public:
     double getMin(double *list,int length);
     double getMax(double *list,int length);
     double getAvg(double *list,int length);
-    void outputScalar(QFileInfo path,int columnNumber,int x,int y, int z);
-    void outputVector(QFileInfo path,int colX,int colY,int colZ,int x,int y,int z);
+    void outputScalar(QString path,int columnNumber,int x,int y, int z);
+    void outputVector(QString path,int colX,int colY,int colZ,int x,int y,int z);
     
     void updateCamera(int choice);
     void updateExtraction(int x,int y, int z);
     void saveImage();
     void slotSwitch3D();
     void slotSwitch1D();
+    void slotOutputStatus();
+    void slotLoadStatus();
+    void slotBatch3D();
     void setup1DFigure(QCustomPlot *customPlot);
     
 
@@ -146,7 +152,9 @@ public:
     void on_vectorGlyph_CB_stateChanged(int state);
     void on_cameraSet_PB_released();
     void outputStatus(QFileInfo filedir);
-
+    void loadStatus(QFileInfo filedir);
+    void outputImage(QString load);
+    void outputDomain(QString filedir,int x, int y, int z);
     
 protected:
     
@@ -163,7 +171,7 @@ private:
     QString printstatus;
     double cameraPosition[3],cameraFocal[3];
     int xmin=0,xmax=0,ymin=0,ymax=0,zmin=0,zmax=0;
-    int tempX=0,tempY=0,tempZ=0;
+
     int xminAll=0,xmaxAll=0,yminAll=0,ymaxAll=0,zminAll=0,zmaxAll=0;
     vtkSmartPointer<vtkCamera> camera = vtkSmartPointer<vtkCamera>::New();
     double **vtkData;
@@ -192,6 +200,7 @@ private:
     QVector<QPen> lineStyle;
     QVector< QVector<double> > rgbWidth;
     QVector<QCPScatterStyle::ScatterShape> scatterStyleList;
+
     
 
 };
