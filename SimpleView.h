@@ -188,10 +188,10 @@ private:
     vtkSmartPointer<vtkScalarBarActor> vectorScaleBarActor = vtkSmartPointer<vtkScalarBarActor>::New();
 //    vtkSmartPointer<vtkVolume> actorScalar = vtkSmartPointer<vtkVolume>::New();
 //    vtkSmartPointer<vtkActor> actorCutter = vtkSmartPointer<vtkActor>::New();
-    vtkActor *actorCutter = vtkActor::New();
-    vtkActor *actorVector = vtkActor::New();
-    vtkActor *actorStream = vtkActor::New();
-    vtkVolume *actorScalar = vtkVolume::New();
+    vtkSmartPointer<vtkActor> actorCutter = vtkSmartPointer<vtkActor>::New();
+    vtkSmartPointer<vtkActor> actorVector = vtkSmartPointer<vtkActor>::New();
+    vtkSmartPointer<vtkActor> actorStream = vtkSmartPointer<vtkActor>::New();
+    vtkSmartPointer<vtkVolume> actorScalar = vtkSmartPointer<vtkVolume>::New();
     std::vector<vtkActor *> actorDomain;
     QVector<bool> existDomain;
     QVector<vtkActor*> actorIso;

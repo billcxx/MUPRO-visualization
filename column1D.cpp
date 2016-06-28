@@ -220,9 +220,8 @@ void column1D::on_load1DFile_PB_clicked(){
             this->ui->plot1DFile_Table->setItem(this->ui->plot1DFile_Table->rowCount()-1,2,new QTableWidgetItem(printstatus));
         }
 //        this->ui->plot1DFile_Table->sortItems(0);
-        
+        delete[] dataHold;
     }
-    
 }
 
 

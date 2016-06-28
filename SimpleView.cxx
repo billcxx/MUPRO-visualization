@@ -80,7 +80,7 @@
 #include <vtkMarchingCubes.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkStreamLine.h>
-#include <vtkHAVSVolumeMapper.h>
+
 #include <vtkUnstructuredGridVolumeZSweepMapper.h>
 #include <fstream>
 #include <iostream>
@@ -88,6 +88,7 @@
 #include <string>
 #include <algorithm>
 #include <cmath>
+#include <vtkGlyph3DMapper.h>
 #include "batch3D.h"
 
 
@@ -629,7 +630,8 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     VTK_CREATE(vtkArrowSource,arrowVector);
     VTK_CREATE(vtkMaskPoints,maskVector);
     VTK_CREATE(vtkGlyph3D,glyphVector);
-    VTK_CREATE(vtkPolyDataMapper,mapperVector);
+//    VTK_CREATE(vtkPolyDataMapper,mapperVector);
+    VTK_CREATE(vtkGlyph3DMapper,mapperVector);
     VTK_CREATE(vtkHedgeHog,hedgehog);
     VTK_CREATE(vtkDataSetMapper,streamMapper);
     VTK_CREATE(vtkThresholdPoints,thresholdVector);
@@ -829,38 +831,54 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             ymaxAll=this->ui->ymax_LE->text().toInt();
             zmaxAll=this->ui->zmax_LE->text().toInt();
             readerVector->SetVOI(xminAll,xmaxAll,yminAll,ymaxAll,zminAll,zmaxAll);
-            readerVector->UpdateWholeExtent();
         }else{
             qDebug()<<xmin<<xmax;
             // readerVector->GetVOI(extent);
             // readerVector->SetVOI(extent);
-            readerVector->UpdateWholeExtent();
         }
+        readerVector->UpdateWholeExtent();
         
         arrowVector->UpdateWholeExtent();
         
         vector_range[0]=this->ui->vectorValueMin_LE->text().toDouble();
         vector_range[1]=this->ui->vectorValueMax_LE->text().toDouble();
+        maskVector->SetInputConnection(readerVector->GetOutputPort());
+        if (this->ui->vectorMaskNum_LE->text().isEmpty()) {
+            this->ui->vectorMaskNum_LE->setText(tr("5000"));
+        }
+        vtkIdType maskNum=this->ui->vectorMaskNum_LE->text().toInt();
+        qDebug()<<"mask number"<<this->ui->vectorMaskNum_LE->text().toInt();
+        maskVector->SetMaximumNumberOfPoints(maskNum);
+        maskVector->SetOnRatio(xmax*ymax*zmax/maskNum);
+        maskVector->SetRandomMode(1);
+        maskVector->Update();
+        if (this->ui->vectorRange_CB->isChecked()) {
+            thresholdVector->SetInputConnection(maskVector->GetOutputPort());
+            thresholdVector->ThresholdBetween(vector_range[0],vector_range[1]);
+            thresholdVector->UpdateWholeExtent();
+//            glyphVector->SetInputConnection(thresholdVector->GetOutputPort());
+            mapperVector->SetInputConnection(thresholdVector->GetOutputPort());
+        }else{
+//            glyphVector->SetInputConnection(maskVector->GetOutputPort());
+            mapperVector->SetInputConnection(maskVector->GetOutputPort());
+        }
+//        glyphVector->SetSourceConnection(0,arrowVector->GetOutputPort());
+        mapperVector->SetSourceConnection(arrowVector->GetOutputPort());
+//        glyphVector->SetVectorModeToUseVector();
+//        glyphVector->SetColorModeToColorByVector();
+//        glyphVector->SetScaleModeToScaleByVector();
+        mapperVector->SetScaleModeToScaleByMagnitude();
+//        glyphVector->SetScaleFactor(this->ui->vectorScale_LE->text().toDouble());
+        mapperVector->SetScaleFactor(this->ui->vectorScale_LE->text().toDouble());
+//        glyphVector->Update();
         
-
-        thresholdVector->SetInputData(readerVector->GetOutput());
-
-        
-        thresholdVector->ThresholdBetween(vector_range[0],vector_range[1]);
-        thresholdVector->UpdateWholeExtent();
-        glyphVector->SetSourceConnection(0,arrowVector->GetOutputPort(0));
-        glyphVector->SetInputConnection(thresholdVector->GetOutputPort());
-        glyphVector->SetVectorModeToUseVector();
-        glyphVector->SetColorModeToColorByVector();
-        glyphVector->SetScaleModeToScaleByVector();
-        glyphVector->SetScaleFactor(this->ui->vectorScale_LE->text().toDouble());
-        glyphVector->UpdateWholeExtent();
-        
-        mapperVector->SetInputConnection(glyphVector->GetOutputPort());
+//        mapperVector->SetInputConnection(glyphVector->GetOutputPort());
         mapperVector->SetScalarRange(vector_range);
         mapperVector->SetLookupTable(colorVector);
-        
+        mapperVector->Update();
+        std::cout<<glyphVector;
         actorVector->SetMapper(mapperVector);
+        
         
         if(this->ui->vectorGlyph_CB->checkState()!=0){
             actorVector->SetVisibility(true);
@@ -1252,8 +1270,8 @@ void SimpleView::slotOpenFile_scalar()
         }else{
             
         }
-        qDebug()<<"output scalar:"<<filehold.absolutePath()+"/"+filehold.baseName();
-        scalarDir=QFileInfo(filehold.absolutePath()+"/"+filehold.baseName());
+        qDebug()<<"output scalar:"<<filehold.absolutePath()+"/"+filehold.completeBaseName();
+        scalarDir=QFileInfo(filehold.absolutePath()+"/"+filehold.completeBaseName());
         for (int i = 0; i < columns; ++i)
         {
             outputScalar(scalarDir.absoluteFilePath(),i,xmax,ymax,zmax);
@@ -1297,6 +1315,8 @@ void SimpleView::slotOpenFile_scalar()
         scalarName=(scalarDir.absoluteFilePath().toStdString()+"."+std::to_string(this->ui->scalarChoice->currentIndex()+1)+".vtk").c_str();
         updateVTK(scalarName,vectorName);
         delete this->vtkData;
+        delete[] dataHold;
+
     }
 }
 
@@ -1336,7 +1356,7 @@ void SimpleView::slotOpenFile_vector()
         }else{
             
         }
-        vectorDir=QFileInfo(filehold.absolutePath()+"/"+filehold.baseName());
+        vectorDir=QFileInfo(filehold.absolutePath()+"/"+filehold.completeBaseName());
         for (i = 0; i < columns/3; ++i)
         {
             qDebug()<<"not sure why nothing shows up";
@@ -1347,7 +1367,7 @@ void SimpleView::slotOpenFile_vector()
             qDebug()<<xmax<<ymax<<zmax;
             qDebug()<<"not sure why nothing shows up";
             qDebug()<<"not sure why nothing shows up";
-            qDebug()<<filehold.absolutePath().append(filehold.baseName());
+            qDebug()<<filehold.absolutePath().append(filehold.completeBaseName());
         }
         this->ui->inputFileVector->setText(filehold.fileName());
         
@@ -1386,13 +1406,16 @@ void SimpleView::slotOpenFile_vector()
         }
         this->ui->vectorValueMin_LE->setText(QString::fromStdString(std::to_string(getMin(dataHold,rows))));
         this->ui->vectorValueMax_LE->setText(QString::fromStdString(std::to_string(getMax(dataHold,rows))));
-        this->ui->vectorScale_LE->setText(QString::fromStdString(std::to_string(2/getMax(dataHold, rows))));
+        this->ui->vectorScale_LE->setText(QString::fromStdString(std::to_string(5/getMax(dataHold, rows))));
 //        this->ui->information_Tab->setCurrentIndex(1);
         int index=this->ui->vectorChoice->currentIndex();
         vectorName=(vectorDir.absoluteFilePath().toStdString()+"."+std::to_string(3*index+1)+std::to_string(3*index+2)+std::to_string(3*index+3)+".vtk").c_str();
         
         updateVTK(scalarName,vectorName);
         delete this->vtkData;
+        delete[] dataHold;
+
+
         
     }
 }
@@ -2005,7 +2028,7 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
     std::ofstream output;
     std::string str;
 //    QFileInfo filehold(filedir);
-//    domainDir= QFileInfo(filehold.absolutePath()+"/"+filehold.baseName());
+//    domainDir= QFileInfo(filehold.absolutePath()+"/"+filehold.completeBaseName());
     str=filedir.toStdString()+".domain.vtk";
     const char *outdir=str.c_str();
     output.open(outdir);
@@ -2031,6 +2054,8 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
             existDomain[outputData[i]]=true;
         }
     }
+    delete[] outputData;
+
 }
 
 int SimpleView::domainType(double px,double py, double pz){
@@ -2107,8 +2132,9 @@ void SimpleView::slotOpenFile_domain(){
         this->ui->volume_CB->setCheckState(Qt::Unchecked);
         this->ui->vector_CB->setCheckState(Qt::Unchecked);
         this->ui->domain_CB->setCheckState(Qt::Checked);
-        
-        outputDomain(load,xmax,ymax,zmax);
+        domainDir= QFileInfo(filehold.absolutePath()+"/"+filehold.completeBaseName());
+
+        outputDomain(domainDir.absoluteFilePath(),xmax,ymax,zmax);
         
         for (int i=0;i<27;i++){
             qDebug()<<i<<existDomain[i];
@@ -2903,6 +2929,8 @@ void SimpleView::outputStatus(QFileInfo filedir){
     output << this->ui->cameraPositionX_LE->text().toDouble() << " " << this->ui->cameraPositionY_LE->text().toDouble() << " " << this->ui->cameraPositionZ_LE->text().toDouble() << endl;
     output << this->ui->cameraFocalX_LE->text().toDouble() << " " << this->ui->cameraFocalY_LE->text().toDouble() << " " << this->ui->cameraFocalZ_LE->text().toDouble() << endl;
     output << this->ui->cameraViewUpX_LE->text().toDouble()<< " " << this->ui->cameraViewUpY_LE->text().toDouble()<< " " << this->ui->cameraViewUpZ_LE->text().toDouble()<< endl;
+    
+    output << this->ui->RGB_Combo->currentIndex() << endl;
     output << this->ui->RGBScalar_Table->rowCount() <<endl;
     //output for the scalar RGB table
     for (int i=0; i<this->ui->RGBScalar_Table->rowCount(); i++) {
@@ -2919,6 +2947,7 @@ void SimpleView::outputStatus(QFileInfo filedir){
         output << this->ui->RGBIso_Table->item(i, 0)->text().toDouble()<< " " << this->ui->RGBIso_Table->item(i, 1)->text().toInt()<< " " << this->ui->RGBIso_Table->item(i, 2)->text().toInt()<< " " << this->ui->RGBIso_Table->item(i, 3)->text().toInt()<< endl;
     }
     //output for the scalar alpha table
+    output << this->ui->alpha_Combo->currentIndex()<<endl;
     output << this->ui->alphaScalar_Table->rowCount()<<endl;
     for (int i=0; i<this->ui->alphaScalar_Table->rowCount(); i++) {
         output << this->ui->alphaScalar_Table->item(i, 0)->text().toDouble()<< " " << this->ui->alphaScalar_Table->item(i, 1)->text().toDouble()<< endl;
@@ -3020,8 +3049,10 @@ void SimpleView::loadStatus(QFileInfo filedir){
     this->ui->cameraViewUpX_LE->setText(QString::fromStdString(x));
     this->ui->cameraViewUpY_LE->setText(QString::fromStdString(y));
     this->ui->cameraViewUpZ_LE->setText(QString::fromStdString(z));
+    
     input >> count;
-
+    this->ui->RGB_Combo->setCurrentIndex(count);
+    input >> count;
     while (this->ui->RGBScalar_Table->rowCount()>count) {
         this->ui->RGBScalar_Table->removeRow(0);
     }
@@ -3072,6 +3103,8 @@ void SimpleView::loadStatus(QFileInfo filedir){
         
     }
     
+    input >> count;
+    this->ui->alpha_Combo->setCurrentIndex(count);
     input >> count;
     while (this->ui->alphaScalar_Table->rowCount()>count) {
         this->ui->alphaScalar_Table->removeRow(0);
