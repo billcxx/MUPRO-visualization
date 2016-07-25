@@ -418,7 +418,7 @@ qproperty-alignment: AlignCenter;*/
 </string>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
             <property name="iconSize">
              <size>
@@ -520,6 +520,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </size>
                    </property>
                    <widget class="QComboBox" name="scalarChoice">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>170</x>
@@ -556,10 +559,13 @@ border-right:1px solid rgb(153, 153, 153);
                      <string>Scalar</string>
                     </property>
                     <property name="checked">
-                     <bool>true</bool>
+                     <bool>false</bool>
                     </property>
                    </widget>
-                   <widget class="QLabel" name="label">
+                   <widget class="QLabel" name="scalarColumn_LB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>30</x>
@@ -616,6 +622,9 @@ border-right:1px solid rgb(153, 153, 153);
 }</string>
                    </property>
                    <widget class="QCheckBox" name="scalarRange_CB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>30</x>
@@ -632,6 +641,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QCheckBox" name="volume_CB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>10</x>
@@ -653,7 +665,7 @@ border-right:1px solid rgb(153, 153, 153);
                      <string>Volume rendering</string>
                     </property>
                     <property name="checked">
-                     <bool>true</bool>
+                     <bool>false</bool>
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="scalarValueMin_LE">
@@ -672,7 +684,10 @@ border-right:1px solid rgb(153, 153, 153);
                      <string>Min value for the range filter</string>
                     </property>
                    </widget>
-                   <widget class="QLabel" name="label_5">
+                   <widget class="QLabel" name="scalarTo_LB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>180</x>
@@ -745,6 +760,9 @@ border-right:1px solid rgb(153, 153, 153);
 }</string>
                    </property>
                    <widget class="QCheckBox" name="slice_CB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>10</x>
@@ -767,6 +785,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="sliceNormalZ">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>200</x>
@@ -786,6 +807,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="sliceNormalY">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>140</x>
@@ -805,6 +829,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="sliceOriginX">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>80</x>
@@ -824,6 +851,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="sliceNormalX">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>80</x>
@@ -843,6 +873,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="sliceOriginY">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>140</x>
@@ -861,7 +894,10 @@ border-right:1px solid rgb(153, 153, 153);
                      <string>Y cordinate of a point on the plane.</string>
                     </property>
                    </widget>
-                   <widget class="QLabel" name="label_8">
+                   <widget class="QLabel" name="slicePoint_LB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>30</x>
@@ -884,6 +920,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="sliceOriginZ">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>200</x>
@@ -902,7 +941,10 @@ border-right:1px solid rgb(153, 153, 153);
                      <string>Z cordinate of a point on the plane.</string>
                     </property>
                    </widget>
-                   <widget class="QLabel" name="label_9">
+                   <widget class="QLabel" name="sliceNormal_LB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>30</x>
@@ -987,6 +1029,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QCheckBox" name="isosurface_CB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>10</x>
@@ -1102,7 +1147,10 @@ border-right:1px solid rgb(153, 153, 153);
                      <string>List of currently specified isosurface value that will be visualized.</string>
                     </property>
                    </widget>
-                   <widget class="QLabel" name="label_3">
+                   <widget class="QLabel" name="isosurfaces_LB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>30</x>
@@ -1537,6 +1585,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </size>
                    </property>
                    <widget class="QComboBox" name="vectorChoice">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>179</x>
@@ -1547,6 +1598,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QLabel" name="label_2">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>30</x>
@@ -1619,9 +1673,12 @@ border-right:1px solid rgb(153, 153, 153);
 }</string>
                    </property>
                    <widget class="QLineEdit" name="vectorValueMin_LE">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
-                      <x>30</x>
+                      <x>50</x>
                       <y>130</y>
                       <width>80</width>
                       <height>21</height>
@@ -1629,9 +1686,12 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="vectorValueMax_LE">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
-                      <x>150</x>
+                      <x>170</x>
                       <y>130</y>
                       <width>80</width>
                       <height>21</height>
@@ -1639,6 +1699,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QCheckBox" name="vectorRange_CB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>30</x>
@@ -1651,7 +1714,10 @@ border-right:1px solid rgb(153, 153, 153);
                      <string>Magnitude range:</string>
                     </property>
                    </widget>
-                   <widget class="QLabel" name="label_4">
+                   <widget class="QLabel" name="vectorScale_LB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>30</x>
@@ -1665,6 +1731,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="vectorScale_LE">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>90</x>
@@ -1674,10 +1743,13 @@ border-right:1px solid rgb(153, 153, 153);
                      </rect>
                     </property>
                    </widget>
-                   <widget class="QLabel" name="label_7">
+                   <widget class="QLabel" name="vectorTo_LB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
-                      <x>110</x>
+                      <x>130</x>
                       <y>130</y>
                       <width>40</width>
                       <height>21</height>
@@ -1691,6 +1763,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QCheckBox" name="vectorGlyph_CB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>10</x>
@@ -1709,12 +1784,15 @@ border-right:1px solid rgb(153, 153, 153);
                      <string>Arrow glyph</string>
                     </property>
                    </widget>
-                   <widget class="QLabel" name="label_37">
+                   <widget class="QLabel" name="vectorMaxPoints_LB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>30</x>
                       <y>40</y>
-                      <width>151</width>
+                      <width>141</width>
                       <height>20</height>
                      </rect>
                     </property>
@@ -1723,6 +1801,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="vectorMaskNum_LE">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>180</x>
@@ -1775,7 +1856,10 @@ border-right:1px solid rgb(153, 153, 153);
 	border-top:1px solid rgb(179, 179, 179);
 }</string>
                    </property>
-                   <widget class="QLabel" name="label_11">
+                   <widget class="QLabel" name="streamSampleRadius_LB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>30</x>
@@ -1789,6 +1873,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="seedCenterY_LE">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>170</x>
@@ -1799,6 +1886,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="seedRadius_LE">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>190</x>
@@ -1809,6 +1899,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="seedCenterX_LE">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>130</x>
@@ -1819,6 +1912,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="seedCenterZ_LE">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>210</x>
@@ -1829,6 +1925,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="seedNumber_LE">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>190</x>
@@ -1838,7 +1937,10 @@ border-right:1px solid rgb(153, 153, 153);
                      </rect>
                     </property>
                    </widget>
-                   <widget class="QLabel" name="label_10">
+                   <widget class="QLabel" name="streamSeedNum_LB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>30</x>
@@ -1851,7 +1953,10 @@ border-right:1px solid rgb(153, 153, 153);
                      <string>Number of seeds:</string>
                     </property>
                    </widget>
-                   <widget class="QLabel" name="label_34">
+                   <widget class="QLabel" name="streamSeedCenter_LB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>30</x>
@@ -1865,6 +1970,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QCheckBox" name="streamline_CB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>10</x>
@@ -1883,7 +1991,10 @@ border-right:1px solid rgb(153, 153, 153);
                      <string>Streamline</string>
                     </property>
                    </widget>
-                   <widget class="QLabel" name="label_36">
+                   <widget class="QLabel" name="streamMaxLength_LB">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>30</x>
@@ -1897,6 +2008,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="streamStepLength_LE">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>170</x>
@@ -2327,6 +2441,9 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                    </widget>
                    <widget class="QListWidget" name="domain_LW">
+                    <property name="enabled">
+                     <bool>false</bool>
+                    </property>
                     <property name="geometry">
                      <rect>
                       <x>30</x>

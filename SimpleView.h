@@ -102,6 +102,9 @@ public:
     void on_alphaDelete_PB_released();
     void on_domain_LW_itemChanged(QListWidgetItem *item);
     void on_domain_CB_stateChanged(int state);
+    void on_slice_CB_stateChanged(int state);
+    void on_streamline_CB_stateChanged(int state);
+    void on_vectorRange_CB_stateChanged(int state);
     void updateVTK(std::string fileNameScalar,std::string fileNameVector);
     
     

@@ -679,6 +679,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
 
     
     if (scalarFile && this->ui->scalar_CB->isChecked()){
+        qDebug()<<"scalarName:"<<QString::fromStdString(scalarName);
         readerScalarOrigin->SetFileName(fileNameScalar);
         qDebug() << readerScalarOrigin;
         readerScalarOrigin->UpdateWholeExtent();
@@ -1117,9 +1118,99 @@ void SimpleView::on_scalar_CB_stateChanged(int state){
     if(state==0){
         this->ui->scalarChoice->setEnabled(false);
         this->ui->volume_CB->setEnabled(false);
+        this->ui->scalarColumn_LB->setEnabled(false);
+        this->ui->slice_CB->setEnabled(false);
+        this->ui->isosurface_CB->setEnabled(false);
+        this->ui->scalarChoice->setEnabled(false);
+        
+        
+        this->ui->scalarRange_CB->setEnabled(false);
+        this->ui->scalarValueMin_LE->setEnabled(false);
+        this->ui->scalarValueMax_LE->setEnabled(false);
+        this->ui->scalarTo_LB->setEnabled(false);
+        
+
+        this->ui->slicePoint_LB->setEnabled(false);
+        this->ui->sliceNormal_LB->setEnabled(false);
+        this->ui->sliceNormalX->setEnabled(false);
+        this->ui->sliceNormalY->setEnabled(false);
+        this->ui->sliceNormalZ->setEnabled(false);
+        this->ui->sliceOriginX->setEnabled(false);
+        this->ui->sliceOriginY->setEnabled(false);
+        this->ui->sliceOriginZ->setEnabled(false);
+        
+        
+        this->ui->isoValue_LB->setEnabled(false);
+        this->ui->isoValue_LE->setEnabled(false);
+        this->ui->isoAdd_PB->setEnabled(false);
+        this->ui->isoDelete_PB->setEnabled(false);
+        this->ui->isosurfaces_LB->setEnabled(false);
+        this->ui->isosurface_LW->setEnabled(false);
     }else{
         this->ui->scalarChoice->setEnabled(true);
         this->ui->volume_CB->setEnabled(true);
+        this->ui->scalarColumn_LB->setEnabled(true);
+        this->ui->slice_CB->setEnabled(true);
+        this->ui->isosurface_CB->setEnabled(true);
+        this->ui->scalarChoice->setEnabled(true);
+        
+        
+        if (this->ui->volume_CB->isChecked()) {
+            if (this->ui->scalarRange_CB->isChecked()) {
+                this->ui->scalarValueMin_LE->setEnabled(true);
+                this->ui->scalarValueMax_LE->setEnabled(true);
+                this->ui->scalarTo_LB->setEnabled(true);
+            }else{
+                this->ui->scalarValueMin_LE->setEnabled(false);
+                this->ui->scalarValueMax_LE->setEnabled(false);
+                this->ui->scalarTo_LB->setEnabled(false);
+            }
+            this->ui->scalarRange_CB->setEnabled(true);
+        }else{
+            this->ui->scalarRange_CB->setEnabled(false);
+            this->ui->scalarValueMin_LE->setEnabled(false);
+            this->ui->scalarValueMax_LE->setEnabled(false);
+            this->ui->scalarTo_LB->setEnabled(false);
+        }
+        
+        if (this->ui->slice_CB->isChecked()) {
+            this->ui->slicePoint_LB->setEnabled(true);
+            this->ui->sliceNormal_LB->setEnabled(true);
+            this->ui->sliceNormalX->setEnabled(true);
+            this->ui->sliceNormalY->setEnabled(true);
+            this->ui->sliceNormalZ->setEnabled(true);
+            this->ui->sliceOriginX->setEnabled(true);
+            this->ui->sliceOriginY->setEnabled(true);
+            this->ui->sliceOriginZ->setEnabled(true);
+        }else{
+            this->ui->slicePoint_LB->setEnabled(false);
+            this->ui->sliceNormal_LB->setEnabled(false);
+            this->ui->sliceNormalX->setEnabled(false);
+            this->ui->sliceNormalY->setEnabled(false);
+            this->ui->sliceNormalZ->setEnabled(false);
+            this->ui->sliceOriginX->setEnabled(false);
+            this->ui->sliceOriginY->setEnabled(false);
+            this->ui->sliceOriginZ->setEnabled(false);
+        }
+        
+        if (this->ui->isosurface_CB->isChecked()) {
+            this->ui->isoValue_LB->setEnabled(true);
+            this->ui->isoValue_LE->setEnabled(true);
+            this->ui->isoAdd_PB->setEnabled(true);
+            this->ui->isoDelete_PB->setEnabled(true);
+            this->ui->isosurfaces_LB->setEnabled(true);
+            this->ui->isosurface_LW->setEnabled(true);
+        }else{
+            this->ui->isoValue_LB->setEnabled(false);
+            this->ui->isoValue_LE->setEnabled(false);
+            this->ui->isoAdd_PB->setEnabled(false);
+            this->ui->isoDelete_PB->setEnabled(false);
+            this->ui->isosurfaces_LB->setEnabled(false);
+            this->ui->isosurface_LW->setEnabled(false);
+        }
+        
+        
+
     }
     
     if(state==0 || this->ui->volume_CB->checkState()==0){
@@ -1131,6 +1222,23 @@ void SimpleView::on_scalar_CB_stateChanged(int state){
 }
 
 void SimpleView::on_volume_CB_stateChanged(int state){
+    if (state==0) {
+        this->ui->scalarRange_CB->setEnabled(false);
+        this->ui->scalarValueMin_LE->setEnabled(false);
+        this->ui->scalarValueMax_LE->setEnabled(false);
+        this->ui->scalarTo_LB->setEnabled(false);
+    }else{
+        this->ui->scalarRange_CB->setEnabled(true);
+        if (this->ui->scalarRange_CB->isChecked()) {
+            this->ui->scalarValueMin_LE->setEnabled(true);
+            this->ui->scalarValueMax_LE->setEnabled(true);
+            this->ui->scalarTo_LB->setEnabled(true);
+        }else{
+            this->ui->scalarValueMin_LE->setEnabled(false);
+            this->ui->scalarValueMax_LE->setEnabled(false);
+            this->ui->scalarTo_LB->setEnabled(false);
+        }
+    }
     if(state==0 || this->ui->scalar_CB->checkState()==0){
         actorScalar->SetVisibility(false);
     }else{
@@ -1139,8 +1247,58 @@ void SimpleView::on_volume_CB_stateChanged(int state){
     this->ui->qvtkWidget->GetRenderWindow()->Render();
 }
 
+void SimpleView::on_slice_CB_stateChanged(int state){
+    if (state==0) {
+        this->ui->slicePoint_LB->setEnabled(false);
+        this->ui->sliceNormal_LB->setEnabled(false);
+        this->ui->sliceNormalX->setEnabled(false);
+        this->ui->sliceNormalY->setEnabled(false);
+        this->ui->sliceNormalZ->setEnabled(false);
+        this->ui->sliceOriginX->setEnabled(false);
+        this->ui->sliceOriginY->setEnabled(false);
+        this->ui->sliceOriginZ->setEnabled(false);
+    }else{
+        this->ui->slicePoint_LB->setEnabled(true);
+        this->ui->sliceNormal_LB->setEnabled(true);
+        this->ui->sliceNormalX->setEnabled(true);
+        this->ui->sliceNormalY->setEnabled(true);
+        this->ui->sliceNormalZ->setEnabled(true);
+        this->ui->sliceOriginX->setEnabled(true);
+        this->ui->sliceOriginY->setEnabled(true);
+        this->ui->sliceOriginZ->setEnabled(true);
+    }
+}
+
 
 void SimpleView::on_vectorGlyph_CB_stateChanged(int state){
+    if (state!=0) {
+        this->ui->vectorMaskNum_LE->setEnabled(true);
+        this->ui->vectorMaxPoints_LB->setEnabled(true);
+        this->ui->vectorScale_LB->setEnabled(true);
+        this->ui->vectorScale_LE->setEnabled(true);
+        this->ui->vectorRange_CB->setEnabled(true);
+        if (this->ui->vectorRange_CB->isChecked()) {
+            this->ui->vectorValueMin_LE->setEnabled(true);
+            this->ui->vectorValueMax_LE->setEnabled(true);
+            this->ui->vectorTo_LB->setEnabled(true);
+        }else{
+            this->ui->vectorValueMin_LE->setEnabled(false);
+            this->ui->vectorValueMax_LE->setEnabled(false);
+            this->ui->vectorTo_LB->setEnabled(false);
+        }
+    }else{
+        this->ui->vectorMaskNum_LE->setEnabled(false);
+        this->ui->vectorMaxPoints_LB->setEnabled(false);
+        this->ui->vectorScale_LB->setEnabled(false);
+        this->ui->vectorScale_LE->setEnabled(false);
+        this->ui->vectorRange_CB->setEnabled(false);
+        this->ui->vectorValueMin_LE->setEnabled(false);
+        this->ui->vectorValueMax_LE->setEnabled(false);
+        this->ui->vectorTo_LB->setEnabled(false);
+    }
+    
+    
+    
     if(state==0 || this->ui->vector_CB->checkState()==0){
         actorVector->SetVisibility(false);
     }else{
@@ -1150,6 +1308,7 @@ void SimpleView::on_vectorGlyph_CB_stateChanged(int state){
 }
 
 void SimpleView::on_scalarBar_CB_stateChanged(int state){
+    
     if(state!=0 && this->ui->scalar_CB->isChecked()){
         scalarScaleBarActor->SetVisibility(true);
     }else{
@@ -1164,6 +1323,65 @@ void SimpleView::on_scalarBar_CB_stateChanged(int state){
 }
 
 void SimpleView::on_vector_CB_stateChanged(int state){
+    if (state==0) {
+        this->ui->vectorGlyph_CB->setEnabled(false);
+        this->ui->streamline_CB->setEnabled(false);
+    }else{
+        this->ui->vectorGlyph_CB->setEnabled(true);
+        this->ui->streamline_CB->setEnabled(true);
+        
+        
+        if (this->ui->vectorGlyph_CB->isChecked()) {
+            this->ui->vectorMaskNum_LE->setEnabled(true);
+            this->ui->vectorMaxPoints_LB->setEnabled(true);
+            this->ui->vectorScale_LB->setEnabled(true);
+            this->ui->vectorScale_LE->setEnabled(true);
+            this->ui->vectorRange_CB->setEnabled(true);
+            if (this->ui->vectorRange_CB->isChecked()) {
+                this->ui->vectorValueMin_LE->setEnabled(true);
+                this->ui->vectorValueMax_LE->setEnabled(true);
+                this->ui->vectorTo_LB->setEnabled(true);
+            }else{
+                this->ui->vectorValueMin_LE->setEnabled(false);
+                this->ui->vectorValueMax_LE->setEnabled(false);
+                this->ui->vectorTo_LB->setEnabled(false);
+            }
+        }else{
+            this->ui->vectorMaskNum_LE->setEnabled(false);
+            this->ui->vectorMaxPoints_LB->setEnabled(false);
+            this->ui->vectorScale_LB->setEnabled(false);
+            this->ui->vectorScale_LE->setEnabled(false);
+            this->ui->vectorRange_CB->setEnabled(false);
+            this->ui->vectorValueMin_LE->setEnabled(false);
+            this->ui->vectorValueMax_LE->setEnabled(false);
+            this->ui->vectorTo_LB->setEnabled(false);
+        }
+        
+        if (this->ui->streamline_CB->isChecked()) {
+            this->ui->streamStepLength_LE->setEnabled(true);
+            this->ui->seedNumber_LE->setEnabled(true);
+            this->ui->seedRadius_LE->setEnabled(true);
+            this->ui->seedCenterX_LE->setEnabled(true);
+            this->ui->seedCenterY_LE->setEnabled(true);
+            this->ui->seedCenterZ_LE->setEnabled(true);
+            this->ui->streamSeedNum_LB->setEnabled(true);
+            this->ui->streamSeedCenter_LB->setEnabled(true);
+            this->ui->streamMaxLength_LB->setEnabled(true);
+            this->ui->streamSampleRadius_LB->setEnabled(true);
+        }else{
+            this->ui->streamStepLength_LE->setEnabled(false);
+            this->ui->seedNumber_LE->setEnabled(false);
+            this->ui->seedRadius_LE->setEnabled(false);
+            this->ui->seedCenterX_LE->setEnabled(false);
+            this->ui->seedCenterY_LE->setEnabled(false);
+            this->ui->seedCenterZ_LE->setEnabled(false);
+            this->ui->streamSeedNum_LB->setEnabled(false);
+            this->ui->streamSeedCenter_LB->setEnabled(false);
+            this->ui->streamMaxLength_LB->setEnabled(false);
+            this->ui->streamSampleRadius_LB->setEnabled(false);
+        }
+    }
+    
     if(state!=0){
         actorVector->SetVisibility(true);
     }else{
@@ -1171,6 +1389,53 @@ void SimpleView::on_vector_CB_stateChanged(int state){
     }
     this->ui->qvtkWidget->GetRenderWindow()->Render();
 }
+
+void SimpleView::on_vectorRange_CB_stateChanged(int state){
+    if (state!=0) {
+        this->ui->vectorValueMin_LE->setEnabled(true);
+        this->ui->vectorValueMax_LE->setEnabled(true);
+        this->ui->vectorTo_LB->setEnabled(true);
+    }else{
+        this->ui->vectorValueMin_LE->setEnabled(false);
+        this->ui->vectorValueMax_LE->setEnabled(false);
+        this->ui->vectorTo_LB->setEnabled(false);
+    }
+}
+
+
+void SimpleView::on_streamline_CB_stateChanged(int state){
+    if (state!=0) {
+        this->ui->streamStepLength_LE->setEnabled(true);
+        this->ui->seedNumber_LE->setEnabled(true);
+        this->ui->seedRadius_LE->setEnabled(true);
+        this->ui->seedCenterX_LE->setEnabled(true);
+        this->ui->seedCenterY_LE->setEnabled(true);
+        this->ui->seedCenterZ_LE->setEnabled(true);
+        this->ui->streamSeedNum_LB->setEnabled(true);
+        this->ui->streamSeedCenter_LB->setEnabled(true);
+        this->ui->streamMaxLength_LB->setEnabled(true);
+        this->ui->streamSampleRadius_LB->setEnabled(true);
+    }else{
+        this->ui->streamStepLength_LE->setEnabled(false);
+        this->ui->seedNumber_LE->setEnabled(false);
+        this->ui->seedRadius_LE->setEnabled(false);
+        this->ui->seedCenterX_LE->setEnabled(false);
+        this->ui->seedCenterY_LE->setEnabled(false);
+        this->ui->seedCenterZ_LE->setEnabled(false);
+        this->ui->streamSeedNum_LB->setEnabled(false);
+        this->ui->streamSeedCenter_LB->setEnabled(false);
+        this->ui->streamMaxLength_LB->setEnabled(false);
+        this->ui->streamSampleRadius_LB->setEnabled(false);
+    }
+    if(state!=0){
+        actorStream->SetVisibility(true);
+    }else{
+        actorStream->SetVisibility(false);
+    }
+    this->ui->qvtkWidget->GetRenderWindow()->Render();
+
+}
+
 
 
 void SimpleView::on_extract_CB_stateChanged(int state){
@@ -1322,7 +1587,7 @@ void SimpleView::slotOpenFile_scalar()
 
 void SimpleView::on_scalarChoice_currentIndexChanged(int index){
 //    if (index!=this->ui->scalarChoice->currentIndex()){
-        scalarName=(scalarDir.absolutePath().toStdString()+std::to_string(index+1)+".vtk").c_str();
+        scalarName=(scalarDir.absoluteFilePath().toStdString()+"."+std::to_string(this->ui->scalarChoice->currentIndex()+1)+".vtk").c_str();
         qDebug()<<"scalar"<<scalarName.c_str();
         updateVTK(scalarName,vectorName);
 //    }
@@ -1649,9 +1914,11 @@ void SimpleView::on_scalarRange_CB_stateChanged(int state){
     if(state==0){
         this->ui->scalarValueMin_LE->setEnabled(false);
         this->ui->scalarValueMax_LE->setEnabled(false);
+        this->ui->scalarTo_LB->setEnabled(false);
     }else{
         this->ui->scalarValueMin_LE->setEnabled(true);
         this->ui->scalarValueMax_LE->setEnabled(true);
+        this->ui->scalarTo_LB->setEnabled(true);
     }
 }
 void SimpleView::on_RGBAdd_PB_released(){
@@ -2755,6 +3022,7 @@ void SimpleView::on_isosurface_CB_stateChanged(int state){
         this->ui->isoAdd_PB->setEnabled(true);
         this->ui->isoDelete_PB->setEnabled(true);
         this->ui->isosurface_LW->setEnabled(true);
+        this->ui->isosurfaces_LB->setEnabled(true);
         
     }else{
         this->ui->isoValue_LE->setEnabled(false);
@@ -2762,6 +3030,8 @@ void SimpleView::on_isosurface_CB_stateChanged(int state){
         this->ui->isoAdd_PB->setEnabled(false);
         this->ui->isoDelete_PB->setEnabled(false);
         this->ui->isosurface_LW->setEnabled(false);
+        this->ui->isosurfaces_LB->setEnabled(false);
+
     }
     int index=this->ui->RGB_Combo->currentIndex();
     

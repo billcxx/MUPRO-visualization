@@ -1,6 +1,7 @@
 #include "column1D.h"
 #include "ui_column1D.h"
 #include <QDebug>
+#include <iostream>
 #include <QFileInfo>
 #include <QFileDialog>
 #include <fstream>
@@ -149,17 +150,16 @@ void column1D::on_load1DFile_PB_clicked(){
         double *dataHold= new double[rows];
         QFileInfo filehold(load);
         // outputScalar(0,xmax,ymax,zmax);
+        while(this->ui->plot1DFileX_Combo->count()>0){
+            this->ui->plot1DFileX_Combo->removeItem(0);
+        }
         for (int i=0; i<columns; i++) {
             this->ui->plot1DFileX_Combo->addItem(QString::fromStdString(std::to_string(i+1)));
         }
-        int current=this->ui->plot1DFileY_LW->count();
-        if(current!=0){
-            for(int i=0;i<current+1;++i){
-                this->ui->plot1DFileY_LW->takeItem(i);
+
+            while(this->ui->plot1DFileY_LW->count()>0){
+                this->ui->plot1DFileY_LW->takeItem(0);
             }
-        }else{
-            
-        }
         for (int i = 0; i < columns; ++i)
         {
             this->ui->plot1DFileY_LW->addItem(QString::fromStdString(std::to_string(i+1)));
@@ -170,15 +170,13 @@ void column1D::on_load1DFile_PB_clicked(){
         this->ui->plot1DFileY_LW->sortItems();
         
         
-        current=this->ui->plot1DColFile_Combo->count();
+
         this->ui->plot1DRelationFile_Combo->setEnabled(true);
         this->ui->plot1DRelationValueFile_LE->setEnabled(true);
-        if(current!=0){
-            for(int i=0;i<current+1;++i){
-                this->ui->plot1DColFile_Combo->removeItem(i);
+
+            while(this->ui->plot1DColFile_Combo->count()>0){
+                this->ui->plot1DColFile_Combo->removeItem(0);
             }
-        }else{
-        }
         for (int i = 0; i < columns; ++i)
         {
             this->ui->plot1DColFile_Combo->addItem(QString::fromStdString(std::to_string(i+1)));
@@ -200,8 +198,8 @@ void column1D::on_load1DFile_PB_clicked(){
 //        this->ui->plot1Dzminzmax_LE->setText(printstatus);
 //        
         this->ui->plot1DFile_Table->clearContents();
-        for (int i=0; i<this->ui->plot1DFile_Table->rowCount(); i++) {
-            this->ui->plot1DFile_Table->removeRow(i);
+        while(this->ui->plot1DFile_Table->rowCount()>0) {
+            this->ui->plot1DFile_Table->removeRow(0);
         }
         for(int i=0;i<columns;++i){
             for (int j=0;j<rows;++j){
@@ -230,8 +228,9 @@ int column1D::loadData1D(QString filedir){
     //First we need to decide whether the first line of the file needs to be kept
     std::ifstream input;
     std::ofstream output;
-    float a;
+    std::string a;
     int i=0,x=0,y=0,z=0,columnNumber=0;
+    float test=0;
     long rowNumber=0;
     int count1=0;
     int count2=0;
@@ -255,11 +254,18 @@ int column1D::loadData1D(QString filedir){
         count1++;
     }
     while(iss2 >> a){
+        qDebug()<<QString::fromStdString(a);
         count2++;
     }
 
+
     
     columnNumber=count2;
+    for (int k=0;k<columnNumber;++k){
+        iss2 >> std::scientific;
+        iss2 >>  test;
+        qDebug()<< "test:"<<test;
+    }
     input.open(dir);
     for (rowNumber=0; std::getline(input, line); rowNumber++) {
     }
@@ -277,9 +283,9 @@ int column1D::loadData1D(QString filedir){
     }else{
         iss1 >> x;
         qDebug()<<"x:"<<x;
-//        if(isnan(x)){
-//            rowNumber--;
-//        }
+        if(x==0){
+            rowNumber--;
+        }
         
         
 //        std::ifstream read(dir, std::ios_base::ate );//open file
@@ -332,10 +338,21 @@ int column1D::loadData1D(QString filedir){
     for (int j=0;j<rowNumber;++j){
         std::getline(input,line);
         std::istringstream iss(line);
+        std::cout << line <<"\n";
         for (int k=0;k<columnNumber;++k){
-            iss >> std::scientific;
-            iss >>  vtkData[j][k];
+            iss >>  a;
+            std::istringstream iss1(a);
+            iss1 >> std::scientific;
+            iss1 >> vtkData[j][k];
+            if(iss1.fail()){
+                std::cout <<  "fail,";
+//                iss.ignore(256,' ');
+            }else{
+                std::cout << vtkData[j][k] <<",";
+
+            }
         }
+        std::cout<<"\n";
     }
     input.close();
     
@@ -344,7 +361,11 @@ int column1D::loadData1D(QString filedir){
     
     output.open(outdir);
     for(int i=0;i<rowNumber;i++){
-        output << "i:" << i << ", vtkData:"<<vtkData[i][0] << "\n";
+        output << "i:" << i << ", vtkData:";
+        for(int j=0;j<columnNumber;j++){
+            output<<vtkData[i][j] << " ";
+        }
+        output << "\n";
     }
     output.close();
     
