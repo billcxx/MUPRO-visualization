@@ -1324,12 +1324,37 @@ void SimpleView::on_scalarBar_CB_stateChanged(int state){
 
 void SimpleView::on_vector_CB_stateChanged(int state){
     if (state==0) {
+        this->ui->vectorChoice->setEnabled(false);
+        this->ui->vector_LB->setEnabled(false);
         this->ui->vectorGlyph_CB->setEnabled(false);
         this->ui->streamline_CB->setEnabled(false);
+        this->ui->vectorValueMin_LE->setEnabled(false);
+        this->ui->vectorValueMax_LE->setEnabled(false);
+        this->ui->vectorTo_LB->setEnabled(false);
+        this->ui->vectorMaskNum_LE->setEnabled(false);
+        this->ui->vectorMaxPoints_LB->setEnabled(false);
+        this->ui->vectorScale_LB->setEnabled(false);
+        this->ui->vectorScale_LE->setEnabled(false);
+        this->ui->vectorRange_CB->setEnabled(false);
+        this->ui->vectorValueMin_LE->setEnabled(false);
+        this->ui->vectorValueMax_LE->setEnabled(false);
+        this->ui->vectorTo_LB->setEnabled(false);
+        this->ui->streamStepLength_LE->setEnabled(false);
+        this->ui->seedNumber_LE->setEnabled(false);
+        this->ui->seedRadius_LE->setEnabled(false);
+        this->ui->seedCenterX_LE->setEnabled(false);
+        this->ui->seedCenterY_LE->setEnabled(false);
+        this->ui->seedCenterZ_LE->setEnabled(false);
+        this->ui->streamSeedNum_LB->setEnabled(false);
+        this->ui->streamSeedCenter_LB->setEnabled(false);
+        this->ui->streamMaxLength_LB->setEnabled(false);
+        this->ui->streamSampleRadius_LB->setEnabled(false);
+        
     }else{
         this->ui->vectorGlyph_CB->setEnabled(true);
         this->ui->streamline_CB->setEnabled(true);
-        
+        this->ui->vectorChoice->setEnabled(true);
+        this->ui->vector_LB->setEnabled(true);
         
         if (this->ui->vectorGlyph_CB->isChecked()) {
             this->ui->vectorMaskNum_LE->setEnabled(true);

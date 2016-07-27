@@ -418,7 +418,7 @@ qproperty-alignment: AlignCenter;*/
 </string>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <property name="iconSize">
              <size>
@@ -1597,7 +1597,7 @@ border-right:1px solid rgb(153, 153, 153);
                      </rect>
                     </property>
                    </widget>
-                   <widget class="QLabel" name="label_2">
+                   <widget class="QLabel" name="vector_LB">
                     <property name="enabled">
                      <bool>false</bool>
                     </property>
