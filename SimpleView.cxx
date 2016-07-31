@@ -1710,11 +1710,14 @@ void SimpleView::slotOpenFile_vector()
     }
 }
 
-void SimpleView::on_vectorChoice_activated(int index){
-    if(index!=this->ui->vectorChoice->currentIndex()){
-        vectorName=(vectorDir.absolutePath().toStdString()+std::to_string(3*index+1)+std::to_string(3*index+2)+std::to_string(3*index+3)+".vtk").c_str();
+void SimpleView::on_vectorChoice_currentIndexChanged(int index){
+    qDebug()<<"vector index:"<<index;
+    qDebug()<<"current index:"<<this->ui->vectorChoice->currentIndex();
+//    if(index!=this->ui->vectorChoice->currentIndex()){
+        vectorName=(vectorDir.absoluteFilePath().toStdString()+"."+std::to_string(3*index+1)+std::to_string(3*index+2)+std::to_string(3*index+3)+".vtk").c_str();
+        qDebug()<<"vectorname:"<<QString::fromStdString(vectorName);
         updateVTK(scalarName,vectorName);
-    }
+//    }
 }
 
 void SimpleView::outputScalar(QString path,int columnNumber,int x, int y, int z){

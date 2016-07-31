@@ -79,7 +79,7 @@ public:
     void figurePlot();
     
     void on_scalarChoice_currentIndexChanged(int index);
-    void on_vectorChoice_activated(int index);
+    void on_vectorChoice_currentIndexChanged(int index);
     void on_axis_CB_stateChanged(int state);
     void on_outline_CB_stateChanged(int state);
     void on_scalar_CB_stateChanged(int state);
