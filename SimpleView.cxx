@@ -2251,9 +2251,9 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
     
     for (i=0;i<zmax+1;i++){
         rowNumber=1*(zmax+1)*(ymax+1)+0*(zmax+1)+i;
-        px=vtkData[rowNumber][0];
-        py=vtkData[rowNumber][1];
-        pz=vtkData[rowNumber][2];
+        px=vtkData[rowNumber][3];
+        py=vtkData[rowNumber][4];
+        pz=vtkData[rowNumber][5];
         // qDebug()<<i << " "<<rowNumber<<std::abs(px)+std::abs(py)+std::abs(pz) ;
         if(std::abs(px)+std::abs(py)+std::abs(pz)>0.000001){
             nfs=i;
@@ -2261,9 +2261,9 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
     }
     for (i=zmax;i>0;i--){
         rowNumber=1*(zmax+1)*(ymax+1)+0*(zmax+1)+i;
-        px=vtkData[rowNumber][0];
-        py=vtkData[rowNumber][1];
-        pz=vtkData[rowNumber][2];
+        px=vtkData[rowNumber][3];
+        py=vtkData[rowNumber][4];
+        pz=vtkData[rowNumber][5];
         // qDebug()<<i << " "<<rowNumber<<std::abs(px)+std::abs(py)+std::abs(pz) ;
         if(std::abs(px)+std::abs(py)+std::abs(pz)>0.000001){
             nsub=i-1;
@@ -2283,9 +2283,9 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
             for (k=nsub+2;k<nfs+2;k++){
                 rowNumber=(i-1)*(zmax+1)*(ymax+1)+(j-1)*(zmax+1)+(k-1); //+3
                 // qDebug()<<"vtkdata:"<<rowNumber;
-                px=vtkData[rowNumber][0];
-                py=vtkData[rowNumber][1];
-                pz=vtkData[rowNumber][2];
+                px=vtkData[rowNumber][3];
+                py=vtkData[rowNumber][4];
+                pz=vtkData[rowNumber][5];
                 hold=k*(xmax+3)*(ymax+3)+j*(xmax+3)+i; //+3
                 // qDebug()<<"outputdata"<<rowNumber;
                 outputData[hold]=domainType(px,py,pz);
