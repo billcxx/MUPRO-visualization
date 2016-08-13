@@ -115,15 +115,17 @@ SimpleView::SimpleView()
         existDomain.push_back(false);
     }
     this->ui->qvtkWidget->setAutomaticImageCacheEnabled(1);
-    VTK_CREATE(vtkTransform,transform);
-    VTK_CREATE(vtkRenderer,renderer);
-    transform->Translate(-5,-5.0,-5.0);
-    axes->SetUserTransform(transform);
+//    VTK_CREATE(vtkTransform,transform);
+//    VTK_CREATE(vtkRenderer,renderer);
+//    transform->Translate(-5,-5.0,-5.0);
+//    axes->SetUserTransform(transform);
     axes->SetScale(10);
     axes->SetTotalLength(10,10,10);
-    axes->GetXAxisCaptionActor2D()->GetProperty()->SetColor(0,0,0);
-    axes->GetYAxisCaptionActor2D()->GetProperty()->SetColor(0,0,0);
-    axes->GetZAxisCaptionActor2D()->GetProperty()->SetColor(0,0,0);
+//    axes->GetXAxisCaptionActor2D()->GetProperty()->SetColor(0,0,0);
+//    axes->GetYAxisCaptionActor2D()->GetProperty()->SetColor(0,0,0);
+//    axes->GetZAxisCaptionActor2D()->GetProperty()->SetColor(0,0,0);
+
+
     
     // Set up action signals and slots
     connect(this->ui->actionOpenFile_scalar, SIGNAL(triggered()), this, SLOT(slotOpenFile_scalar()));
@@ -195,7 +197,7 @@ SimpleView::SimpleView()
     domainRGB[26][0]=0.8867188;domainRGB[26][1]=0.4335937;domainRGB[26][2]=0.0273438; //c-
     
     for (int i=0; i<27; i++) {
-        this->ui->domain_LW->item(i)->setForeground(QColor(domainRGB[i][0]*255,255*domainRGB[i][1],domainRGB[i][2]*255));
+        this->ui->domain_LW->item(i+4)->setForeground(QColor(domainRGB[i][0]*255,255*domainRGB[i][1],domainRGB[i][2]*255));
     }
     
     
@@ -650,9 +652,9 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     VTK_CREATE(vtkColorTransferFunction,colorScalar);
     VTK_CREATE(vtkColorTransferFunction,colorVector);
     VTK_CREATE(vtkCompositeTransferFunctionItem,compositeColor);
-    VTK_CREATE(vtkRenderer,rendererAxes);
+//    VTK_CREATE(vtkRenderer,rendererAxes);
     
-    VTK_CREATE(vtkCubeAxesActor,cubeAxes);
+//    VTK_CREATE(vtkCubeAxesActor,cubeAxes);
     
     
     VTK_CREATE(vtkOutlineFilter,outlineScalar);
@@ -1007,8 +1009,13 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     }
     
     
-    renderer->AddActor(axes);
-
+//    renderer->AddActor(axes);
+    widget->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
+    widget->SetOrientationMarker( axes );
+    widget->SetInteractor( this->ui->qvtkWidget->GetRenderWindow()->GetInteractor());
+    widget->SetViewport( 0.0, 0.0, 0.2, 0.2 );
+    widget->SetEnabled( 1 );
+    widget->InteractiveOn();
     
 
     
@@ -1109,6 +1116,14 @@ void SimpleView::on_outline_CB_stateChanged(int state){
         }
     }else{
         outlineVectorActor->SetVisibility(false);
+    }
+    
+    if(this->ui->domain_CB->checkState()){
+        if (state!=0) {
+            outlineDomainActor->SetVisibility(true);
+        }else{
+            outlineDomainActor->SetVisibility(false);
+        }
     }
     
     this->ui->qvtkWidget->GetRenderWindow()->Render();
@@ -2232,9 +2247,9 @@ int SimpleView::domainProcessing(QString filedir){
     for (int i=0;i<27;i++){
         qDebug()<<i<<existDomain[i];
         if(existDomain[i]){
-            this->ui->domain_LW->item(i)->setCheckState(Qt::Checked);
+            this->ui->domain_LW->item(i+4)->setCheckState(Qt::Checked);
         }else{
-            this->ui->domain_LW->item(i)->setCheckState(Qt::Unchecked);
+            this->ui->domain_LW->item(i+4)->setCheckState(Qt::Unchecked);
         }
     }
     return columnNumber;
@@ -2434,9 +2449,9 @@ void SimpleView::slotOpenFile_domain(){
         for (int i=0;i<27;i++){
             qDebug()<<i<<existDomain[i];
             if(existDomain[i]){
-                this->ui->domain_LW->item(i)->setCheckState(Qt::Checked);
+                this->ui->domain_LW->item(i+4)->setCheckState(Qt::Checked);
             }else{
-                this->ui->domain_LW->item(i)->setCheckState(Qt::Unchecked);
+                this->ui->domain_LW->item(i+4)->setCheckState(Qt::Unchecked);
             }
         }
 
@@ -2597,6 +2612,7 @@ void SimpleView::drawDomain(std::string domainName){
     // }else{
     //   actorDomain[0]->SetVisibility(true);
     // }
+//    domainRenderer->AddActor(axes);
     
     VTK_CREATE(vtkOutlineFilter,outlineDomain);
     VTK_CREATE(vtkDataSetMapper,outlineDomainMapper);
@@ -2607,6 +2623,26 @@ void SimpleView::drawDomain(std::string domainName){
 
     domainRenderer->SetBackground(0.9,0.9,0.9);
     domainRenderer->AddActor(outlineDomainActor);
+    if (this->ui->outline_CB->checkState()) {
+        outlineDomainActor->SetVisibility(true);
+    }else{
+        outlineDomainActor->SetVisibility(false);
+    }
+    
+
+    
+    widget->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
+    widget->SetOrientationMarker( axes );
+    widget->SetInteractor( this->ui->qvtkWidget->GetRenderWindow()->GetInteractor());
+    widget->SetViewport( 0.0, 0.0, 0.2, 0.2 );
+    widget->SetEnabled( 1 );
+    widget->InteractiveOn();
+    
+    if(this->ui->axis_CB->checkState()!=0){
+        axes->SetVisibility(true);
+    }else{
+        axes->SetVisibility(false);
+    }
     
     if(!reset){domainRenderer->SetActiveCamera(camera);}
     
@@ -2621,11 +2657,54 @@ void SimpleView::drawDomain(std::string domainName){
 void SimpleView::on_domain_LW_itemChanged(QListWidgetItem *item){
     int i=0;
     i=this->ui->domain_LW->row(item);
-    if(item->checkState()){
-        actorDomain[i]->SetVisibility(true);
+    if (i==0) {
+        if (item->checkState()) {
+            for (int j=0; j<31 ; j++) {
+                this->ui->domain_LW->item(j)->setCheckState(Qt::Checked);
+            }
+        }else{
+            for (int j=0; j<31 ; j++) {
+                this->ui->domain_LW->item(j)->setCheckState(Qt::Unchecked);
+            }
+        }
+    }else if (i==1){
+        if (item->checkState()) {
+            for (int j=5; j<13 ; j++) {
+                this->ui->domain_LW->item(j)->setCheckState(Qt::Checked);
+            }
+        }else{
+            for (int j=5; j<13 ; j++) {
+                this->ui->domain_LW->item(j)->setCheckState(Qt::Unchecked);
+            }
+        }
+    }else if (i==2){
+        if (item->checkState()) {
+            for (int j=13; j<25 ; j++) {
+                this->ui->domain_LW->item(j)->setCheckState(Qt::Checked);
+            }
+        }else{
+            for (int j=13; j<25 ; j++) {
+                this->ui->domain_LW->item(j)->setCheckState(Qt::Unchecked);
+            }
+        }
+    }else if (i==3){
+        if (item->checkState()) {
+            for (int j=25; j<31 ; j++) {
+                this->ui->domain_LW->item(j)->setCheckState(Qt::Checked);
+            }
+        }else{
+            for (int j=25; j<31 ; j++) {
+                this->ui->domain_LW->item(j)->setCheckState(Qt::Unchecked);
+            }
+        }
     }else{
-        actorDomain[i]->SetVisibility(false);
+        if(item->checkState()){
+            actorDomain[i-4]->SetVisibility(true);
+        }else{
+            actorDomain[i-4]->SetVisibility(false);
+        }
     }
+    
     this->ui->qvtkWidget->GetRenderWindow()->Render();
     this->ui->qvtkWidget->update();
 
@@ -3497,7 +3576,7 @@ void SimpleView::loadStatus(QFileInfo filedir){
     input >> checkstate;
     this->ui->domain_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
     domain=checkstate;
-    for (int i=0; i<27; i++) {
+    for (int i=0; i<31; i++) {
         input >> checkstate;
         this->ui->domain_LW->item(i)->setCheckState(static_cast<Qt::CheckState>(checkstate));
     }

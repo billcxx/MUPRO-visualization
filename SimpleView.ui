@@ -418,7 +418,7 @@ qproperty-alignment: AlignCenter;*/
 </string>
             </property>
             <property name="currentIndex">
-             <number>1</number>
+             <number>2</number>
             </property>
             <property name="iconSize">
              <size>
@@ -2457,6 +2457,38 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                     <item>
                      <property name="text">
+                      <string>Check all domains</string>
+                     </property>
+                     <property name="checkState">
+                      <enum>Checked</enum>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Check all R domains</string>
+                     </property>
+                     <property name="checkState">
+                      <enum>Checked</enum>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Check all O domains</string>
+                     </property>
+                     <property name="checkState">
+                      <enum>Checked</enum>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>Check all T domains</string>
+                     </property>
+                     <property name="checkState">
+                      <enum>Checked</enum>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
                       <string>Substrate</string>
                      </property>
                      <property name="background">
@@ -2483,7 +2515,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>R1+</string>
+                      <string>R1+ (+,+,+)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2491,7 +2523,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>R1-</string>
+                      <string>R1- (-,-,-)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2499,7 +2531,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>R2+</string>
+                      <string>R2+ (-,+,+)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2507,7 +2539,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>R2-</string>
+                      <string>R2- (+,-,-)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2515,7 +2547,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>R3+</string>
+                      <string>R3+ (-,-,+)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2523,7 +2555,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>R3-</string>
+                      <string>R3- (+,+,-)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2531,7 +2563,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>R4+</string>
+                      <string>R4+ (+,-,+)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2539,7 +2571,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>R4-</string>
+                      <string>R4- (-,+,-)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2547,7 +2579,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>O1+</string>
+                      <string>O1+ (+,+,0)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2555,7 +2587,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>O1-</string>
+                      <string>O1- (-,-,0)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2563,7 +2595,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>O2+</string>
+                      <string>O2+ (+,-,0)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2571,7 +2603,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>O2-</string>
+                      <string>O2- (-,+,0)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2579,7 +2611,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>O3+</string>
+                      <string>O3+ (+,0,+)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2587,7 +2619,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>O3-</string>
+                      <string>O3- (-,0,-)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2595,7 +2627,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>O4+</string>
+                      <string>O4+ (+,0,-)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2603,7 +2635,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>O4-</string>
+                      <string>O4- (-,0,+)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2611,7 +2643,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>O5+</string>
+                      <string>O5+ (0,+,+)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2619,7 +2651,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>O5-</string>
+                      <string>O5- (0,-,-)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2627,7 +2659,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>O6+</string>
+                      <string>O6+ (0,+,-)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2635,7 +2667,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>O6-</string>
+                      <string>O6- (0,-,+)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2643,7 +2675,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>T1+</string>
+                      <string>T1+ (+,0,0)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2651,7 +2683,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>T1-</string>
+                      <string>T1- (-,0,0)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2659,7 +2691,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>T2+</string>
+                      <string>T2+ (0,+,0)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2667,7 +2699,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>T2-</string>
+                      <string>T2- (0,-,0)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2675,7 +2707,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>T3+</string>
+                      <string>T3+ (0,0,+)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>
@@ -2683,7 +2715,7 @@ border-right:1px solid rgb(153, 153, 153);
                     </item>
                     <item>
                      <property name="text">
-                      <string>T3-</string>
+                      <string>T3- (0,0,-)</string>
                      </property>
                      <property name="checkState">
                       <enum>Checked</enum>

@@ -34,6 +34,7 @@
 #include <vtkExtractVOI.h>
 #include <vtkStreamLine.h>
 #include "qcustomplot.h"
+#include <vtkOrientationMarkerWidget.h>
 
 #include <QDesktopWidget>
 #include <QScreen>
@@ -195,6 +196,7 @@ private:
     vtkSmartPointer<vtkActor> actorVector = vtkSmartPointer<vtkActor>::New();
     vtkSmartPointer<vtkActor> actorStream = vtkSmartPointer<vtkActor>::New();
     vtkSmartPointer<vtkVolume> actorScalar = vtkSmartPointer<vtkVolume>::New();
+    vtkSmartPointer<vtkOrientationMarkerWidget> widget =vtkSmartPointer<vtkOrientationMarkerWidget>::New();
     std::vector<vtkActor *> actorDomain;
     QVector<bool> existDomain;
     QVector<vtkActor*> actorIso;
