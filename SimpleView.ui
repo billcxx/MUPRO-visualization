@@ -549,7 +549,6 @@ border-right:1px solid rgb(153, 153, 153);
                     </property>
                     <property name="font">
                      <font>
-                      <pointsize>13</pointsize>
                       <weight>75</weight>
                       <italic>false</italic>
                       <bold>true</bold>
