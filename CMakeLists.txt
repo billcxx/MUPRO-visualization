@@ -89,7 +89,7 @@ MESSAGE("vtk library" ${VTK_LIBRARIES} )
 MESSAGE("QT library" ${QT_LIBRARIES} )
 
 
-add_executable(SimpleView MACOSX_BUNDLE
+add_executable(SimpleView WIN32
   ${Srcs} ${Hdrs} ${UI_Srcs} ${MOC_Hdrs} ${QRC_Srcs})
 qt5_use_modules(SimpleView Core Gui Widgets PrintSupport)
 target_link_libraries(SimpleView 
