@@ -15,6 +15,8 @@
 #ifndef SimpleView_H
 #define SimpleView_H
 
+#define piValue 3.141592653589
+
 #include "vtkSmartPointer.h"    // Required for smart pointer internal ivars.
 #include <vtkQtTableView.h>
 #include <QMainWindow>
@@ -35,6 +37,7 @@
 #include <vtkStreamLine.h>
 #include "qcustomplot.h"
 #include <vtkOrientationMarkerWidget.h>
+#include <vtkScalarBarWidget.h>
 
 #include <QDesktopWidget>
 #include <QScreen>
@@ -85,8 +88,9 @@ public:
     void on_outline_CB_stateChanged(int state);
     void on_scalar_CB_stateChanged(int state);
     void on_volume_CB_stateChanged(int state);
-    void on_scalarBar_CB_stateChanged(int state);
-    void on_vector_CB_stateChanged(int state);
+	void on_scalarLegendBar_CB_stateChanged(int state);
+	void on_vectorLegendBar_CB_stateChanged(int state);
+	void on_vector_CB_stateChanged(int state);
     void on_extract_CB_stateChanged(int state);
     void on_xmin_LE_editingFinished();
     void on_ymin_LE_editingFinished();
@@ -151,6 +155,13 @@ public:
     void on_isosurface_CB_stateChanged(int state);
     void on_isoAdd_PB_released();
     void on_isoDelete_PB_released();
+	void on_scalarLegend_LE_textChanged(const QString & text);
+	void on_vectorLegend_LE_textChanged(const QString & text);
+	void on_domainStdAngle_LE_editingFinished();
+	void on_domainStdValue_LE_editingFinished();
+	void on_domainRePlot_PB_released();
+
+
     void drawIsoSurface(vtkAlgorithmOutput * readerScalarPort);
     void on_isosurface_LW_itemChanged(QListWidgetItem *item);
     void on_vectorGlyph_CB_stateChanged(int state);
@@ -168,7 +179,7 @@ private:
     
     vtkSmartPointer<vtkQtTableView> TableView= vtkSmartPointer<vtkQtTableView>::New();
     int columns;
-    std::string scalarName,vectorName;
+    std::string scalarName,vectorName,domainName;
     QFileInfo scalarDir,vectorDir,domainDir;
     // Designer form
     Ui_SimpleView *ui;
@@ -177,6 +188,36 @@ private:
     int xmin=0,xmax=0,ymin=0,ymax=0,zmin=0,zmax=0;
 
     int xminAll=0,xmaxAll=0,yminAll=0,ymaxAll=0,zminAll=0,zmaxAll=0;
+	double domainStandardValue = 0.3, domainStandardAngle = 4.0, domainStandardAngleRad=4.0*3.141592653589/180;
+	double domainOrth[27][3] = {
+		{0,0,0},
+		{std::sqrt(3),std::sqrt(3),std::sqrt(3) },
+		{-1*std::sqrt(3),-1 * std::sqrt(3),-1 * std::sqrt(3) },
+		{ -1 * std::sqrt(3),std::sqrt(3),std::sqrt(3) },
+		{ std::sqrt(3),-1 * std::sqrt(3),-1 * std::sqrt(3) },
+		{ -1 * std::sqrt(3),-1 * std::sqrt(3),std::sqrt(3) },
+		{ std::sqrt(3),std::sqrt(3),-1 * std::sqrt(3) },
+		{ std::sqrt(3),-1 * std::sqrt(3),std::sqrt(3) },
+		{ -1 * std::sqrt(3),std::sqrt(3),-1 * std::sqrt(3) },
+		{ std::sqrt(2),std::sqrt(2),0},
+		{-1 * std::sqrt(2),-1 * std::sqrt(2),0},
+		{ std::sqrt(2),-1 * std::sqrt(2),0},
+		{ -1 * std::sqrt(2),std::sqrt(2),0},
+		{ std::sqrt(2),0,std::sqrt(2) },
+		{ -1 * std::sqrt(2),0,-1 * std::sqrt(2) },
+		{ std::sqrt(2),0,-1 * std::sqrt(2) },
+		{ -1 * std::sqrt(2),0,std::sqrt(2) },
+		{0,std::sqrt(2),std::sqrt(2) },
+		{0,-1 * std::sqrt(2),-1 * std::sqrt(2) },
+		{0,std::sqrt(2),-1 * std::sqrt(2) },
+		{0,-1 * std::sqrt(2),std::sqrt(2) },
+		{1,0,0},
+		{-1,0,0},
+		{0,1,0},
+		{0,-1,0},
+		{0,0,1},
+		{0,0,-1}
+	};
     vtkSmartPointer<vtkCamera> camera = vtkSmartPointer<vtkCamera>::New();
     double **vtkData;
     double RGBPoint;
@@ -197,6 +238,8 @@ private:
     vtkSmartPointer<vtkActor> actorStream = vtkSmartPointer<vtkActor>::New();
     vtkSmartPointer<vtkVolume> actorScalar = vtkSmartPointer<vtkVolume>::New();
     vtkSmartPointer<vtkOrientationMarkerWidget> widget =vtkSmartPointer<vtkOrientationMarkerWidget>::New();
+	vtkSmartPointer<vtkScalarBarWidget> scalarLegendWidget = vtkSmartPointer<vtkScalarBarWidget>::New();
+	vtkSmartPointer<vtkScalarBarWidget> vectorLegendWidget = vtkSmartPointer<vtkScalarBarWidget>::New();
     std::vector<vtkActor *> actorDomain;
     QVector<bool> existDomain;
     QVector<vtkActor*> actorIso;

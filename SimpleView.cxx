@@ -90,6 +90,7 @@
 #include <cmath>
 #include <vtkGlyph3DMapper.h>
 #include "batch3D.h"
+#include "domainCriteria.h"
 
 
 
@@ -108,6 +109,7 @@ SimpleView::SimpleView()
     this->ui->RGB_Combo->setView(new QListView());
     this->ui->alpha_Combo->setView(new QListView());
     this->ui->scalarChoice->setView(new QListView());
+	this->ui->domainAlpha_Combo->setView(new QListView());
 //    this->ui->plot1DGeneral_LW->SetView
     
     for(int nr = 0; nr < 27; nr++){
@@ -561,6 +563,7 @@ void SimpleView::slotUpdate(){
     qDebug()<<"Slot update"<<scalarName.c_str()<<vectorName.c_str();
     if(this->ui->stackedWidget->currentIndex()==0){
         updateVTK(scalarName,vectorName);
+		drawDomain(domainName);
     }else if(this->ui->stackedWidget->currentIndex()==1){
         setup1DFigure(this->ui->customPlot);
     }
@@ -1018,25 +1021,36 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     widget->InteractiveOn();
     
 
+	scalarLegendWidget->SetInteractor(this->ui->qvtkWidget->GetRenderWindow()->GetInteractor());
+	scalarLegendWidget->SetScalarBarActor(scalarScaleBarActor);
+	scalarLegendWidget->ResizableOn();
+	scalarLegendWidget->On();
+
+
+	vectorLegendWidget->SetScalarBarActor(vectorScaleBarActor);
+	vectorLegendWidget->SetInteractor(this->ui->qvtkWidget->GetRenderWindow()->GetInteractor());
+	vectorLegendWidget->On();
     
     RGBPoint=3;
     scalarScaleBarActor->SetLookupTable(colorScalar);
-    scalarScaleBarActor->SetTitle("Scalar");
+    scalarScaleBarActor->SetTitle(this->ui->scalarLegend_LE->text().toStdString().c_str());
     scalarScaleBarActor->SetNumberOfLabels(RGBPoint);
+	scalarScaleBarActor->SetMaximumWidthInPixels(80);
     scalarScaleBarActor->GetTitleTextProperty()->SetColor(0,0,0);
+	scalarScaleBarActor->GetTitleTextProperty()->SetJustificationToLeft();
     scalarScaleBarActor->GetLabelTextProperty()->SetColor(0,0,0);
-    scalarScaleBarActor->SetPosition(0.1,0.05);
+	scalarScaleBarActor->DrawTickLabelsOn();
     scalarScaleBarActor->UseOpacityOn();
-    renderer->AddActor2D(scalarScaleBarActor);
+    //renderer->AddActor2D(scalarScaleBarActor);
     
     vectorScaleBarActor->SetLookupTable(colorVector);
-    vectorScaleBarActor->SetTitle("Vector");
+    vectorScaleBarActor->SetTitle(this->ui->vectorLegend_LE->text().toStdString().c_str());
     vectorScaleBarActor->SetNumberOfLabels(RGBPoint);
+	vectorScaleBarActor->SetMaximumWidthInPixels(80);
     vectorScaleBarActor->GetTitleTextProperty()->SetColor(0,0,0);
     vectorScaleBarActor->GetLabelTextProperty()->SetColor(0,0,0);
-    vectorScaleBarActor->SetPosition(0.8,0.05);
     vectorScaleBarActor->UseOpacityOn();
-    renderer->AddActor2D(vectorScaleBarActor);
+   // renderer->AddActor2D(vectorScaleBarActor);
     
     if(this->ui->outline_CB->checkState()!=0){
         if (this->ui->scalar_CB->checkState()!=0){
@@ -1051,27 +1065,29 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     }
     
     if(this->ui->axis_CB->checkState()!=0){
-        axes->SetVisibility(true);
+		widget->On();
+        //axes->SetVisibility(true);
     }else{
-        axes->SetVisibility(false);
+		widget->Off();
+        //axes->SetVisibility(false);
     }
     
-    if(this->ui->scalarBar_CB->checkState()!=0){
-        if(this->ui->scalar_CB->checkState()!=0){
+    if(this->ui->scalarLegendBar_CB->checkState()!=0){
+		scalarLegendWidget->On();
             scalarScaleBarActor->SetVisibility(true);
         }else{
+		scalarLegendWidget->Off();
             scalarScaleBarActor->SetVisibility(false);
         }
         
-        if(this->ui->vector_CB->checkState()!=0){
+        if(this->ui->vectorLegendBar_CB->checkState()!=0){
+			vectorLegendWidget->On();
             vectorScaleBarActor->SetVisibility(true);
         }else{
+			vectorLegendWidget->Off();
             vectorScaleBarActor->SetVisibility(false);
         }
-    }else{
-        scalarScaleBarActor->SetVisibility(false);
-        vectorScaleBarActor->SetVisibility(false);
-    }
+
     
     
     // VTK/Qt wedded
@@ -1086,11 +1102,21 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     
 }
 
+void SimpleView::on_scalarLegend_LE_textChanged(const QString & text) {
+	scalarScaleBarActor->SetTitle(text.toStdString().c_str());
+}
+
+void SimpleView::on_vectorLegend_LE_textChanged(const QString & text) {
+	vectorScaleBarActor->SetTitle(text.toStdString().c_str());
+}
+
 void SimpleView::on_axis_CB_stateChanged(int state){
     if(state!=0){
+		widget->On();
         axes->SetVisibility(true);
         reset=false;
     }else{
+		widget->Off();
         axes->SetVisibility(false);
     }
     this->ui->qvtkWidget->GetRenderWindow()->Render();
@@ -1322,19 +1348,27 @@ void SimpleView::on_vectorGlyph_CB_stateChanged(int state){
     this->ui->qvtkWidget->GetRenderWindow()->Render();
 }
 
-void SimpleView::on_scalarBar_CB_stateChanged(int state){
+void SimpleView::on_scalarLegendBar_CB_stateChanged(int state){
     
-    if(state!=0 && this->ui->scalar_CB->isChecked()){
+    if(state!=0 && this->ui->scalarLegendBar_CB->isChecked()){
+		scalarLegendWidget->On();
         scalarScaleBarActor->SetVisibility(true);
     }else{
+		scalarLegendWidget->Off();
         scalarScaleBarActor->SetVisibility(false);
     }
-    if(state!=0 && this->ui->vector_CB->isChecked()){
-        vectorScaleBarActor->SetVisibility(true);
-    }else{
-        vectorScaleBarActor->SetVisibility(false);
-    }
     this->ui->qvtkWidget->GetRenderWindow()->Render();
+}
+
+void SimpleView::on_vectorLegendBar_CB_stateChanged(int state) {
+	if (state != 0 && this->ui->vectorLegendBar_CB->isChecked()) {
+		vectorLegendWidget->On();
+		vectorScaleBarActor->SetVisibility(true);
+	}else {
+		vectorLegendWidget->Off();
+		vectorScaleBarActor->SetVisibility(false);
+	}
+	this->ui->qvtkWidget->GetRenderWindow()->Render();
 }
 
 void SimpleView::on_vector_CB_stateChanged(int state){
@@ -1597,8 +1631,8 @@ void SimpleView::slotOpenFile_scalar()
         printstatus = QString::fromStdString("0 - "+std::to_string(zmax));
         this->ui->zMinMaxScalar->setText(printstatus);
         
-//        this->ui->scalar_Table->clearContents();
-        for (int i=0; i<this->ui->scalar_Table->rowCount(); i++) {
+        this->ui->scalar_Table->clearContents();
+        for (int i=0; i<this->ui->scalar_Table->rowCount(); i=0) {
             this->ui->scalar_Table->removeRow(0);
         }
         for(int i=0;i<columns;++i){
@@ -1689,7 +1723,7 @@ void SimpleView::slotOpenFile_vector()
         this->ui->zMinMaxVector->setText(printstatus);
         
         this->ui->vector_Table->clearContents();
-        for (int i=0; i<this->ui->vector_Table->rowCount(); i++) {
+        for (int i=0; i<this->ui->vector_Table->rowCount(); i=0) {
             this->ui->vector_Table->removeRow(0);
         }
         for(i=0;i<columns;++i){
@@ -1947,7 +1981,7 @@ int SimpleView::loadData(QString filedir){
     tempY=y;
     tempZ=z;
     
-
+	qDebug() << "load data successfully";
     return columnNumber;
 }
 
@@ -2133,17 +2167,22 @@ void SimpleView::on_alpha_Combo_currentIndexChanged(int index){
         this->ui->alpha_LE->setEnabled(false);
         this->ui->alphaScalar_Table->setEnabled(false);
         this->ui->alphaVector_Table->setEnabled(false);
+		this->ui->domainAlpha_Combo->setEnabled(false);
+		this->ui->alphaDomain_Table->setEnabled(false);
         this->ui->alpha_Stack->setEnabled(false);
     }else{
         this->ui->alphaValue_LE->setEnabled(true);
         this->ui->alpha_LE->setEnabled(true);
         this->ui->alphaScalar_Table->setEnabled(true);
-        this->ui->alphaVector_Table->setEnabled(true);
+		this->ui->domainAlpha_Combo->setEnabled(true);
+        this->ui->alphaDomain_Table->setEnabled(true);
         this->ui->alpha_Stack->setEnabled(true);
         if(index==1){
             this->ui->alpha_Stack->setCurrentIndex(0);
+			this->ui->alphaValue_Stack->setCurrentIndex(0);
         }else if(index==2){
             this->ui->alpha_Stack->setCurrentIndex(1);
+			this->ui->alphaValue_Stack->setCurrentIndex(1);
         }
     }
 }
@@ -2151,10 +2190,9 @@ void SimpleView::on_alpha_Combo_currentIndexChanged(int index){
 void SimpleView::on_alphaAdd_PB_released(){
     QString item;
     int row;
-    if (this->ui->alphaValue_LE->text().isEmpty() |
-        this->ui->alpha_LE->text().isEmpty()){
+    if (this->ui->alpha_LE->text().isEmpty()){
     }else{
-        if (this->ui->alpha_Stack->currentIndex()==0){
+        if (!this->ui->alphaValue_LE->text().isEmpty() && this->ui->alpha_Stack->currentIndex()==0){
             row=this->ui->alphaScalar_Table->rowCount();
             qDebug()<<row;
             this->ui->alphaScalar_Table->insertRow(row);
@@ -2164,7 +2202,17 @@ void SimpleView::on_alphaAdd_PB_released(){
             item=this->ui->alpha_LE->text();
             this->ui->alphaScalar_Table->setItem(row,1,new QTableWidgetItem(item));
             this->ui->alphaScalar_Table->sortItems(0,Qt::AscendingOrder);
-        }else if (this->ui->alpha_Stack->currentIndex()==1){
+		}else if (this->ui->alpha_Stack->currentIndex() == 1) {
+			row = this->ui->alphaDomain_Table->rowCount();
+			qDebug() << row;
+			this->ui->alphaDomain_Table->insertRow(row);
+			//      row=row;
+			item = this->ui->domainAlpha_Combo->currentText();
+			this->ui->alphaDomain_Table->setItem(row, 0, new QTableWidgetItem(item));
+			item = this->ui->alpha_LE->text();
+			this->ui->alphaDomain_Table->setItem(row, 1, new QTableWidgetItem(item));
+			this->ui->alphaDomain_Table->sortItems(0, Qt::AscendingOrder);
+		}else if (this->ui->alphaValue_LE->text().isEmpty() && this->ui->alpha_Stack->currentIndex() == 2) {
             row=this->ui->alphaVector_Table->rowCount();
             qDebug()<<row;
             this->ui->alphaVector_Table->insertRow(row);
@@ -2183,7 +2231,10 @@ void SimpleView::on_alphaAdd_PB_released(){
 void SimpleView::on_alphaDelete_PB_released(){
     if (this->ui->alpha_Stack->currentIndex()==0){
         this->ui->alphaScalar_Table->removeRow(this->ui->alphaScalar_Table->currentRow());
-    }else if (this->ui->alpha_Stack->currentIndex()==1){
+    }else if (this->ui->alpha_Stack->currentIndex() == 1) {
+		this->ui->alphaDomain_Table->removeRow(this->ui->alphaDomain_Table->currentRow());
+	}
+	else if (this->ui->alpha_Stack->currentIndex()==2){
         this->ui->alphaVector_Table->removeRow(this->ui->alphaVector_Table->currentRow());
     }
 }
@@ -2300,17 +2351,21 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
         for (j=1;j<ymax+2;j++){
             for (k=nsub+2;k<nfs+2;k++){
                 rowNumber=(i-1)*(zmax+1)*(ymax+1)+(j-1)*(zmax+1)+(k-1); //+3
-                // qDebug()<<"vtkdata:"<<rowNumber;
+               // qDebug()<<"vtkdata:"<<rowNumber<<i<<j<<k;
                 px=vtkData[rowNumber][3];
                 py=vtkData[rowNumber][4];
                 pz=vtkData[rowNumber][5];
                 hold=k*(xmax+3)*(ymax+3)+j*(xmax+3)+i; //+3
-                // qDebug()<<"outputdata"<<rowNumber;
                 outputData[hold]=domainType(px,py,pz);
                 if(outputData[hold]>=1 && outputData[hold]<9) mR++;
                 if(outputData[hold]>=9 && outputData[hold]<21) mO++;
                 if(outputData[hold]>=21 && outputData[hold]<27) mT++;
                 if(outputData[hold]==-1) mN++;
+				if (outputData[hold]>26)
+				{
+					qDebug() << "output" << outputData[hold] << i << j << k << px << py << pz;
+				}
+				//qDebug() << "outputdata" << hold;
                 // if (outputData[hold]==0)qDebug()<<i<<" "<<j<<" "<<k<<" "<<px<<" "<<py<<" "<<pz<<" "<<outputData[hold] << " "<<domainType(px,py,pz) << " "<<hold;
                 // outputData[rowNumber]=-1;
             }
@@ -2326,10 +2381,20 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
         }
     }
     mfilm=mR+mO+mT+mN;
-    fR=mR/mfilm;
-    fT=mT/mfilm;
-    fO=mO/mfilm;
-    fN=mN/mfilm;
+	if (mfilm!=0)
+	{
+		fR=mR/mfilm;
+		fT=mT/mfilm;
+		fO=mO/mfilm;
+		fN=mN/mfilm;
+	}
+	else {
+		fR = 0;
+		fT = 0;
+		fO = 0;
+		fN = 0;
+	}
+
     qDebug()<<mR<<" "<<mT<<" "<<mO<<" "<<mN;
 
     
@@ -2369,59 +2434,27 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
 }
 
 int SimpleView::domainType(double px,double py, double pz){
-    double plot1=0,plot2=0,plot3=0;
-    bool alongX=false,alongY=false,alongZ=false;
-    int returnValue;
+    double angle=0,hold=0,length=0;
+    bool isDomain=false,isR=false,isO=false,isT=false;
+    int returnValue=-1;
     int isROT;
-    plot1=0.3;
-    plot2=0.3;
-    plot3=0.3;
-    if(std::abs(px)>plot1) alongX=true;
-    if(std::abs(py)>plot2) alongY=true;
-    if(std::abs(pz)>plot3) alongZ=true;
-    
-    isROT=alongZ+alongY+alongX;
-    returnValue=-1;
-    // qDebug()<<px<<" "<<py<<" "<<pz<<" "<<alongX<<" "<<alongY<<" "<<alongZ<<" "<<isROT;
-    if(isROT==3){ // Is a R phase
-        if( px > plot1 &&  py > plot2 &&  pz > plot3) returnValue = 1; //R1+
-        if(-px > plot1 && -py > plot2 && -pz > plot3) returnValue = 2; //R1-
-        if(-px > plot1 &&  py > plot2 &&  pz > plot3) returnValue = 3; //R2+
-        if( px > plot1 && -py > plot2 && -pz > plot3) returnValue = 4; //R2-
-        if(-px > plot1 && -py > plot2 &&  pz > plot3) returnValue = 5; //R3+
-        if( px > plot1 &&  py > plot2 && -pz > plot3) returnValue = 6; //R3-
-        if( px > plot1 && -py > plot2 &&  pz > plot3) returnValue = 7; //R4+
-        if(-px > plot1 &&  py > plot2 && -pz > plot3) returnValue = 8; //R4-
-    }else if(isROT==2){ // Is a O phase
-        if( px > plot1 &&  py > plot2 &&  std::abs(pz) < plot3) returnValue = 9;  //O1+
-        if(-px > plot1 && -py > plot2 &&  std::abs(pz) < plot3) returnValue = 10; //O1-
-        if( px > plot1 && -py > plot2 &&  std::abs(pz) < plot3) returnValue = 11; //O2+
-        if(-px > plot1 &&  py > plot2 &&  std::abs(pz) < plot3) returnValue = 12; //O2-
-        if( px > plot1 &&  std::abs(py) < plot2 &&  pz > plot3) returnValue = 13; //O3+
-        if(-px > plot1 &&  std::abs(py) < plot2 && -pz > plot3) returnValue = 14; //O3-
-        if( px > plot1 &&  std::abs(py) < plot2 && -pz > plot3) returnValue = 15; //O4+
-        if(-px > plot1 &&  std::abs(py) < plot2 &&  pz > plot3) returnValue = 16; //O4-
-        if( std::abs(px) < plot1 &&  py > plot2 &&  pz > plot3) returnValue = 17; //O5+
-        if( std::abs(px) < plot1 && -py > plot2 && -pz > plot3) returnValue = 18; //O5-
-        if( std::abs(px) < plot1 &&  py > plot2 && -pz > plot3) returnValue = 19; //O6+
-        if( std::abs(px) < plot1 && -py > plot2 &&  pz > plot3) returnValue = 20; //O6-
-    }else if(isROT==1){ // Is a T phase
-        if( px > plot1 &&  std::abs(py) < plot2 &&  std::abs(pz) < plot3) returnValue = 21; //T1+
-        if(-px > plot1 &&  std::abs(py) < plot2 &&  std::abs(pz) < plot3) returnValue = 22; //T1-
-        if( std::abs(px) < plot1 &&  py > plot2 &&  std::abs(pz) < plot3) returnValue = 23; //T2+
-        if( std::abs(px) < plot1 && -py > plot2 &&  std::abs(pz) < plot3) returnValue = 24; //T2-
-        if( std::abs(px) < plot1 &&  std::abs(py) < plot2 &&  pz > plot3) returnValue = 25; //T3+
-        if( std::abs(px) < plot1 &&  std::abs(py) < plot2 && -pz > plot3) returnValue = 26; //T3-
-    }else if(isROT==0){
-        if( (std::abs(px)+std::abs(py)+std::abs(pz)) <= 0.0001){
-            returnValue = -1;
-            // qDebug()<<(std::abs(px)+std::abs(py)+std::abs(pz))<<" "<<returnValue;
-        }else{
-            returnValue = -1;
-            // qDebug()<<(std::abs(px)+std::abs(py)+std::abs(pz))<<" "<<returnValue;
-        }
-    }
-    return returnValue;
+	length = std::sqrt(px*px + py*py + pz*pz);
+	//qDebug() << "length:" << length << domainStandardValue;
+	if ( length> domainStandardValue)
+	{
+		isDomain = true;
+		for (int i = 1; i < 27; i++)
+		{
+			angle = std::acos((px*domainOrth[i][0] + py*domainOrth[i][1] + pz*domainOrth[i][2])/length);
+			
+			if (angle < domainStandardAngleRad)
+			{
+				returnValue=i;
+			}
+			//qDebug() << "angle:" << i << angle << domainStandardAngle<< px << py << pz << returnValue;
+		}
+	}
+	return returnValue;
 }
 
 void SimpleView::slotOpenFile_domain(){
@@ -2432,65 +2465,80 @@ void SimpleView::slotOpenFile_domain(){
     QString load=filedialog.getOpenFileName();
     qDebug()<<"Filename:"<<load;
     if (!load.isEmpty()) {
-        columns=loadData(load);
-        qDebug()<<"after domain processing";
-        int rows=(xmax+1)*(ymax+1)*(zmax+1);
-        double *dataHold= new double[rows];
-        existDomain.fill(false);
-        QFileInfo filehold(load);
-        this->ui->scalar_CB->setCheckState(Qt::Unchecked);
-        this->ui->volume_CB->setCheckState(Qt::Unchecked);
-        this->ui->vector_CB->setCheckState(Qt::Unchecked);
-        this->ui->domain_CB->setCheckState(Qt::Checked);
-        domainDir= QFileInfo(filehold.absolutePath()+"/"+filehold.completeBaseName());
+		domainCriteria *domainC = new domainCriteria(this);
+		if (domainC->exec()==QDialog::Accepted)
+		{
 
-        outputDomain(domainDir.absoluteFilePath(),xmax,ymax,zmax);
-        
-        for (int i=0;i<27;i++){
-            qDebug()<<i<<existDomain[i];
-            if(existDomain[i]){
-                this->ui->domain_LW->item(i+4)->setCheckState(Qt::Checked);
-            }else{
-                this->ui->domain_LW->item(i+4)->setCheckState(Qt::Unchecked);
-            }
-        }
+			domainStandardAngle = domainC->getDomainStdAngle();
+			domainStandardAngleRad = domainStandardAngle*piValue / 180;
+			domainStandardValue = domainC->getDomainStdValue();
+			this->ui->domainStdAngle_LE->setText(QString::number(domainStandardAngle));
+			this->ui->domainStdValue_LE->setText(QString::number(domainStandardValue));
+			columns = loadData(load);
+			qDebug() << "angle" << domainStandardAngle;
+			qDebug() << "value" << domainStandardValue;
+			qDebug() << "after domain processing";
+			int rows = (xmax + 1)*(ymax + 1)*(zmax + 1);
+			double *dataHold = new double[rows];
+			existDomain.fill(false);
+			QFileInfo filehold(load);
+			this->ui->scalar_CB->setCheckState(Qt::Unchecked);
+			this->ui->volume_CB->setCheckState(Qt::Unchecked);
+			this->ui->vector_CB->setCheckState(Qt::Unchecked);
+			this->ui->domain_CB->setCheckState(Qt::Checked);
+			domainDir = QFileInfo(filehold.absolutePath() + "/" + filehold.completeBaseName());
 
+			outputDomain(domainDir.absoluteFilePath(), xmax, ymax, zmax);
+
+			for (int i = 0; i<27; i++) {
+				//qDebug() << i << existDomain[i];
+				if (existDomain[i]) {
+					this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Checked);
+				}
+				else {
+					this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Unchecked);
+				}
+			}
+
+
+			this->ui->inputFileDomain->setText(filehold.fileName());
+
+			printstatus = QString::fromStdString(std::to_string(columns));
+			this->ui->rowcolDomain->setText(printstatus);
+
+			printstatus = QString::fromStdString("0 - " + std::to_string(xmax));
+			this->ui->xMinMaxDomain->setText(printstatus);
+
+			printstatus = QString::fromStdString("0 - " + std::to_string(ymax));
+			this->ui->yMinMaxDomain->setText(printstatus);
+
+			printstatus = QString::fromStdString("0 - " + std::to_string(zmax));
+			this->ui->zMinMaxDomain->setText(printstatus);
+
+			this->ui->domain_Table->clearContents();
+			for (int i = 0; i<this->ui->domain_Table->rowCount(); i = 0) {
+				this->ui->domain_Table->removeRow(0);
+			}
+			for (int i = 0; i<columns; ++i) {
+				for (int j = 0; j<rows; ++j) {
+					dataHold[j] = vtkData[j][i];
+				}
+				// qDebug()<<i<<" "<<dataHold[i];
+				this->ui->domain_Table->insertRow(this->ui->domain_Table->rowCount());
+				printstatus = QString::fromStdString(std::to_string(getMin(dataHold, rows)));
+				this->ui->domain_Table->setItem(this->ui->domain_Table->rowCount() - 1, 0, new QTableWidgetItem(printstatus));
+				printstatus = QString::fromStdString(std::to_string(getMax(dataHold, rows)));
+				this->ui->domain_Table->setItem(this->ui->domain_Table->rowCount() - 1, 1, new QTableWidgetItem(printstatus));
+				printstatus = QString::fromStdString(std::to_string(getAvg(dataHold, rows)));
+				this->ui->domain_Table->setItem(this->ui->domain_Table->rowCount() - 1, 2, new QTableWidgetItem(printstatus));
+			}
+			//        this->ui->information_Tab->setCurrentIndex(2);
+			qDebug() << "before vtk part" << domainDir.absoluteFilePath() + ".domain.vtk";
+			domainName = domainDir.absoluteFilePath().toStdString() + ".domain.vtk";
+			drawDomain(domainName);
+			//delete this->vtkData;
+		}
         
-        this->ui->inputFileDomain->setText(filehold.fileName());
-        
-        printstatus = QString::fromStdString(std::to_string(columns));
-        this->ui->rowcolDomain->setText(printstatus);
-        
-        printstatus = QString::fromStdString("0 - "+std::to_string(xmax));
-        this->ui->xMinMaxDomain->setText(printstatus);
-        
-        printstatus = QString::fromStdString("0 - "+std::to_string(ymax));
-        this->ui->yMinMaxDomain->setText(printstatus);
-        
-        printstatus = QString::fromStdString("0 - "+std::to_string(zmax));
-        this->ui->zMinMaxDomain->setText(printstatus);
-        
-        this->ui->domain_Table->clearContents();
-        for (int i=0; i<this->ui->domain_Table->rowCount(); i++) {
-            this->ui->domain_Table->removeRow(i);
-        }
-        for(int i=0;i<columns;++i){
-            for (int j=0;j<rows;++j){
-                dataHold[j]=vtkData[j][i];
-            }
-            // qDebug()<<i<<" "<<dataHold[i];
-            this->ui->domain_Table->insertRow(this->ui->domain_Table->rowCount());
-            printstatus = QString::fromStdString(std::to_string(getMin(dataHold,rows)));
-            this->ui->domain_Table->setItem(this->ui->domain_Table->rowCount()-1,0,new QTableWidgetItem(printstatus));
-            printstatus = QString::fromStdString(std::to_string(getMax(dataHold,rows)));
-            this->ui->domain_Table->setItem(this->ui->domain_Table->rowCount()-1,1,new QTableWidgetItem(printstatus));
-            printstatus = QString::fromStdString(std::to_string(getAvg(dataHold,rows)));
-            this->ui->domain_Table->setItem(this->ui->domain_Table->rowCount()-1,2,new QTableWidgetItem(printstatus));
-        }
-//        this->ui->information_Tab->setCurrentIndex(2);
-        qDebug()<<"before vtk part"<<domainDir.absoluteFilePath()+".domain.vtk";
-        drawDomain(domainDir.absoluteFilePath().toStdString()+".domain.vtk");
-        delete this->vtkData;
     }
 }
 
@@ -2564,44 +2612,88 @@ void SimpleView::drawDomain(std::string domainName){
     }
     
     for(int i=0;i<27;i++){
-        VTK_CREATE(vtkThreshold,domainThreshold);
-        VTK_CREATE(vtkDataSetSurfaceFilter,domainSurface);
-        VTK_CREATE(vtkSmoothPolyDataFilter,domainSmooth);
-        VTK_CREATE(vtkPolyDataNormals,normalGenerator);
-        VTK_CREATE(vtkDataSetMapper,domainMapper);
-//        qDebug()<<"create the domain"<<i;
-        readerDomain->UpdateWholeExtent();
-        domainThreshold->SetInputConnection(readerDomain->GetOutputPort());
-        domainThreshold->AllScalarsOff();
-        domainThreshold->ThresholdBetween(i-0.5,i+0.5);
-        domainThreshold->UpdateWholeExtent();
-//        qDebug()<<"before surface"<<i;
-        domainSurface->SetInputData(domainThreshold->GetOutput());
-        domainSurface->UpdateWholeExtent();
-        domainSmooth->SetInputConnection(domainSurface->GetOutputPort());
-        domainSmooth->SetNumberOfIterations(30);
-        domainSmooth->SetRelaxationFactor(0.1);
-        domainSmooth->FeatureEdgeSmoothingOff();
-        domainSmooth->BoundarySmoothingOn();
-        domainSmooth->UpdateWholeExtent();
-        normalGenerator->SetInputData(domainSmooth->GetOutput());
-        normalGenerator->ComputePointNormalsOn();
-        normalGenerator->ComputeCellNormalsOn();
-        normalGenerator->UpdateWholeExtent();
-        domainMapper->SetInputConnection(normalGenerator->GetOutputPort());
-        domainMapper->ScalarVisibilityOff();
-        domainMapper->UpdateWholeExtent();
-        actorDomain[i]->SetMapper(domainMapper);
-//        qDebug()<<domainRGB[i][0]<<" "<<domainRGB[i][1]<<" "<<domainRGB[i][2];
-        actorDomain[i]->GetProperty()->SetColor(domainRGB[i][0],domainRGB[i][1],domainRGB[i][2]);
-        actorDomain[i]->GetProperty()->GetColor(R);
-//        qDebug()<<"out "<<R[0]<<" "<<R[1]<<" "<<R[2];
-        // actorDomain[i]->GetProperty()->SetDiffuseColor(domainRGB[i][0],domainRGB[i][1],domainRGB[i][2]);
-        // actorDomain[i]->GetProperty()->SetRepresentationToSurface();
-        actorDomain[i]->Modified();
-        actorDomain[i]->SetVisibility(true);
-        domainRenderer->AddActor(actorDomain[i]);
+		if (this->ui->domain_LW->item(i + 4)->checkState())
+		{
+			VTK_CREATE(vtkThreshold,domainThreshold);
+					VTK_CREATE(vtkDataSetSurfaceFilter,domainSurface);
+					VTK_CREATE(vtkSmoothPolyDataFilter,domainSmooth);
+					VTK_CREATE(vtkPolyDataNormals,normalGenerator);
+					VTK_CREATE(vtkDataSetMapper,domainMapper);
+			//        qDebug()<<"create the domain"<<i;
+					readerDomain->UpdateWholeExtent();
+					domainThreshold->SetInputConnection(readerDomain->GetOutputPort());
+					domainThreshold->AllScalarsOff();
+					domainThreshold->ThresholdBetween(i-0.5,i+0.5);
+					domainThreshold->UpdateWholeExtent();
+			//        qDebug()<<"before surface"<<i;
+					domainSurface->SetInputData(domainThreshold->GetOutput());
+					domainSurface->UpdateWholeExtent();
+					domainSmooth->SetInputConnection(domainSurface->GetOutputPort());
+					domainSmooth->SetNumberOfIterations(30);
+					domainSmooth->SetRelaxationFactor(0.1);
+					domainSmooth->FeatureEdgeSmoothingOff();
+					domainSmooth->BoundarySmoothingOn();
+					domainSmooth->UpdateWholeExtent();
+					normalGenerator->SetInputData(domainSmooth->GetOutput());
+					normalGenerator->ComputePointNormalsOn();
+					normalGenerator->ComputeCellNormalsOn();
+					normalGenerator->UpdateWholeExtent();
+					domainMapper->SetInputConnection(normalGenerator->GetOutputPort());
+					domainMapper->ScalarVisibilityOff();
+					domainMapper->UpdateWholeExtent();
+					actorDomain[i]->SetMapper(domainMapper);
+			//        qDebug()<<domainRGB[i][0]<<" "<<domainRGB[i][1]<<" "<<domainRGB[i][2];
+					actorDomain[i]->GetProperty()->SetColor(domainRGB[i][0],domainRGB[i][1],domainRGB[i][2]);
+					actorDomain[i]->GetProperty()->GetColor(R);
+					actorDomain[i]->GetProperty()->SetOpacity(1);
+			//        qDebug()<<"out "<<R[0]<<" "<<R[1]<<" "<<R[2];
+					// actorDomain[i]->GetProperty()->SetDiffuseColor(domainRGB[i][0],domainRGB[i][1],domainRGB[i][2]);
+					// actorDomain[i]->GetProperty()->SetRepresentationToSurface();
+					actorDomain[i]->Modified();
+					actorDomain[i]->SetVisibility(true);
+					domainRenderer->AddActor(actorDomain[i]);
+		}
+        
     }
+
+	for (int i = 0; i < this->ui->alphaDomain_Table->rowCount(); i++)
+	{
+		int index = this->ui->domainAlpha_Combo->findText(this->ui->alphaDomain_Table->item(i, 0)->text());
+		double value = this->ui->alphaDomain_Table->item(i, 1)->text().toDouble();
+		this->ui->cameraFocalX_LE->setText(QString::number(index));
+		if (index>=4)
+		{
+			actorDomain[index - 4]->GetProperty()->SetOpacity(value);
+		}
+		else if (index == 0) {
+			for (int j = 0; j < 27; j++)
+			{
+				actorDomain[j]->GetProperty()->SetOpacity(value);
+			}
+		}
+		else if (index == 1)
+		{
+			for (int j = 1; j < 9; j++)
+			{
+				actorDomain[j]->GetProperty()->SetOpacity(value);
+			}
+		}
+		else if (index == 2)
+		{
+			for (int j = 9; j < 21; j++)
+			{
+				actorDomain[j]->GetProperty()->SetOpacity(value);
+			}
+		}
+		else if (index == 3)
+		{
+			for (int j = 21; j < 27; j++)
+			{
+				actorDomain[j]->GetProperty()->SetOpacity(value);
+			}
+		}
+
+	}
     // actorDomain[0]->SetVisibility(false);
     // actorDomain[25]->GetProperty()->SetColor(1,0,0);
     // actorDomain[25]->GetBackfaceProperty()->SetColor(1,0,0);
@@ -2639,8 +2731,10 @@ void SimpleView::drawDomain(std::string domainName){
     widget->InteractiveOn();
     
     if(this->ui->axis_CB->checkState()!=0){
+		widget->On();
         axes->SetVisibility(true);
     }else{
+		widget->Off();
         axes->SetVisibility(false);
     }
     
@@ -3297,7 +3391,8 @@ void SimpleView::outputStatus(QFileInfo filedir){
     std::ofstream output;
     output.open(filedir.absoluteFilePath().toStdString().c_str());
     output << this->ui->outline_CB->checkState() << endl;
-    output << this->ui->scalarBar_CB->checkState() << endl;
+    output << this->ui->scalarLegendBar_CB->checkState() << endl;
+	output << this->ui->vectorLegendBar_CB->checkState() << endl;
     output << this->ui->axis_CB->checkState() << endl;
     output << this->ui->extract_CB->checkState() << endl;
     output << this->ui->xmin_LE->text().toDouble() << " " << this->ui->xmax_LE->text().toDouble() << endl;
@@ -3352,6 +3447,7 @@ void SimpleView::outputStatus(QFileInfo filedir){
     output << this->ui->vectorChoice->count()<<endl;
     output << this->ui->vectorChoice->currentIndex()<<endl;
     output << this->ui->vectorGlyph_CB->checkState()<<endl;
+	output << this->ui->vectorMaskNum_LE->text().toDouble() << endl;
     output << this->ui->vectorScale_LE->text().toDouble()<<endl;
     output << this->ui->vectorRange_CB->checkState()<<endl;
     output << this->ui->vectorValueMin_LE->text().toDouble()<< " " << this->ui->vectorValueMax_LE->text().toDouble()<<endl;
@@ -3400,7 +3496,9 @@ void SimpleView::loadStatus(QFileInfo filedir){
     input >> checkstate ;
     this->ui->outline_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
     input >> checkstate ;
-    this->ui->scalarBar_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
+    this->ui->scalarLegendBar_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
+	input >> checkstate;
+	this->ui->vectorLegendBar_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
     input >> checkstate;
     this->ui->axis_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
     input >> checkstate;
@@ -3551,6 +3649,8 @@ void SimpleView::loadStatus(QFileInfo filedir){
     vectorColumn=index;
     input >> checkstate;
     this->ui->vectorGlyph_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
+	input >> value;
+	this->ui->vectorMaskNum_LE->setText(QString::fromStdString(value));
     input >> value;
     this->ui->vectorScale_LE->setText(QString::fromStdString(value));
     input >> checkstate;
@@ -3602,4 +3702,49 @@ void SimpleView::slotBatch3D(){
     qDebug()<<"Batch producing 3D plot";
     batch3D *dialog=new batch3D(this);
     dialog->show();
+}
+
+
+void SimpleView::on_domainStdAngle_LE_editingFinished() {
+	domainStandardAngle = this->ui->domainStdAngle_LE->text().toDouble();
+	domainStandardAngleRad = domainStandardAngle*piValue / 180;
+	qDebug() << "domain angle:" << domainStandardAngle << domainStandardAngleRad;
+}
+
+void SimpleView::on_domainStdValue_LE_editingFinished()
+{
+	domainStandardValue = this->ui->domainStdValue_LE->text().toDouble();
+	qDebug() << "domain value:" << domainStandardValue;
+}
+
+void SimpleView::on_domainRePlot_PB_released()
+{
+	domainStandardAngle = this->ui->domainStdAngle_LE->text().toDouble();
+	domainStandardAngleRad = domainStandardAngle*piValue / 180;
+	domainStandardValue = this->ui->domainStdValue_LE->text().toDouble();
+	qDebug() << "angle" << domainStandardAngle;
+	qDebug() << "value" << domainStandardValue;
+	qDebug() << "after domain processing";
+	int rows = (xmax + 1)*(ymax + 1)*(zmax + 1);
+	double *dataHold = new double[rows];
+	existDomain.fill(false);
+
+	this->ui->scalar_CB->setCheckState(Qt::Unchecked);
+	this->ui->volume_CB->setCheckState(Qt::Unchecked);
+	this->ui->vector_CB->setCheckState(Qt::Unchecked);
+	this->ui->domain_CB->setCheckState(Qt::Checked);
+
+	outputDomain(domainDir.absoluteFilePath(), xmax, ymax, zmax);
+
+	for (int i = 0; i<27; i++) {
+		//qDebug() << i << existDomain[i];
+		if (existDomain[i]) {
+			this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Checked);
+		}
+		else {
+			this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Unchecked);
+		}
+	}
+	domainName = domainDir.absoluteFilePath().toStdString() + ".domain.vtk";
+	drawDomain(domainName);
 }
