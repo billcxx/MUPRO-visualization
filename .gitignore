@@ -28,3 +28,6 @@
 *.app
 
 build/
+*.vtk
+*.vtk
+*.dat

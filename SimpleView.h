@@ -38,7 +38,9 @@
 #include "qcustomplot.h"
 #include <vtkOrientationMarkerWidget.h>
 #include <vtkScalarBarWidget.h>
-
+#include <vtkDataSetReader.h>
+#include <vtkStructuredPointsReader.h>
+#include <vtkStructuredPoints.h>
 #include <QDesktopWidget>
 #include <QScreen>
 #include <QMessageBox>
@@ -160,8 +162,10 @@ public:
 	void on_domainStdAngle_LE_editingFinished();
 	void on_domainStdValue_LE_editingFinished();
 	void on_domainRePlot_PB_released();
-
-
+	void on_vectorColorMode_Combo_currentIndexChanged(int index);
+	double * getRGB(double px, double py, double pz, double magnitudeRange[2], double xyRange[2], double zRange[2]);
+	double * convertHSLToRGB(double hue, double saturation, double lightness);
+	double rescale(double value, double range[2]);
     void drawIsoSurface(vtkAlgorithmOutput * readerScalarPort);
     void on_isosurface_LW_itemChanged(QListWidgetItem *item);
     void on_vectorGlyph_CB_stateChanged(int state);
@@ -184,33 +188,38 @@ private:
     // Designer form
     Ui_SimpleView *ui;
     QString printstatus;
-    double cameraPosition[3],cameraFocal[3];
+	boolean updateFlag = false;
+	double cameraPosition[3], cameraFocal[3], pointFraction[27] = { 0.0 };
+	QVector<QString> domainList = { "Check all domains","Check all R domains", "Check all O domains", "Check all T domains", "Substrate", \
+									"R1+(+,+,+)","R1-(-,-,-)","R2+(-,+,+)","R2-(+,-,-)","R3+(+,+,-)","R3-(-,-,+)","R4+(+,-,+)","R4-(-,+,-)", \
+									"O1+(+,+,0)","O1-(-,-,0)","O2+(+,-,0)","O2-(-,+,0)","O3+(+,0,+)","O3-(-,0,-)","O4+(+,0,-)","O4-(-,0,+)",\
+									"O5+(0,+,+)","O5-(0,-,-)","O6+(0,+,-)","O6-(0,-,+)","T1+(+,0,0)","T1-(-,0,0)","T2+(0,+,0)","T2-(0,-,0)","T3+(0,0,+)","T3-(0,0,-)"};
     int xmin=0,xmax=0,ymin=0,ymax=0,zmin=0,zmax=0;
 
     int xminAll=0,xmaxAll=0,yminAll=0,ymaxAll=0,zminAll=0,zmaxAll=0;
 	double domainStandardValue = 0.3, domainStandardAngle = 4.0, domainStandardAngleRad=4.0*3.141592653589/180;
 	double domainOrth[27][3] = {
 		{0,0,0},
-		{std::sqrt(3),std::sqrt(3),std::sqrt(3) },
-		{-1*std::sqrt(3),-1 * std::sqrt(3),-1 * std::sqrt(3) },
-		{ -1 * std::sqrt(3),std::sqrt(3),std::sqrt(3) },
-		{ std::sqrt(3),-1 * std::sqrt(3),-1 * std::sqrt(3) },
-		{ -1 * std::sqrt(3),-1 * std::sqrt(3),std::sqrt(3) },
-		{ std::sqrt(3),std::sqrt(3),-1 * std::sqrt(3) },
-		{ std::sqrt(3),-1 * std::sqrt(3),std::sqrt(3) },
-		{ -1 * std::sqrt(3),std::sqrt(3),-1 * std::sqrt(3) },
-		{ std::sqrt(2),std::sqrt(2),0},
-		{-1 * std::sqrt(2),-1 * std::sqrt(2),0},
-		{ std::sqrt(2),-1 * std::sqrt(2),0},
-		{ -1 * std::sqrt(2),std::sqrt(2),0},
-		{ std::sqrt(2),0,std::sqrt(2) },
-		{ -1 * std::sqrt(2),0,-1 * std::sqrt(2) },
-		{ std::sqrt(2),0,-1 * std::sqrt(2) },
-		{ -1 * std::sqrt(2),0,std::sqrt(2) },
-		{0,std::sqrt(2),std::sqrt(2) },
-		{0,-1 * std::sqrt(2),-1 * std::sqrt(2) },
-		{0,std::sqrt(2),-1 * std::sqrt(2) },
-		{0,-1 * std::sqrt(2),std::sqrt(2) },
+		{1/std::sqrt(3),1/std::sqrt(3),1/std::sqrt(3) },
+		{-1/std::sqrt(3),-1 / std::sqrt(3),-1 / std::sqrt(3) },
+		{ -1 / std::sqrt(3),1/std::sqrt(3),1/std::sqrt(3) },
+		{ 1/std::sqrt(3),-1 / std::sqrt(3),-1 / std::sqrt(3) },
+		{ -1 / std::sqrt(3),-1 / std::sqrt(3),1/std::sqrt(3) },
+		{ 1/std::sqrt(3),1/std::sqrt(3),-1 / std::sqrt(3) },
+		{ 1/std::sqrt(3),-1 / std::sqrt(3),1/std::sqrt(3) },
+		{ -1 / std::sqrt(3),1/std::sqrt(3),-1 / std::sqrt(3) },
+		{ 1/std::sqrt(2),1/std::sqrt(2),0},
+		{-1 / std::sqrt(2),-1 / std::sqrt(2),0},
+		{ 1/std::sqrt(2),-1 / std::sqrt(2),0},
+		{ -1 / std::sqrt(2),1/std::sqrt(2),0},
+		{ 1/std::sqrt(2),0,1/std::sqrt(2) },
+		{ -1 / std::sqrt(2),0,-1 / std::sqrt(2) },
+		{ 1/std::sqrt(2),0,-1 / std::sqrt(2) },
+		{ -1 / std::sqrt(2),0,1/std::sqrt(2) },
+		{0,1/std::sqrt(2),1/std::sqrt(2) },
+		{0,-1 / std::sqrt(2),-1 / std::sqrt(2) },
+		{0,1/std::sqrt(2),-1 / std::sqrt(2) },
+		{0,-1 / std::sqrt(2),1/std::sqrt(2) },
 		{1,0,0},
 		{-1,0,0},
 		{0,1,0},
@@ -236,8 +245,11 @@ private:
     vtkSmartPointer<vtkActor> actorCutter = vtkSmartPointer<vtkActor>::New();
     vtkSmartPointer<vtkActor> actorVector = vtkSmartPointer<vtkActor>::New();
     vtkSmartPointer<vtkActor> actorStream = vtkSmartPointer<vtkActor>::New();
+	vtkSmartPointer<vtkActor> vectorRTActor = vtkSmartPointer<vtkActor>::New();
     vtkSmartPointer<vtkVolume> actorScalar = vtkSmartPointer<vtkVolume>::New();
+	vtkSmartPointer<vtkStructuredPointsReader> readerVectorOrigin = vtkSmartPointer<vtkStructuredPointsReader>::New();
     vtkSmartPointer<vtkOrientationMarkerWidget> widget =vtkSmartPointer<vtkOrientationMarkerWidget>::New();
+	vtkSmartPointer<vtkOrientationMarkerWidget> vectorOrientationLegend = vtkSmartPointer<vtkOrientationMarkerWidget>::New();
 	vtkSmartPointer<vtkScalarBarWidget> scalarLegendWidget = vtkSmartPointer<vtkScalarBarWidget>::New();
 	vtkSmartPointer<vtkScalarBarWidget> vectorLegendWidget = vtkSmartPointer<vtkScalarBarWidget>::New();
     std::vector<vtkActor *> actorDomain;

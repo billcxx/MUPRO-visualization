@@ -11,6 +11,8 @@
 #include "ui_SimpleView.h"
 #include "SimpleView.h"
 #include <vtkSmartPointer.h>
+#include <vtkRTAnalyticSource.h>
+#include <vtkGradientFilter.h>
 #include <vtkPointData.h>
 #include <vtkDataObjectToTable.h>
 #include <vtkDataSetReader.h>
@@ -80,6 +82,9 @@
 #include <vtkMarchingCubes.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkStreamLine.h>
+#include <vtkExtractGrid.h>
+#include <vtkFloatArray.h>
+#include <vtkAssignAttribute.h>
 
 #include <vtkUnstructuredGridVolumeZSweepMapper.h>
 #include <fstream>
@@ -110,6 +115,7 @@ SimpleView::SimpleView()
     this->ui->alpha_Combo->setView(new QListView());
     this->ui->scalarChoice->setView(new QListView());
 	this->ui->domainAlpha_Combo->setView(new QListView());
+	this->ui->vectorColorMode_Combo->setView(new QListView());
 //    this->ui->plot1DGeneral_LW->SetView
     
     for(int nr = 0; nr < 27; nr++){
@@ -560,6 +566,7 @@ void SimpleView::setup1DFigure(QCustomPlot *customPlot){
 
 
 void SimpleView::slotUpdate(){
+	updateFlag = true;
     qDebug()<<"Slot update"<<scalarName.c_str()<<vectorName.c_str();
     if(this->ui->stackedWidget->currentIndex()==0){
         updateVTK(scalarName,vectorName);
@@ -626,17 +633,17 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         renderer=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
     }
 //    renderer=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
-    VTK_CREATE(vtkDataSetReader, readerScalarOrigin);
+    VTK_CREATE(vtkStructuredPointsReader, readerScalarOrigin);
     VTK_CREATE(vtkExtractVOI,readerScalar);
     VTK_CREATE(vtkVolumeProperty,volumePropertyScalar);
     VTK_CREATE(vtkThreshold,thresholdScalar);
-    VTK_CREATE(vtkDataSetReader,readerVectorOrigin);
+   // VTK_CREATE(vtkDataSetReader,readerVectorOrigin);
     VTK_CREATE(vtkExtractVOI,readerVector);
     VTK_CREATE(vtkArrowSource,arrowVector);
     VTK_CREATE(vtkMaskPoints,maskVector);
     VTK_CREATE(vtkGlyph3D,glyphVector);
-//    VTK_CREATE(vtkPolyDataMapper,mapperVector);
-    VTK_CREATE(vtkGlyph3DMapper,mapperVector);
+    VTK_CREATE(vtkPolyDataMapper,mapperVector);
+//    VTK_CREATE(vtkGlyph3DMapper,mapperVector);
     VTK_CREATE(vtkHedgeHog,hedgehog);
     VTK_CREATE(vtkDataSetMapper,streamMapper);
     VTK_CREATE(vtkThresholdPoints,thresholdVector);
@@ -686,11 +693,18 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     if (scalarFile && this->ui->scalar_CB->isChecked()){
         qDebug()<<"scalarName:"<<QString::fromStdString(scalarName);
         readerScalarOrigin->SetFileName(fileNameScalar);
-        qDebug() << readerScalarOrigin;
-        readerScalarOrigin->UpdateWholeExtent();
-//        readerScalarOrigin->Update();
-        readerScalarOrigin->GetOutput()->GetPointData()->GetScalars()->GetRange(scalar_range);
-        readerScalar->SetInputConnection(readerScalarOrigin->GetOutputPort());
+        qDebug() << readerScalarOrigin->GetOutput()->GetSpacing()[2];
+		readerScalarOrigin->GetOutput()->SetSpacing(this->ui->rescaleX_LE->text().toDouble(), this->ui->rescaleY_LE->text().toDouble(), this->ui->rescaleZ_LE->text().toDouble());
+		//readerScalarOrigin->UpdateInformation();
+        //readerScalarOrigin->UpdateWholeExtent();
+		qDebug() << readerScalarOrigin->GetOutput()->GetSpacing()[0] << readerScalarOrigin->GetOutput()->GetSpacing()[1] << readerScalarOrigin->GetOutput()->GetSpacing()[2];
+		readerScalarOrigin->Update();
+		readerScalarOrigin->GetOutput()->SetSpacing(this->ui->rescaleX_LE->text().toDouble(), this->ui->rescaleY_LE->text().toDouble(), this->ui->rescaleZ_LE->text().toDouble());
+		
+		readerScalarOrigin->GetOutput()->GetPointData()->GetScalars()->GetRange(scalar_range);
+        readerScalar->SetInputData(readerScalarOrigin->GetOutput());
+
+		qDebug()<<readerScalar->GetOutput()->GetSpacing()[0] << readerScalar->GetOutput()->GetSpacing()[1] << readerScalar->GetOutput()->GetSpacing()[2];
         if (this->ui->extract_CB->checkState()!=0){
             xminAll=this->ui->xmin_LE->text().toInt();
             yminAll=this->ui->ymin_LE->text().toInt();
@@ -699,6 +713,8 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             ymaxAll=this->ui->ymax_LE->text().toInt();
             zmaxAll=this->ui->zmax_LE->text().toInt();
             readerScalar->SetVOI(xminAll,xmaxAll,yminAll,ymaxAll,zminAll,zmaxAll);
+			qDebug() << "scalar sample rate" << this->ui->xDelta_LE->text().toInt() << this->ui->yDelta_LE->text().toInt() << this->ui->zDelta_LE->text().toInt();
+			readerScalar->SetSampleRate(this->ui->xDelta_LE->text().toInt(), this->ui->yDelta_LE->text().toInt(), this->ui->zDelta_LE->text().toInt());
         }else{
         }
         readerScalar->UpdateWholeExtent();
@@ -754,7 +770,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             vmin=scalar_range[0];
             vmax=scalar_range[1];
             VTK_CREATE(vtkSmartVolumeMapper,mapperScalar);
-//            VTK_CREATE(vtkVolumeMapper,mapperScalar);
+//            VTK_CREATE(vtkVolumeMapper,mapperScalar)
             mapperScalar->SetInputConnection(0,readerScalar->GetOutputPort(0));
             // mapperScalar->SetLookupTable(tableScalar);
             actorScalar->SetMapper(mapperScalar);
@@ -818,17 +834,25 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     
     if (vectorFile && this->ui->vector_CB->isChecked()){
         //Then is the vector part
-        readerVectorOrigin->SetFileName(fileNameVector);
-        readerVectorOrigin->UpdateWholeExtent();
-        
-        readerVectorOrigin->GetOutput()->GetPointData()->GetVectors()->GetRange(vector_range,-1);
-        
-        
-        readerVectorOrigin->GetOutput()->GetPointData()->SetActiveScalars("Magnitude");
+		if (!updateFlag)
+		{
+			readerVectorOrigin->ReadAllVectorsOn();
+			readerVectorOrigin->SetFileName(fileNameVector);
+			
+		}
+		qDebug() << readerVectorOrigin->GetOutput()->GetSpacing()[0] << readerVectorOrigin->GetOutput()->GetSpacing()[1] << readerVectorOrigin->GetOutput()->GetSpacing()[2];
+
+		readerVectorOrigin->Update();
+		readerVectorOrigin->GetOutput()->SetSpacing(this->ui->rescaleX_LE->text().toDouble(), this->ui->rescaleY_LE->text().toDouble(), this->ui->rescaleZ_LE->text().toDouble());
+		qDebug() << readerVectorOrigin->GetOutput()->GetSpacing()[0] << readerVectorOrigin->GetOutput()->GetSpacing()[1] << readerVectorOrigin->GetOutput()->GetSpacing()[2];
+
+		readerVectorOrigin->GetOutput()->GetPointData()->GetVectors()->GetRange(vector_range,-1);
+        //readerVectorOrigin->GetOutput()->GetPointData()->SetActiveScalars("Magnitude");
         readerVectorOrigin->GetOutput()->GetPointData()->SetActiveVectors("vector");
+		/*readerVectorOrigin->GetOutput()->GetPointData()->SetScalars("RGB");*/
+
         
-        
-        readerVector->SetInputConnection(0,readerVectorOrigin->GetOutputPort(0));
+        readerVector->SetInputData(readerVectorOrigin->GetOutput());
         if (this->ui->extract_CB->checkState()!=0){
             xminAll=this->ui->xmin_LE->text().toInt();
             yminAll=this->ui->ymin_LE->text().toInt();
@@ -837,14 +861,15 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             ymaxAll=this->ui->ymax_LE->text().toInt();
             zmaxAll=this->ui->zmax_LE->text().toInt();
             readerVector->SetVOI(xminAll,xmaxAll,yminAll,ymaxAll,zminAll,zmaxAll);
+			readerVector->SetSampleRate(this->ui->xDelta_LE->text().toInt(), this->ui->yDelta_LE->text().toInt(), this->ui->zDelta_LE->text().toInt());
         }else{
             qDebug()<<xmin<<xmax;
             // readerVector->GetVOI(extent);
             // readerVector->SetVOI(extent);
         }
-        readerVector->UpdateWholeExtent();
+        readerVector->Update();
         
-        arrowVector->UpdateWholeExtent();
+        //arrowVector->UpdateWholeExtent();
         
         vector_range[0]=this->ui->vectorValueMin_LE->text().toDouble();
         vector_range[1]=this->ui->vectorValueMax_LE->text().toDouble();
@@ -862,28 +887,42 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             thresholdVector->SetInputConnection(maskVector->GetOutputPort());
             thresholdVector->ThresholdBetween(vector_range[0],vector_range[1]);
             thresholdVector->UpdateWholeExtent();
-//            glyphVector->SetInputConnection(thresholdVector->GetOutputPort());
-            mapperVector->SetInputConnection(thresholdVector->GetOutputPort());
+            glyphVector->SetInputConnection(thresholdVector->GetOutputPort());
+//            mapperVector->SetInputConnection(thresholdVector->GetOutputPort());
         }else{
-//            glyphVector->SetInputConnection(maskVector->GetOutputPort());
-            mapperVector->SetInputConnection(maskVector->GetOutputPort());
+            glyphVector->SetInputConnection(maskVector->GetOutputPort());
+//            mapperVector->SetInputConnection(maskVector->GetOutputPort());
         }
-//        glyphVector->SetSourceConnection(0,arrowVector->GetOutputPort());
-        mapperVector->SetSourceConnection(arrowVector->GetOutputPort());
-//        glyphVector->SetVectorModeToUseVector();
-//        glyphVector->SetColorModeToColorByVector();
-//        glyphVector->SetScaleModeToScaleByVector();
-        mapperVector->SetScaleModeToScaleByMagnitude();
-//        glyphVector->SetScaleFactor(this->ui->vectorScale_LE->text().toDouble());
-        mapperVector->SetScaleFactor(this->ui->vectorScale_LE->text().toDouble());
-//        glyphVector->Update();
+        glyphVector->SetSourceConnection(arrowVector->GetOutputPort());
+		glyphVector->SetInputArrayToProcess(1, 0, 0, 0, "vector");
+//        mapperVector->SetSourceConnection(arrowVector->GetOutputPort());
+		glyphVector->OrientOn();
+        glyphVector->SetVectorModeToUseVector();
+		
+        glyphVector->SetScaleModeToScaleByVector();
+		qDebug() << maskVector->GetOutput()->GetPointData()->GetNumberOfArrays();
+		glyphVector->GetOutput()->GetPointData()->AddArray(maskVector->GetOutput()->GetPointData()->GetArray("RGB"));
+		qDebug() << glyphVector->GetOutput()->GetPointData()->GetArray("RGB")->GetNumberOfTuples();
+
+		//glyphVector->SetInputArrayToProcess(3, 0, 0, 0, "RGB");
+		qDebug() << glyphVector->GetOutput()->GetPointData()->GetNumberOfArrays();
+
+		qDebug() << "mask rgb"<< maskVector->GetOutput()->GetPointData()->GetArray("RGB")->GetDataType();
+		//glyphVector->SetIndexModeToVector();
+		//mapperVector->SetScaleModeToScaleByMagnitude();
+//		mapperVector->SetScaleModeToScaleByMagnitude();
+        glyphVector->SetScaleFactor(this->ui->vectorScale_LE->text().toDouble());
+ //       mapperVector->SetScaleFactor(this->ui->vectorScale_LE->text().toDouble());
+        glyphVector->Update();
+
+        mapperVector->SetInputConnection(glyphVector->GetOutputPort());
         
-//        mapperVector->SetInputConnection(glyphVector->GetOutputPort());
-        mapperVector->SetScalarRange(vector_range);
-        mapperVector->SetLookupTable(colorVector);
-        mapperVector->Update();
-        std::cout<<glyphVector;
-        actorVector->SetMapper(mapperVector);
+		mapperVector->ScalarVisibilityOn();
+		mapperVector->SetScalarModeToUsePointFieldData();
+
+		
+		
+		actorVector->SetMapper(mapperVector);
         
         
         if(this->ui->vectorGlyph_CB->checkState()!=0){
@@ -899,7 +938,47 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         outlineVectorActor->GetProperty()->SetColor(0,0,0);
         renderer->AddActor(outlineVectorActor);
         
-        
+		if (this->ui->vectorColorMode_Combo->currentIndex()==0)
+		{
+			glyphVector->SetColorModeToColorByVector();
+			mapperVector->SelectColorArray("GlyphVector");
+			colorVector->SetVectorModeToMagnitude();
+			qDebug() << "magnitude";
+		}
+		else if (this->ui->vectorColorMode_Combo->currentIndex() == 4)
+		{
+			mapperVector->SelectColorArray("RGB");
+
+			mapperVector->SetColorModeToDefault();
+			//mapperVector->SetColorModeToMapScalars();
+			//qDebug() << glyphVector->GetOutput()->GetPointData()->GetArray("RGB")->GetRange(-1)[1];
+			//qDebug() << glyphVector->GetOutput()->GetPointData()->GetArray("RGB")->GetNumberOfTuples();
+			//qDebug() << glyphVector->GetOutput()->GetPointData()->GetArray(2)->GetNumberOfTuples();
+			//qDebug() << glyphVector->GetOutput()->GetPointData()->GetArray(0)->GetName();
+			//qDebug() << glyphVector->GetOutput()->GetPointData()->GetArray(1)->GetName();
+			//qDebug() << glyphVector->GetOutput()->GetPointData()->GetArray(2)->GetName();
+
+			colorVector->SetVectorModeToRGBColors();
+			qDebug() << "RGB";
+		}
+		else
+		{
+			glyphVector->SetColorModeToColorByVector();
+			mapperVector->SelectColorArray("GlyphVector");
+			int colorIndex = this->ui->vectorColorMode_Combo->currentIndex();
+			int vectorIndex = this->ui->vectorChoice->currentIndex();
+			colorVector->SetVectorModeToComponent();
+			colorVector->SetVectorComponent(this->ui->vectorColorMode_Combo->currentIndex()-1);
+			vector_range[0] = this->ui->vector_Table->item( vectorIndex * 3 + colorIndex - 1, 0)->text().toDouble();
+			vector_range[1] = this->ui->vector_Table->item( vectorIndex * 3 + colorIndex - 1, 1)->text().toDouble();
+			qDebug() << "component1";
+		}
+		mapperVector->SetScalarRange(vector_range);
+		colorVector->Build();
+		std::cout << "colorVector:!!!!!!!!!!!!!!!!!!!!" << colorVector;
+		mapperVector->SetLookupTable(colorVector);
+		std::cout << mapperVector;
+		mapperVector->Update();
         
         if(this->ui->streamline_CB->isChecked()){
             vectorSeed->SetCenter(this->ui->seedCenterX_LE->text().toDouble(), this->ui->seedCenterY_LE->text().toDouble(), this->ui->seedCenterZ_LE->text().toDouble());
@@ -1026,12 +1105,98 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
 	scalarLegendWidget->ResizableOn();
 	scalarLegendWidget->On();
 
+	VTK_CREATE(vtkRTAnalyticSource, vectorRT);
+	VTK_CREATE(vtkContourFilter, vectorRTContour);
+	VTK_CREATE(vtkPolyDataMapper, vectorRTMapper);
+	VTK_CREATE(vtkLookupTable, vectorRTLookupTable);
+	VTK_CREATE(vtkUnsignedCharArray, rgb);
+	vectorRT->SetWholeExtent(-10, 10, -10, 10, -10, 10);
+	vectorRT->SetCenter(0, 0, 0);
+	vectorRT->SetXFreq(0);
+	vectorRT->SetYFreq(0);
+	vectorRT->SetZFreq(0);
+	vectorRT->SetXFreq(0);
+	vectorRT->SetXMag(10);
+	vectorRT->SetYMag(10);
+	vectorRT->SetZMag(10);
+	vectorRT->Update();
+	vectorRTContour->SetInputConnection(vectorRT->GetOutputPort());
+	vectorRTContour->SetValue(0, 200);
+	vectorRTContour->ComputeNormalsOn();
+	vectorRTContour->Update();
+	rgb->SetNumberOfComponents(3);
+	rgb->SetName("RGB1");
+	double *RGB;
+	double *normal;
+	double magnRange[2];
+	double zRange[2];
+	double xyRange[2];
+	RGB = new double(3);
+	normal = new double(3);
+	magnRange[0] = 0;
+	magnRange[1] = 1;
+	xyRange[0] = 0;
+	xyRange[1] = 1;
+	zRange[0] = -1;
+	zRange[1] = 1;
+	for (vtkIdType i = 0; i < vectorRTContour->GetOutput()->GetPointData()->GetNumberOfTuples(); i++)
+	{
+		normal = vectorRTContour->GetOutput()->GetPointData()->GetNormals()->GetTuple(i);
+		RGB = getRGB(normal[0], normal[1], normal[2], magnRange, xyRange, zRange);
+		//if (normal[2] < 0)
+		//{
+		//	qDebug() << "RGBnormal:" << i <<RGB[0] << RGB[1] << RGB[2] << normal[0] << normal[1] << normal[2];
+		//}
+		rgb->InsertNextTuple3(int(RGB[0]),int(RGB[1]),int(RGB[2]));
+	}
+	qDebug() << rgb->GetNumberOfTuples() << vectorRTContour->GetOutput()->GetPointData()->GetNumberOfTuples();
 
+	vectorRTContour->GetOutput()->GetPointData()->AddArray(rgb);
+	vectorRTContour->Update();
+
+	VTK_CREATE(vtkAssignAttribute, vectorContourAssign);
+	vectorContourAssign->SetInputConnection(vectorRTContour->GetOutputPort());
+	vectorContourAssign->Assign("RGB1", vtkDataSetAttributes::VECTORS, vtkAssignAttribute::POINT_DATA);
+	vectorContourAssign->Update();
+	qDebug() << vectorRTContour->GetOutput()->GetPointData()->GetNumberOfArrays();
+	qDebug() << vectorRTContour->GetOutput()->GetPointData()->GetArray(0)->GetName();
+	qDebug() << vectorRTContour->GetOutput()->GetPointData()->GetArray(1)->GetName();
+	qDebug() << vectorRTContour->GetOutput()->GetPointData()->GetArray(2)->GetName();
+	qDebug() << vectorRTContour->GetOutput()->GetPointData()->GetArray(2)->GetNumberOfTuples();
+	qDebug() << vectorRTContour->GetOutput()->GetPointData()->GetArray(2)->GetTuple(400)[1];
+	qDebug() << vectorRTContour->GetOutput()->GetPointData()->GetArray(2)->GetTuple(1094)[1];
+	qDebug() << vectorRTContour->GetOutput()->GetPointData()->GetArray(2)->GetTuple(1095)[0];
+	vectorRTLookupTable->SetVectorModeToRGBColors();
+	vectorRTLookupTable->Build();
+	vectorRTMapper->SetInputConnection(vectorContourAssign->GetOutputPort());
+	vectorRTMapper->SetScalarModeToUsePointFieldData();
+	vectorRTMapper->SetColorModeToDefault();
+	vectorRTMapper->SetLookupTable(vectorRTLookupTable);
+	vectorRTMapper->ScalarVisibilityOn();
+	vectorRTMapper->SelectColorArray("RGB1");
+	vectorRTMapper->Update();
+	vectorRTActor->SetMapper(vectorRTMapper);
+	vectorOrientationLegend->SetOutlineColor(0.9300, 0.5700, 0.1300);
+	vectorOrientationLegend->SetOrientationMarker(vectorRTActor);
+	vectorOrientationLegend->SetInteractor(this->ui->qvtkWidget->GetRenderWindow()->GetInteractor());
+	vectorOrientationLegend->SetViewport(0.8, 0.4, 1.0, 0.6);
+	vectorOrientationLegend->SetEnabled(1);
+	vectorOrientationLegend->InteractiveOn();
+ 
+	vectorScaleBarActor->SetLookupTable(colorVector);
+	vectorScaleBarActor->SetTitle(this->ui->vectorLegend_LE->text().toStdString().c_str());
+	vectorScaleBarActor->SetNumberOfLabels(RGBPoint);
+	vectorScaleBarActor->SetMaximumWidthInPixels(80);
+	vectorScaleBarActor->GetTitleTextProperty()->SetColor(0,0,0);
+	vectorScaleBarActor->GetLabelTextProperty()->SetColor(0,0,0);
+	vectorScaleBarActor->UseOpacityOn();
 	vectorLegendWidget->SetScalarBarActor(vectorScaleBarActor);
+
 	vectorLegendWidget->SetInteractor(this->ui->qvtkWidget->GetRenderWindow()->GetInteractor());
 	vectorLegendWidget->On();
     
     RGBPoint=3;
+	colorScalar->Build();
     scalarScaleBarActor->SetLookupTable(colorScalar);
     scalarScaleBarActor->SetTitle(this->ui->scalarLegend_LE->text().toStdString().c_str());
     scalarScaleBarActor->SetNumberOfLabels(RGBPoint);
@@ -1042,14 +1207,8 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
 	scalarScaleBarActor->DrawTickLabelsOn();
     scalarScaleBarActor->UseOpacityOn();
     //renderer->AddActor2D(scalarScaleBarActor);
-    
-    vectorScaleBarActor->SetLookupTable(colorVector);
-    vectorScaleBarActor->SetTitle(this->ui->vectorLegend_LE->text().toStdString().c_str());
-    vectorScaleBarActor->SetNumberOfLabels(RGBPoint);
-	vectorScaleBarActor->SetMaximumWidthInPixels(80);
-    vectorScaleBarActor->GetTitleTextProperty()->SetColor(0,0,0);
-    vectorScaleBarActor->GetLabelTextProperty()->SetColor(0,0,0);
-    vectorScaleBarActor->UseOpacityOn();
+
+
    // renderer->AddActor2D(vectorScaleBarActor);
     
     if(this->ui->outline_CB->checkState()!=0){
@@ -1081,10 +1240,25 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         }
         
         if(this->ui->vectorLegendBar_CB->checkState()!=0){
-			vectorLegendWidget->On();
-            vectorScaleBarActor->SetVisibility(true);
+			if (this->ui->vectorColorMode_Combo->currentIndex()==4)
+			{
+				vectorOrientationLegend->On();
+				vectorRTActor->SetVisibility(true);
+				vectorLegendWidget->Off();
+				vectorScaleBarActor->SetVisibility(false);
+			}
+			else {
+				vectorLegendWidget->On();
+				vectorScaleBarActor->SetVisibility(true);
+				vectorOrientationLegend->Off();
+				vectorRTActor->SetVisibility(false);
+			}
+
+
         }else{
 			vectorLegendWidget->Off();
+			vectorOrientationLegend->Off();
+			vectorRTActor->SetVisibility(false);
             vectorScaleBarActor->SetVisibility(false);
         }
 
@@ -1361,13 +1535,31 @@ void SimpleView::on_scalarLegendBar_CB_stateChanged(int state){
 }
 
 void SimpleView::on_vectorLegendBar_CB_stateChanged(int state) {
-	if (state != 0 && this->ui->vectorLegendBar_CB->isChecked()) {
-		vectorLegendWidget->On();
-		vectorScaleBarActor->SetVisibility(true);
-	}else {
+	if (state != 0) {
+		if (this->ui->vectorColorMode_Combo->currentIndex() == 4)
+		{
+			vectorOrientationLegend->On();
+			vectorRTActor->SetVisibility(true);
+			vectorLegendWidget->Off();
+			vectorScaleBarActor->SetVisibility(false);
+		}
+		else {
+			vectorLegendWidget->On();
+			vectorScaleBarActor->SetVisibility(true);
+			vectorOrientationLegend->Off();
+			vectorRTActor->SetVisibility(false);
+		}
+
+
+	}
+	else {
 		vectorLegendWidget->Off();
+		vectorOrientationLegend->Off();
+		vectorRTActor->SetVisibility(false);
 		vectorScaleBarActor->SetVisibility(false);
 	}
+
+	
 	this->ui->qvtkWidget->GetRenderWindow()->Render();
 }
 
@@ -1520,19 +1712,20 @@ void SimpleView::on_extract_CB_stateChanged(int state){
         this->ui->ymax_LE->setEnabled(false);
         this->ui->zmin_LE->setEnabled(false);
         this->ui->zmax_LE->setEnabled(false);
+		this->ui->xDelta_LE->setEnabled(false);
+		this->ui->yDelta_LE->setEnabled(false);
+		this->ui->zDelta_LE->setEnabled(false);
     }else{
+
         this->ui->xmin_LE->setEnabled(true);
         this->ui->xmax_LE->setEnabled(true);
         this->ui->ymin_LE->setEnabled(true);
         this->ui->ymax_LE->setEnabled(true);
         this->ui->zmin_LE->setEnabled(true);
         this->ui->zmax_LE->setEnabled(true);
-        this->ui->xmin_LE->setText(QString::fromStdString(std::to_string(xminAll)));
-        this->ui->ymin_LE->setText(QString::fromStdString(std::to_string(yminAll)));
-        this->ui->zmin_LE->setText(QString::fromStdString(std::to_string(zminAll)));
-        this->ui->xmax_LE->setText(QString::fromStdString(std::to_string(xmaxAll)));
-        this->ui->ymax_LE->setText(QString::fromStdString(std::to_string(ymaxAll)));
-        this->ui->zmax_LE->setText(QString::fromStdString(std::to_string(zmaxAll)));
+		this->ui->xDelta_LE->setEnabled(true);
+		this->ui->yDelta_LE->setEnabled(true);
+		this->ui->zDelta_LE->setEnabled(true);	
     }
 }
 
@@ -1567,13 +1760,15 @@ void SimpleView::on_zmax_LE_editingFinished(){
 void SimpleView::slotOpenFile_scalar()
 {
     QFileDialog filedialog;
-    
+	boolean aaa;
     filedialog.setFileMode(QFileDialog::AnyFile);
     filedialog.setNameFilter(tr("Input (*.*)"));
     filedialog.setOption(QFileDialog::ReadOnly);
     QString load=filedialog.getOpenFileName();
-    qDebug()<<"Filename:"<<load;
-    if (!load.isEmpty()) {
+	QFileInfo fileExtension = QFileInfo(load);
+	aaa = (fileExtension.suffix() != "vtk");
+    qDebug()<<"Filename:"<<load << fileExtension.suffix() << aaa;
+    if (!load.isEmpty() && fileExtension.suffix() != "vtk") {
         columns=loadData(load);
         
         if(tempX==1){
@@ -1656,14 +1851,48 @@ void SimpleView::slotOpenFile_scalar()
         delete this->vtkData;
         delete[] dataHold;
 
-    }
+	}
+	else if (fileExtension.suffix()=="vtk")
+	{
+		columns = 1;
+
+		int current = this->ui->scalarChoice->count();
+		if (current != 0) {
+			for (int i = 0; i<current + 1; ++i) {
+				this->ui->scalarChoice->removeItem(0);
+			}
+		}
+		else {
+
+		}
+
+		for (int i = 0; i < columns; ++i)
+		{
+
+			this->ui->scalarChoice->addItem(QString::fromStdString(std::to_string(i + 1)));
+		}
+
+		this->ui->scalar_Table->clearContents();
+		for (int i = 0; i<this->ui->scalar_Table->rowCount(); i = 0) {
+			this->ui->scalar_Table->removeRow(0);
+		}
+		
+
+		this->ui->scalar_CB->setCheckState(Qt::Checked);
+		this->ui->volume_CB->setCheckState(Qt::Checked);
+		this->ui->vector_CB->setCheckState(Qt::Unchecked);
+		this->ui->domain_CB->setCheckState(Qt::Unchecked);
+		xmax = 10; ymax = 10; zmax = 10;
+		scalarName = load.toStdString();
+		updateVTK(scalarName, vectorName);
+	}
 }
 
 void SimpleView::on_scalarChoice_currentIndexChanged(int index){
 //    if (index!=this->ui->scalarChoice->currentIndex()){
         scalarName=(scalarDir.absoluteFilePath().toStdString()+"."+std::to_string(this->ui->scalarChoice->currentIndex()+1)+".vtk").c_str();
         qDebug()<<"scalar"<<scalarName.c_str();
-        updateVTK(scalarName,vectorName);
+        //updateVTK(scalarName,vectorName);
 //    }
 }
 void SimpleView::slotOpenFile_vector()
@@ -1674,8 +1903,9 @@ void SimpleView::slotOpenFile_vector()
     filedialog.setNameFilter(tr("Input (*.*)"));
     filedialog.setOption(QFileDialog::ReadOnly);
     QString load=filedialog.getOpenFileName();
+	QFileInfo fileExtension = QFileInfo(load);
     qDebug()<<"Filename:"<<load;
-    if (!load.isEmpty()) {
+    if (!load.isEmpty() && fileExtension.suffix().toStdString() != "vtk") {
         columns=loadData(load);
         int rows=(xmax+1)*(ymax+1)*(zmax+1);
         double *dataHold= new double[rows];
@@ -1696,18 +1926,18 @@ void SimpleView::slotOpenFile_vector()
             
         }
         vectorDir=QFileInfo(filehold.absolutePath()+"/"+filehold.completeBaseName());
-        for (i = 0; i < columns/3; ++i)
-        {
-            qDebug()<<"not sure why nothing shows up";
-            qDebug()<<QString::fromStdString(std::to_string(3*i+1)+std::to_string(3*i+2)+std::to_string(3*i+3));
-            outputVector(vectorDir.absoluteFilePath(),3*i,3*i+1,3*i+2,xmax,ymax,zmax);
-            this->ui->vectorChoice->addItem(QString::fromStdString(std::to_string(3*i+1)+std::to_string(3*i+2)+std::to_string(3*i+3)));
-            qDebug()<<"not sure why nothing shows up";
-            qDebug()<<xmax<<ymax<<zmax;
-            qDebug()<<"not sure why nothing shows up";
-            qDebug()<<"not sure why nothing shows up";
-            qDebug()<<filehold.absolutePath().append(filehold.completeBaseName());
-        }
+		for (i = 0; i < columns / 3; ++i)
+		{
+			qDebug() << "not sure why nothing shows up";
+			qDebug() << QString::fromStdString(std::to_string(3 * i + 1) + std::to_string(3 * i + 2) + std::to_string(3 * i + 3));
+			outputVector(vectorDir.absoluteFilePath(), 3 * i, 3 * i + 1, 3 * i + 2, xmax, ymax, zmax);
+			this->ui->vectorChoice->addItem(QString::fromStdString(std::to_string(3 * i + 1) + std::to_string(3 * i + 2) + std::to_string(3 * i + 3)));
+			qDebug() << "not sure why nothing shows up";
+			qDebug() << xmax << ymax << zmax;
+			qDebug() << "not sure why nothing shows up";
+			qDebug() << "not sure why nothing shows up";
+			qDebug() << filehold.absolutePath().append(filehold.completeBaseName());
+		}
         this->ui->inputFileVector->setText(filehold.fileName());
         
         printstatus = QString::fromStdString(std::to_string(columns));
@@ -1746,8 +1976,15 @@ void SimpleView::slotOpenFile_vector()
         this->ui->vectorValueMin_LE->setText(QString::fromStdString(std::to_string(getMin(dataHold,rows))));
         this->ui->vectorValueMax_LE->setText(QString::fromStdString(std::to_string(getMax(dataHold,rows))));
         this->ui->vectorScale_LE->setText(QString::fromStdString(std::to_string(5/getMax(dataHold, rows))));
+		//this->ui->vectorMaskNum_LE->setText(QString::number(rows));
 //        this->ui->information_Tab->setCurrentIndex(1);
+
+
+
         int index=this->ui->vectorChoice->currentIndex();
+
+
+
         vectorName=(vectorDir.absoluteFilePath().toStdString()+"."+std::to_string(3*index+1)+std::to_string(3*index+2)+std::to_string(3*index+3)+".vtk").c_str();
         
         updateVTK(scalarName,vectorName);
@@ -1756,7 +1993,39 @@ void SimpleView::slotOpenFile_vector()
 
 
         
-    }
+	}
+	else if (fileExtension.suffix().toStdString() == "vtk")
+	{
+		columns = 3;
+
+		this->ui->scalar_CB->setCheckState(Qt::Unchecked);
+		this->ui->volume_CB->setCheckState(Qt::Unchecked);
+		this->ui->vector_CB->setCheckState(Qt::Checked);
+		this->ui->vectorGlyph_CB->setCheckState(Qt::Checked);
+		this->ui->domain_CB->setCheckState(Qt::Unchecked);
+		this->ui->vectorScale_LE->setText("1");
+		qDebug() << columns << columns / 3;
+		qDebug() << xmax << ymax << zmax;
+		int current = this->ui->vectorChoice->count();
+		if (current != 0) {
+			for (i = 0; i<current + 1; ++i) {
+				this->ui->vectorChoice->removeItem(0);
+			}
+		}
+		else {
+
+		}
+
+
+			this->ui->vectorChoice->addItem(QString::fromStdString("123"));
+
+
+
+			xmax = 10; ymax = 10; zmax = 10;
+
+		vectorName = load.toStdString();
+		updateVTK(scalarName, vectorName);
+	}
 }
 
 void SimpleView::on_vectorChoice_currentIndexChanged(int index){
@@ -1765,7 +2034,7 @@ void SimpleView::on_vectorChoice_currentIndexChanged(int index){
 //    if(index!=this->ui->vectorChoice->currentIndex()){
         vectorName=(vectorDir.absoluteFilePath().toStdString()+"."+std::to_string(3*index+1)+std::to_string(3*index+2)+std::to_string(3*index+3)+".vtk").c_str();
         qDebug()<<"vectorname:"<<QString::fromStdString(vectorName);
-        updateVTK(scalarName,vectorName);
+        //updateVTK(scalarName,vectorName);
 //    }
 }
 
@@ -1800,7 +2069,7 @@ void SimpleView::outputScalar(QString path,int columnNumber,int x, int y, int z)
     output << "DATASET STRUCTURED_POINTS\n";
     output << "DIMENSIONS " << std::to_string(x) << " " << std::to_string(y) <<" "<< std::to_string(z) << "\n";
     output << "ORIGIN 0 0 0\n";
-    output << "SPACING 1 1 1\n";
+    output << "SPACING " << this->ui->rescaleX_LE->text().toStdString() << " " << this->ui->rescaleY_LE->text().toStdString() << " " << this->ui->rescaleZ_LE->text().toStdString()<<"\n";
     output << "\n";
     output << "POINT_DATA " << std::to_string(rowNumber)+"\n";
     output << "SCALARS scalar float\n";
@@ -1828,12 +2097,180 @@ void SimpleView::outputScalar(QString path,int columnNumber,int x, int y, int z)
     scalarName=str;
 }
 
+
+
+double  Hue_2_RGB(double v1, double v2, double vH)             //Function Hue_2_RGB http://www.easyrgb.com/index.php?X=MATH&H=19#text19
+{
+	if (vH < 0) {
+		vH += 1;
+	}
+	if (vH > 1) {
+		vH -= 1;
+	}
+	if ((6 * vH) < 1) {
+		return (v1 + (v2 - v1) * 6 * vH);
+	}
+	if ((2 * vH) < 1) {
+		return (v2);
+	}
+	if ((3 * vH) < 2) {
+		return (v1 + (v2 - v1) * ((2 / 3.0) - vH) * 6);
+	}
+	return (v1);
+}
+
+
+double * SimpleView::convertHSLToRGB(double hue, double saturation, double lightness) {
+	//The formular in this conversion subroutine is taken from http://www.rapidtables.com/convert/color/hsl-to-rgb.htm
+	double* RGB = new double[3];
+	RGB[0] = 0;
+	RGB[1] = 0;
+	RGB[2] = 0;
+	double var_1 = 0.0, var_2 = 0.0;
+	/*double C = 0, X = 0, m = 0, r = 0, g = 0, b = 0;
+	C = (1 - std::abs(2 * lightness - 1))*saturation;
+	X = C*(1 - std::abs(fmod((hue / 60.0) ,2.0) - 1));
+	m = lightness - C / 2.0;
+	if (hue>=0 && hue<60)
+	{
+		r = C;
+		g = X;
+		b = 0;
+	}
+	else if (hue>=60 && hue<120)
+	{
+		r = X;
+		g = C;
+		b = 0;
+	}
+	else if (hue>=120 && hue<180)
+	{
+		r = 0;
+		g = C;
+		b = X;
+	}
+	else if (hue >= 180 && hue < 240) {
+		r = 0;
+		g = X;
+		b = C;
+	}
+	else if (hue >= 240 && hue < 300) {
+		r = X;
+		g = 0;
+		b = C;
+	}
+	else if (hue>=300 && hue<360)
+	{
+		r = C;
+		g = 0;
+		b = X;
+	}
+
+	RGB[0] = 255 * (r + m);
+	RGB[1] = 255 * (g + m);
+	RGB[2] = 255 * (b + m);*/
+
+
+	if (saturation <= 10e-6)                       //HSL from 0 to 1
+	{
+		RGB[0] = lightness * 255;                     //RGB results from 0 to 255
+		RGB[1] = lightness * 255;
+		RGB[2] = lightness * 255;
+	}
+	else
+	{
+		if (lightness < 0.5) {
+			var_2 = lightness * (1 + saturation);
+		}
+		else {
+			var_2 = (lightness + saturation) - (saturation * lightness);
+		}
+
+				var_1 = 2 * lightness - var_2;
+
+				RGB[0] = 255 * Hue_2_RGB(var_1, var_2, hue/360.0 + (1 / 3.0));
+				RGB[1] = 255 * Hue_2_RGB(var_1, var_2, hue/360.0);
+				RGB[2] = 255 * Hue_2_RGB(var_1, var_2, hue/360.0 - (1 / 3.0));
+	}
+
+	//qDebug() << "hsv to rgb" << hue << saturation << lightness << RGB[0] << RGB[1] << RGB[2];
+
+	return RGB;
+}
+
+
+
+
+double SimpleView::rescale(double value, double range[2]) {
+	if (range[1]-range[0]<10e-6)
+	{
+		return 0.5;
+	}
+	else {
+		if (value <= range[0])
+		{
+			return 0;
+		}
+		else if (value >= range[1])
+		{
+			return 1;
+		}
+		else {
+			return (value - range[0]) / (range[1] - range[0]);
+		}
+	}
+
+}
+
+double * SimpleView::getRGB(double px, double py, double pz, double magnitudeRange[2], double xyRange[2], double zRange[2]) {
+	double hue,saturation,lightness;
+	double xyMagnitude = 0.0;
+	xyMagnitude = std::sqrt(px*px + py*py);
+	if (xyMagnitude<10e-6)
+	{
+		hue = 0;
+		saturation = 0;
+		lightness = rescale(pz, zRange);
+	}
+	else {
+		if (py >= 0)
+		{
+			hue = std::acos(px / xyMagnitude) / piValue * 180;
+		}
+		else {
+			hue = 360 - (std::acos(px / xyMagnitude) / piValue * 180);
+		}
+		saturation = rescale(std::sqrt(px*px + py*py + pz*pz), magnitudeRange);
+		saturation = 1;
+		lightness = rescale(pz, zRange);
+	}
+
+	//qDebug() << "rrrgggbbb" << px << py << pz << hue << saturation << lightness;
+	return convertHSLToRGB(hue,saturation,lightness);
+}
+
+
 void SimpleView::outputVector(QString path,int colX,int colY,int colZ, int x, int y, int z){
     long rowNumber;
+	double magnitudeRange[2] = { 0,0 };
+	double zRange[2] = { 0,0 };
+	double xyRange[2] = { 0,0 };
+	double * magnitude, * xyMagnitude, *zMagnitude,*hold;
+	double *RGB;
+	long holdIndex = 0;
+
+	RGB = new double[3];
+	RGB={ 0};
+
     x=x+1;
     y=y+1;
     z=z+1;
-    rowNumber=x*y*z;
+	rowNumber = x*y*z;
+	magnitude = new double[rowNumber];
+	xyMagnitude = new double[rowNumber];
+	zMagnitude = new double[rowNumber];
+	qDebug() << "rownumber:" << x << y << z << rowNumber;
+
     std::ofstream output;
     std::string str;
     str=path.toStdString()+"."+std::to_string(colX+1)+std::to_string(colY+1)+std::to_string(colZ+1)+".vtk";
@@ -1846,19 +2283,19 @@ void SimpleView::outputVector(QString path,int colX,int colY,int colZ, int x, in
     output << "DATASET STRUCTURED_POINTS\n";
     output << "DIMENSIONS " << std::to_string(x) << " " << std::to_string(y) <<" "<< std::to_string(z) << "\n";
     output << "ORIGIN 0 0 0\n";
-    output << "SPACING 1 1 1\n";
+	output << "SPACING " << this->ui->rescaleX_LE->text().toStdString() << " " << this->ui->rescaleY_LE->text().toStdString() << " " << this->ui->rescaleZ_LE->text().toStdString() << "\n";
     output << "\n";
     output << "POINT_DATA " << std::to_string(rowNumber)+"\n";
-    output << "SCALARS Magnitude float \n";
-    output << "LOOKUP_TABLE default \n";
-    output << std::scientific;
-    for (int m=0;m<z;++m){
-        for (int n=0;n<y;++n){
-            for (int w=0;w<x;++w){
-                output << setw(14) << sqrt(pow(vtkData[w*y*z+n*z+m][colX],2)+pow(vtkData[w*y*z+n*z+m][colY],2)+pow(vtkData[w*y*z+n*z+m][colZ],2)) << "\n";
-            }
-        }
-    }
+    //output << "SCALARS Magnitude float \n";
+    //output << "LOOKUP_TABLE default \n";
+    //output << std::scientific;
+    //for (int m=0;m<z;++m){
+    //    for (int n=0;n<y;++n){
+    //        for (int w=0;w<x;++w){
+    //            output << setw(14) << sqrt(pow(vtkData[w*y*z+n*z+m][colX],2)+pow(vtkData[w*y*z+n*z+m][colY],2)+pow(vtkData[w*y*z+n*z+m][colZ],2)) << "\n";
+    //        }
+    //    }
+    //}
     
     output << "\n";
     output << "VECTORS vector float\n";
@@ -1866,10 +2303,58 @@ void SimpleView::outputVector(QString path,int colX,int colY,int colZ, int x, in
     for (int m=0;m<z;++m){
         for (int n=0;n<y;++n){
             for (int w=0;w<x;++w){
-                output << setw(14) << vtkData[w*y*z+n*z+m][colX] << " " << setw(14) << vtkData[w*y*z+n*z+m][colY] << " " << setw(14) << vtkData[w*y*z+n*z+m][colZ] << "\n";
+				holdIndex = w*y*z + n*z + m;
+                output << setw(14) << vtkData[holdIndex][colX] << " " << setw(14) << vtkData[holdIndex][colY] << " " << setw(14) << vtkData[holdIndex][colZ] << "\n";
+				magnitude[holdIndex] = std::sqrt(vtkData[holdIndex][colX] * vtkData[holdIndex][colX] + vtkData[holdIndex][colY] * vtkData[holdIndex][colY] + vtkData[holdIndex][colZ] * vtkData[holdIndex][colZ]);
+				xyMagnitude[holdIndex] = std::sqrt(vtkData[holdIndex][colX] * vtkData[holdIndex][colX] + vtkData[holdIndex][colY] * vtkData[holdIndex][colY]);
+				zMagnitude[holdIndex] = vtkData[holdIndex][colZ];
             }
         }
     }
+	magnitudeRange[0] = 0;
+	magnitudeRange[1] = *std::max_element(magnitude, magnitude + rowNumber);
+	xyRange[0] = 0;
+	xyRange[1] = *std::max_element(xyMagnitude, xyMagnitude + rowNumber);
+	zRange[0] = *std::min_element(zMagnitude, zMagnitude + rowNumber);
+	zRange[1] = *std::max_element(zMagnitude, zMagnitude + rowNumber);
+	zRange[0] = -magnitudeRange[1];
+	zRange[1] = magnitudeRange[1];
+	if ((std::abs(zRange[0]) - std::abs(zRange[1])) < 10e-8)
+	{
+		zRange[0] = -std::abs(zRange[0]);
+		zRange[1] = std::abs(zRange[0]);
+	}
+	else {
+		if (std::abs(zRange[0]) > std::abs(zRange[1]))
+		{
+			zRange[0] = -std::abs(zRange[0]);
+			zRange[1] = std::abs(zRange[0]);
+		}
+		else {
+			zRange[0] = -std::abs(zRange[1]);
+			zRange[1] = std::abs(zRange[1]);
+		}
+	}
+
+	qDebug() << "zrange" << magnitudeRange[1] << xyRange[1] << zRange[1];
+	output << "\n";
+	output << "VECTORS RGB unsigned_char\n";
+	output << std::scientific;
+	for (int m = 0; m<z; ++m) {
+		for (int n = 0; n<y; ++n) {
+			for (int w = 0; w<x; ++w) {
+				holdIndex = w*y*z + n*z + m;
+				//qDebug() << "in the getRGB" << w << n << m;
+				RGB = getRGB(vtkData[holdIndex][colX], vtkData[holdIndex][colY],vtkData[holdIndex][colZ],magnitudeRange,xyRange,zRange);
+				//qDebug() << "RGB::" << RGB[0] << RGB[1] << RGB[2] << vtkData[holdIndex][colX] << vtkData[holdIndex][colY] << vtkData[holdIndex][colZ];
+				output <<  std::fixed << setprecision(0) << RGB[0] << " " <<  RGB[1] << " " <<  RGB[2] << "\n";
+			}
+		}
+	}
+
+
+
+
     output.close();
     vectorName=str;
 }
@@ -1879,6 +2364,7 @@ void SimpleView::slotExit() {
 }
 
 int SimpleView::loadData(QString filedir){
+	updateFlag = false;
     //First we need to decide whether the first line of the file needs to be kept
     std::ifstream input;
     std::ofstream output;
@@ -2309,39 +2795,65 @@ int SimpleView::domainProcessing(QString filedir){
 void SimpleView::outputDomain(QString filedir,int x, int y, int z){
     int rowNumber=(x+3)*(y+3)*(z+3);
     int mR=0,mO=0,mT=0,mN=0,mfilm=0; //mN is for null, mfilm is for total film
-    double fR,fT,fO,fN;
+	int pointNumber[27] = {0};
+	int index = 0;
+	double fR, fT, fO, fN;
     int i=0,j=0,k=0;
     int nfs=0,nsub=0;
     long hold;
     double px,py,pz;
     int* outputData= new int[rowNumber];
     std::fill_n(outputData,rowNumber,-1);
-    qDebug()<<xmax<<" "<<ymax<<" "<<zmax<<" "<<rowNumber;
-    
+    qDebug()<<xmax<<" "<<ymax<<" "<<zmax<<" "<<rowNumber<<columns;
+	if (columns==3)
+	{
+		index = 0;
+	}
+	else if (columns==6)
+	{
+		index = 3;
+	}
+	else {
+		qDebug() << "columns not recognized";
+		index=0;
+	}
     for (i=0;i<zmax+1;i++){
-        rowNumber=1*(zmax+1)*(ymax+1)+0*(zmax+1)+i;
-        px=vtkData[rowNumber][3];
-        py=vtkData[rowNumber][4];
-        pz=vtkData[rowNumber][5];
+		for ( j = 0; j < ymax+1; j++)
+		{
+			for (k = 0; k < xmax + 1; k++) {
+				rowNumber=k*(zmax+1)*(ymax+1)+j*(zmax+1)+i;
+				px=vtkData[rowNumber][index];
+				py=vtkData[rowNumber][index+1];
+				pz=vtkData[rowNumber][index+2];
+				if (std::abs(px) + std::abs(py) + std::abs(pz)>0.000001) {
+					nfs = i;
+					break;
+				}
+			}
+		}
+       
         // qDebug()<<i << " "<<rowNumber<<std::abs(px)+std::abs(py)+std::abs(pz) ;
-        if(std::abs(px)+std::abs(py)+std::abs(pz)>0.000001){
-            nfs=i;
-        }
+
     }
     for (i=zmax;i>0;i--){
-        rowNumber=1*(zmax+1)*(ymax+1)+0*(zmax+1)+i;
-        px=vtkData[rowNumber][3];
-        py=vtkData[rowNumber][4];
-        pz=vtkData[rowNumber][5];
-        // qDebug()<<i << " "<<rowNumber<<std::abs(px)+std::abs(py)+std::abs(pz) ;
-        if(std::abs(px)+std::abs(py)+std::abs(pz)>0.000001){
-            nsub=i-1;
-        }
+		for (j = 0; j < ymax + 1; j++)
+		{
+			for (k = 0; k < xmax + 1; k++) {
+				rowNumber = k*(zmax + 1)*(ymax + 1) + j*(zmax + 1) + i;
+				px = vtkData[rowNumber][index];
+				py = vtkData[rowNumber][index + 1];
+				pz = vtkData[rowNumber][index + 2];
+				if (std::abs(px) + std::abs(py) + std::abs(pz)>0.000001) {
+					nsub = i-1;
+					break;
+				}
+			}
+		}
     }
     qDebug()<<nfs<<" "<<nsub;
     for (i=1;i<xmax+2;i++){
         for (j=1;j<ymax+2;j++){
-            for (k=1;k<nsub+2;k++){
+            for (k=1;k<nsub+1;k++){
                 hold=k*(xmax+3)*(ymax+3)+j*(xmax+3)+i; //+3
                 outputData[hold]=0;
             }
@@ -2349,18 +2861,20 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
     }
     for (i=1;i<xmax+2;i++){
         for (j=1;j<ymax+2;j++){
-            for (k=nsub+2;k<nfs+2;k++){
+            for (k=nsub+1;k<nfs+2;k++){
                 rowNumber=(i-1)*(zmax+1)*(ymax+1)+(j-1)*(zmax+1)+(k-1); //+3
                // qDebug()<<"vtkdata:"<<rowNumber<<i<<j<<k;
-                px=vtkData[rowNumber][3];
-                py=vtkData[rowNumber][4];
-                pz=vtkData[rowNumber][5];
+                px=vtkData[rowNumber][index];
+                py=vtkData[rowNumber][index+1];
+                pz=vtkData[rowNumber][index+2];
                 hold=k*(xmax+3)*(ymax+3)+j*(xmax+3)+i; //+3
                 outputData[hold]=domainType(px,py,pz);
                 if(outputData[hold]>=1 && outputData[hold]<9) mR++;
                 if(outputData[hold]>=9 && outputData[hold]<21) mO++;
                 if(outputData[hold]>=21 && outputData[hold]<27) mT++;
                 if(outputData[hold]==-1) mN++;
+				//qDebug() << outputData[hold] << pointNumber[outputData[hold]];
+				pointNumber[outputData[hold]]++;
 				if (outputData[hold]>26)
 				{
 					qDebug() << "output" << outputData[hold] << i << j << k << px << py << pz;
@@ -2381,18 +2895,30 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
         }
     }
     mfilm=mR+mO+mT+mN;
+	pointFraction[0] = 0.0;
 	if (mfilm!=0)
 	{
+
 		fR=mR/mfilm;
 		fT=mT/mfilm;
 		fO=mO/mfilm;
 		fN=mN/mfilm;
+		for (int i = 1; i < 27; i++)
+		{
+			
+			pointFraction[i] = pointNumber[i] / double(mfilm);
+			qDebug() << "fraction" << pointFraction[i] << mfilm;
+		}
 	}
 	else {
 		fR = 0;
 		fT = 0;
 		fO = 0;
 		fN = 0;
+		for (int i = 1; i < 27; i++)
+		{
+			pointFraction[i] = 0.0;
+		}
 	}
 
     qDebug()<<mR<<" "<<mT<<" "<<mO<<" "<<mN;
@@ -2414,7 +2940,7 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
     output << "DATASET STRUCTURED_POINTS\n";
     output << "DIMENSIONS " << std::to_string(xmax+3) << " " << std::to_string(ymax+3) <<" "<< std::to_string(zmax+3) << "\n"; //+3
     output << "ORIGIN -1 -1 -1\n";
-    output << "SPACING 1 1 1\n";
+	output << "SPACING " << this->ui->rescaleX_LE->text().toStdString() << " " << this->ui->rescaleY_LE->text().toStdString() << " " << this->ui->rescaleZ_LE->text().toStdString() << "\n";
     output << "\n";
     output << "POINT_DATA " << std::to_string(rowNumber)+"\n";
     output << "SCALARS domain int\n";
@@ -2434,7 +2960,7 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
 }
 
 int SimpleView::domainType(double px,double py, double pz){
-    double angle=0,hold=0,length=0;
+    double angle=0,hold= piValue,length=0;
     bool isDomain=false,isR=false,isO=false,isT=false;
     int returnValue=-1;
     int isROT;
@@ -2447,11 +2973,13 @@ int SimpleView::domainType(double px,double py, double pz){
 		{
 			angle = std::acos((px*domainOrth[i][0] + py*domainOrth[i][1] + pz*domainOrth[i][2])/length);
 			
-			if (angle < domainStandardAngleRad)
+			if (angle < domainStandardAngleRad && angle < hold)
 			{
+				hold = angle;
 				returnValue=i;
+				//qDebug() << "angle:" << i << angle << domainStandardAngleRad << hold << px << py << pz << returnValue;
 			}
-			//qDebug() << "angle:" << i << angle << domainStandardAngle<< px << py << pz << returnValue;
+			//
 		}
 	}
 	return returnValue;
@@ -2490,15 +3018,23 @@ void SimpleView::slotOpenFile_domain(){
 
 			outputDomain(domainDir.absoluteFilePath(), xmax, ymax, zmax);
 
+			this->ui->domain_LW->item(0)->setText(domainList[0] + "\t" + QString::number(std::accumulate(pointFraction, pointFraction + 27, 0.0, std::plus<double>()) * 100) + "%");
+			this->ui->domain_LW->item(1)->setText(domainList[1] + "\t" + QString::number(std::accumulate(pointFraction + 1, pointFraction + 9, 0, std::plus<double>()) * 100) + "%");
+			this->ui->domain_LW->item(2)->setText(domainList[2] + "\t" + QString::number(std::accumulate(pointFraction + 9, pointFraction + 21, 0, std::plus<double>()) * 100) + "%");
+			this->ui->domain_LW->item(3)->setText(domainList[3] + "\t" + QString::number(std::accumulate(pointFraction + 21, pointFraction + 27, 0, std::plus<double>()) * 100) + "%");
 			for (int i = 0; i<27; i++) {
-				//qDebug() << i << existDomain[i];
+				//qDebug() << i << pointFraction[i] << existDomain[i] << domainList[i + 4] + " " + QString::number(pointFraction[i]);
+				this->ui->domain_LW->item(i + 4)->setText(domainList[i + 4] + "\t" + QString::number(pointFraction[i]*100)+"%");
 				if (existDomain[i]) {
 					this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Checked);
 				}
 				else {
 					this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Unchecked);
 				}
+				
 			}
+
+
 
 
 			this->ui->inputFileDomain->setText(filehold.fileName());
@@ -2558,193 +3094,199 @@ void SimpleView::drawDomain(std::string domainName){
     }
     qDebug()<<"before color";
     
-    VTK_CREATE(vtkRenderer,domainRenderer);
-    VTK_CREATE(vtkDataSetReader, readerDomainOrigin);
-    domainRGB[0][0]=0.752912;domainRGB[0][1]=0.752912;domainRGB[0][2]=0.752912; //sub
-    domainRGB[1][0]=0;domainRGB[1][1]=0;domainRGB[1][2]=1;  //R1+
-    domainRGB[2][0]=0.46;domainRGB[2][1]=0.7175;domainRGB[2][2]=0.8135; //R1-
-    domainRGB[3][0]=0;domainRGB[2][1]=0.1537870;domainRGB[3][2]=0.0; //R2+
-    domainRGB[4][0]=0;domainRGB[4][1]=1;domainRGB[4][2]=0; //R2-
-    domainRGB[5][0]=1;domainRGB[5][1]=0;domainRGB[5][2]=0; //R3+
-    domainRGB[6][0]=1;domainRGB[6][1]=0.566921;domainRGB[6][2]=0.633741; //R3-
-    domainRGB[7][0]=1;domainRGB[7][1]=0.418685;domainRGB[7][2]=0; //R4+
-    domainRGB[8][0]=1;domainRGB[8][1]=1;domainRGB[8][2]=0; //R4-
-    domainRGB[9][0]=1;domainRGB[9][1]=0;domainRGB[9][2]=1; //O1+
-    domainRGB[10][0]=0.64629;domainRGB[10][1]=0.130165;domainRGB[10][2]=0.130165; //O1-
-    domainRGB[11][0]=0.9;domainRGB[11][1]=0.566921;domainRGB[11][2]=0.633741; //O2+
-    domainRGB[12][0]=0.751111;domainRGB[12][1]=0.393695;domainRGB[12][2]=0.751111; //O2-
-    domainRGB[13][0]=0.418685;domainRGB[13][1]=0.027128;domainRGB[13][2]=0.027128; //O3+
-    domainRGB[14][0]=0.678201;domainRGB[14][1]=0.498270;domainRGB[14][2]=0.301423; //O3-
-    domainRGB[15][0]=0.476371;domainRGB[15][1]=0.035432;domainRGB[15][2]=0.14173; //O4+
-    domainRGB[16][0]=0.961169;domainRGB[16][1]=0.251965;domainRGB[16][2]=0.199862; //O4-
-    domainRGB[17][0]=0.355309;domainRGB[17][1]=0.968874;domainRGB[17][2]=0.355309; //O5+
-    domainRGB[18][0]=0.038446;domainRGB[18][1]=0.646290;domainRGB[18][2]=0.038446; //O5-
-    domainRGB[19][0]=0.766921;domainRGB[19][1]=0.766921;domainRGB[19][2]=0.766921; //O6+
-    domainRGB[20][0]=0.169550;domainRGB[20][1]=0.169550;domainRGB[20][2]=0.169550; //O6-
-    domainRGB[21][0]=0.566921;domainRGB[21][1]=0.566921;domainRGB[21][2]=0.566921; //a1+
-    domainRGB[22][0]=0.393695;domainRGB[22][1]=0.015747;domainRGB[22][2]=0.885813; //a1-
-    domainRGB[23][0]=0.0;domainRGB[23][1]=0.0;domainRGB[23][2]=0.0; //a2+
-    domainRGB[24][0]=1.0;domainRGB[24][1]=0.710881;domainRGB[24][2]=0.0; //a2-
-    domainRGB[25][0]=0.885813;domainRGB[25][1]=0.813533;domainRGB[25][2]=0.301423; //c+
-    domainRGB[26][0]=0.8867188;domainRGB[26][1]=0.4335937;domainRGB[26][2]=0.0273438; //c-
-    qDebug()<<"after color"<<domainRGB[0][2];
-    
-    VTK_CREATE(vtkExtractVOI,readerDomain);
-    // renWinInteractor->SetRenderWindow(this->ui->qvtkWidget->GetRenderWindow());
-    
-    readerDomainOrigin->SetFileName(fileNameDomain);
-    qDebug() << readerDomainOrigin << fileNameDomain;
-    readerDomainOrigin->UpdateWholeExtent();
-//    readerDomainOrigin->GetOutput()->GetPointData()->GetScalars()->GetRange(domain_range);
-//    qDebug()<<domain_range;
-    readerDomain->SetInputConnection(readerDomainOrigin->GetOutputPort());
-    readerDomain->SetVOI(0,xmax+2,0,ymax+2,0,zmax+2);
-    readerDomain->UpdateWholeExtent();
-    
-    double R[3];
-    
-    if (this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems()==0){
-        this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(domainRenderer);
-        qDebug()<<"domain renderer";
-    }else{
-        qDebug()<<"false domain renderer";
-        domainRenderer=this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
-    }
-    
-    for(int i=0;i<27;i++){
-		if (this->ui->domain_LW->item(i + 4)->checkState())
-		{
-			VTK_CREATE(vtkThreshold,domainThreshold);
-					VTK_CREATE(vtkDataSetSurfaceFilter,domainSurface);
-					VTK_CREATE(vtkSmoothPolyDataFilter,domainSmooth);
-					VTK_CREATE(vtkPolyDataNormals,normalGenerator);
-					VTK_CREATE(vtkDataSetMapper,domainMapper);
-			//        qDebug()<<"create the domain"<<i;
-					readerDomain->UpdateWholeExtent();
-					domainThreshold->SetInputConnection(readerDomain->GetOutputPort());
-					domainThreshold->AllScalarsOff();
-					domainThreshold->ThresholdBetween(i-0.5,i+0.5);
-					domainThreshold->UpdateWholeExtent();
-			//        qDebug()<<"before surface"<<i;
-					domainSurface->SetInputData(domainThreshold->GetOutput());
-					domainSurface->UpdateWholeExtent();
-					domainSmooth->SetInputConnection(domainSurface->GetOutputPort());
-					domainSmooth->SetNumberOfIterations(30);
-					domainSmooth->SetRelaxationFactor(0.1);
-					domainSmooth->FeatureEdgeSmoothingOff();
-					domainSmooth->BoundarySmoothingOn();
-					domainSmooth->UpdateWholeExtent();
-					normalGenerator->SetInputData(domainSmooth->GetOutput());
-					normalGenerator->ComputePointNormalsOn();
-					normalGenerator->ComputeCellNormalsOn();
-					normalGenerator->UpdateWholeExtent();
-					domainMapper->SetInputConnection(normalGenerator->GetOutputPort());
-					domainMapper->ScalarVisibilityOff();
-					domainMapper->UpdateWholeExtent();
-					actorDomain[i]->SetMapper(domainMapper);
-			//        qDebug()<<domainRGB[i][0]<<" "<<domainRGB[i][1]<<" "<<domainRGB[i][2];
-					actorDomain[i]->GetProperty()->SetColor(domainRGB[i][0],domainRGB[i][1],domainRGB[i][2]);
-					actorDomain[i]->GetProperty()->GetColor(R);
-					actorDomain[i]->GetProperty()->SetOpacity(1);
-			//        qDebug()<<"out "<<R[0]<<" "<<R[1]<<" "<<R[2];
-					// actorDomain[i]->GetProperty()->SetDiffuseColor(domainRGB[i][0],domainRGB[i][1],domainRGB[i][2]);
-					// actorDomain[i]->GetProperty()->SetRepresentationToSurface();
-					actorDomain[i]->Modified();
-					actorDomain[i]->SetVisibility(true);
-					domainRenderer->AddActor(actorDomain[i]);
-		}
-        
-    }
+	if (domainFile && this->ui->domain_CB->isChecked()) {
 
-	for (int i = 0; i < this->ui->alphaDomain_Table->rowCount(); i++)
-	{
-		int index = this->ui->domainAlpha_Combo->findText(this->ui->alphaDomain_Table->item(i, 0)->text());
-		double value = this->ui->alphaDomain_Table->item(i, 1)->text().toDouble();
-		this->ui->cameraFocalX_LE->setText(QString::number(index));
-		if (index>=4)
-		{
-			actorDomain[index - 4]->GetProperty()->SetOpacity(value);
+		VTK_CREATE(vtkRenderer, domainRenderer);
+		VTK_CREATE(vtkDataSetReader, readerDomainOrigin);
+		domainRGB[0][0] = 0.752912; domainRGB[0][1] = 0.752912; domainRGB[0][2] = 0.752912; //sub
+		domainRGB[1][0] = 0; domainRGB[1][1] = 0; domainRGB[1][2] = 1;  //R1+
+		domainRGB[2][0] = 0.46; domainRGB[2][1] = 0.7175; domainRGB[2][2] = 0.8135; //R1-
+		domainRGB[3][0] = 0; domainRGB[2][1] = 0.1537870; domainRGB[3][2] = 0.0; //R2+
+		domainRGB[4][0] = 0; domainRGB[4][1] = 1; domainRGB[4][2] = 0; //R2-
+		domainRGB[5][0] = 1; domainRGB[5][1] = 0; domainRGB[5][2] = 0; //R3+
+		domainRGB[6][0] = 1; domainRGB[6][1] = 0.566921; domainRGB[6][2] = 0.633741; //R3-
+		domainRGB[7][0] = 1; domainRGB[7][1] = 0.418685; domainRGB[7][2] = 0; //R4+
+		domainRGB[8][0] = 1; domainRGB[8][1] = 1; domainRGB[8][2] = 0; //R4-
+		domainRGB[9][0] = 1; domainRGB[9][1] = 0; domainRGB[9][2] = 1; //O1+
+		domainRGB[10][0] = 0.64629; domainRGB[10][1] = 0.130165; domainRGB[10][2] = 0.130165; //O1-
+		domainRGB[11][0] = 0.9; domainRGB[11][1] = 0.566921; domainRGB[11][2] = 0.633741; //O2+
+		domainRGB[12][0] = 0.751111; domainRGB[12][1] = 0.393695; domainRGB[12][2] = 0.751111; //O2-
+		domainRGB[13][0] = 0.418685; domainRGB[13][1] = 0.027128; domainRGB[13][2] = 0.027128; //O3+
+		domainRGB[14][0] = 0.678201; domainRGB[14][1] = 0.498270; domainRGB[14][2] = 0.301423; //O3-
+		domainRGB[15][0] = 0.476371; domainRGB[15][1] = 0.035432; domainRGB[15][2] = 0.14173; //O4+
+		domainRGB[16][0] = 0.961169; domainRGB[16][1] = 0.251965; domainRGB[16][2] = 0.199862; //O4-
+		domainRGB[17][0] = 0.355309; domainRGB[17][1] = 0.968874; domainRGB[17][2] = 0.355309; //O5+
+		domainRGB[18][0] = 0.038446; domainRGB[18][1] = 0.646290; domainRGB[18][2] = 0.038446; //O5-
+		domainRGB[19][0] = 0.766921; domainRGB[19][1] = 0.766921; domainRGB[19][2] = 0.766921; //O6+
+		domainRGB[20][0] = 0.169550; domainRGB[20][1] = 0.169550; domainRGB[20][2] = 0.169550; //O6-
+		domainRGB[21][0] = 0.566921; domainRGB[21][1] = 0.566921; domainRGB[21][2] = 0.566921; //a1+
+		domainRGB[22][0] = 0.393695; domainRGB[22][1] = 0.015747; domainRGB[22][2] = 0.885813; //a1-
+		domainRGB[23][0] = 0.0; domainRGB[23][1] = 0.0; domainRGB[23][2] = 0.0; //a2+
+		domainRGB[24][0] = 1.0; domainRGB[24][1] = 0.710881; domainRGB[24][2] = 0.0; //a2-
+		domainRGB[25][0] = 0.885813; domainRGB[25][1] = 0.813533; domainRGB[25][2] = 0.301423; //c+
+		domainRGB[26][0] = 0.8867188; domainRGB[26][1] = 0.4335937; domainRGB[26][2] = 0.0273438; //c-
+		qDebug() << "after color" << domainRGB[0][2];
+
+		VTK_CREATE(vtkExtractVOI, readerDomain);
+		// renWinInteractor->SetRenderWindow(this->ui->qvtkWidget->GetRenderWindow());
+
+		readerDomainOrigin->SetFileName(fileNameDomain);
+		qDebug() << readerDomainOrigin << fileNameDomain;
+		readerDomainOrigin->UpdateWholeExtent();
+		//    readerDomainOrigin->GetOutput()->GetPointData()->GetScalars()->GetRange(domain_range);
+		//    qDebug()<<domain_range;
+		readerDomain->SetInputConnection(readerDomainOrigin->GetOutputPort());
+		readerDomain->SetVOI(0, xmax + 2, 0, ymax + 2, 0, zmax + 2);
+		readerDomain->UpdateWholeExtent();
+
+		double R[3];
+
+		if (this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetNumberOfItems() == 0) {
+			this->ui->qvtkWidget->GetRenderWindow()->AddRenderer(domainRenderer);
+			qDebug() << "domain renderer";
 		}
-		else if (index == 0) {
-			for (int j = 0; j < 27; j++)
-			{
-				actorDomain[j]->GetProperty()->SetOpacity(value);
-			}
-		}
-		else if (index == 1)
-		{
-			for (int j = 1; j < 9; j++)
-			{
-				actorDomain[j]->GetProperty()->SetOpacity(value);
-			}
-		}
-		else if (index == 2)
-		{
-			for (int j = 9; j < 21; j++)
-			{
-				actorDomain[j]->GetProperty()->SetOpacity(value);
-			}
-		}
-		else if (index == 3)
-		{
-			for (int j = 21; j < 27; j++)
-			{
-				actorDomain[j]->GetProperty()->SetOpacity(value);
-			}
+		else {
+			qDebug() << "false domain renderer";
+			domainRenderer = this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer();
 		}
 
+		for (int i = 0; i < 27; i++) {
+			if (this->ui->domain_LW->item(i + 4)->checkState())
+			{
+				VTK_CREATE(vtkThreshold, domainThreshold);
+				VTK_CREATE(vtkDataSetSurfaceFilter, domainSurface);
+				VTK_CREATE(vtkSmoothPolyDataFilter, domainSmooth);
+				VTK_CREATE(vtkPolyDataNormals, normalGenerator);
+				VTK_CREATE(vtkDataSetMapper, domainMapper);
+				//        qDebug()<<"create the domain"<<i;
+				readerDomain->UpdateWholeExtent();
+				domainThreshold->SetInputConnection(readerDomain->GetOutputPort());
+				domainThreshold->AllScalarsOff();
+				domainThreshold->ThresholdBetween(i - 0.5, i + 0.5);
+				domainThreshold->UpdateWholeExtent();
+				//        qDebug()<<"before surface"<<i;
+				domainSurface->SetInputData(domainThreshold->GetOutput());
+				domainSurface->UpdateWholeExtent();
+				domainSmooth->SetInputConnection(domainSurface->GetOutputPort());
+				domainSmooth->SetNumberOfIterations(30);
+				domainSmooth->SetRelaxationFactor(0.1);
+				domainSmooth->FeatureEdgeSmoothingOff();
+				domainSmooth->BoundarySmoothingOn();
+				domainSmooth->UpdateWholeExtent();
+				normalGenerator->SetInputData(domainSmooth->GetOutput());
+				normalGenerator->ComputePointNormalsOn();
+				normalGenerator->ComputeCellNormalsOn();
+				normalGenerator->UpdateWholeExtent();
+				domainMapper->SetInputConnection(normalGenerator->GetOutputPort());
+				domainMapper->ScalarVisibilityOff();
+				domainMapper->UpdateWholeExtent();
+				actorDomain[i]->SetMapper(domainMapper);
+				//        qDebug()<<domainRGB[i][0]<<" "<<domainRGB[i][1]<<" "<<domainRGB[i][2];
+				actorDomain[i]->GetProperty()->SetColor(domainRGB[i][0], domainRGB[i][1], domainRGB[i][2]);
+				actorDomain[i]->GetProperty()->GetColor(R);
+				actorDomain[i]->GetProperty()->SetOpacity(1);
+				//        qDebug()<<"out "<<R[0]<<" "<<R[1]<<" "<<R[2];
+						// actorDomain[i]->GetProperty()->SetDiffuseColor(domainRGB[i][0],domainRGB[i][1],domainRGB[i][2]);
+						// actorDomain[i]->GetProperty()->SetRepresentationToSurface();
+				actorDomain[i]->Modified();
+				actorDomain[i]->SetVisibility(true);
+				domainRenderer->AddActor(actorDomain[i]);
+			}
+
+		}
+
+		for (int i = 0; i < this->ui->alphaDomain_Table->rowCount(); i++)
+		{
+			int index = this->ui->domainAlpha_Combo->findText(this->ui->alphaDomain_Table->item(i, 0)->text());
+			double value = this->ui->alphaDomain_Table->item(i, 1)->text().toDouble();
+			this->ui->cameraFocalX_LE->setText(QString::number(index));
+			if (index >= 4)
+			{
+				actorDomain[index - 4]->GetProperty()->SetOpacity(value);
+			}
+			else if (index == 0) {
+				for (int j = 0; j < 27; j++)
+				{
+					actorDomain[j]->GetProperty()->SetOpacity(value);
+				}
+			}
+			else if (index == 1)
+			{
+				for (int j = 1; j < 9; j++)
+				{
+					actorDomain[j]->GetProperty()->SetOpacity(value);
+				}
+			}
+			else if (index == 2)
+			{
+				for (int j = 9; j < 21; j++)
+				{
+					actorDomain[j]->GetProperty()->SetOpacity(value);
+				}
+			}
+			else if (index == 3)
+			{
+				for (int j = 21; j < 27; j++)
+				{
+					actorDomain[j]->GetProperty()->SetOpacity(value);
+				}
+			}
+
+		}
+		// actorDomain[0]->SetVisibility(false);
+		// actorDomain[25]->GetProperty()->SetColor(1,0,0);
+		// actorDomain[25]->GetBackfaceProperty()->SetColor(1,0,0);
+
+
+		// if(this->ui->domain_CB->checkState()==0){
+		//   actorDomain[0]->SetVisibility(false);
+		// }else{
+		//   actorDomain[0]->SetVisibility(true);
+		// }
+	//    domainRenderer->AddActor(axes);
+
+		VTK_CREATE(vtkOutlineFilter, outlineDomain);
+		VTK_CREATE(vtkDataSetMapper, outlineDomainMapper);
+		outlineDomain->SetInputConnection(readerDomainOrigin->GetOutputPort());
+		outlineDomainMapper->SetInputConnection(outlineDomain->GetOutputPort());
+		outlineDomainActor->SetMapper(outlineDomainMapper);
+		outlineDomainActor->GetProperty()->SetColor(0, 1, 0);
+
+		domainRenderer->SetBackground(0.9, 0.9, 0.9);
+		domainRenderer->AddActor(outlineDomainActor);
+		if (this->ui->outline_CB->checkState()) {
+			outlineDomainActor->SetVisibility(true);
+		}
+		else {
+			outlineDomainActor->SetVisibility(false);
+		}
+
+
+
+		widget->SetOutlineColor(0.9300, 0.5700, 0.1300);
+		widget->SetOrientationMarker(axes);
+		widget->SetInteractor(this->ui->qvtkWidget->GetRenderWindow()->GetInteractor());
+		widget->SetViewport(0.0, 0.0, 0.2, 0.2);
+		widget->SetEnabled(1);
+		widget->InteractiveOn();
+
+		if (this->ui->axis_CB->checkState() != 0) {
+			widget->On();
+			axes->SetVisibility(true);
+		}
+		else {
+			widget->Off();
+			axes->SetVisibility(false);
+		}
+
+		if (!reset) { domainRenderer->SetActiveCamera(camera); }
+
+		this->ui->qvtkWidget->GetRenderWindow()->Render();
+		this->ui->qvtkWidget->update();
+
+		camera = domainRenderer->GetActiveCamera();
+		reset = false;
 	}
-    // actorDomain[0]->SetVisibility(false);
-    // actorDomain[25]->GetProperty()->SetColor(1,0,0);
-    // actorDomain[25]->GetBackfaceProperty()->SetColor(1,0,0);
-    
-    
-    // if(this->ui->domain_CB->checkState()==0){
-    //   actorDomain[0]->SetVisibility(false);
-    // }else{
-    //   actorDomain[0]->SetVisibility(true);
-    // }
-//    domainRenderer->AddActor(axes);
-    
-    VTK_CREATE(vtkOutlineFilter,outlineDomain);
-    VTK_CREATE(vtkDataSetMapper,outlineDomainMapper);
-    outlineDomain->SetInputConnection(readerDomainOrigin->GetOutputPort());
-    outlineDomainMapper->SetInputConnection(outlineDomain->GetOutputPort());
-    outlineDomainActor->SetMapper(outlineDomainMapper);
-    outlineDomainActor->GetProperty()->SetColor(0,1,0);
-
-    domainRenderer->SetBackground(0.9,0.9,0.9);
-    domainRenderer->AddActor(outlineDomainActor);
-    if (this->ui->outline_CB->checkState()) {
-        outlineDomainActor->SetVisibility(true);
-    }else{
-        outlineDomainActor->SetVisibility(false);
-    }
-    
-
-    
-    widget->SetOutlineColor( 0.9300, 0.5700, 0.1300 );
-    widget->SetOrientationMarker( axes );
-    widget->SetInteractor( this->ui->qvtkWidget->GetRenderWindow()->GetInteractor());
-    widget->SetViewport( 0.0, 0.0, 0.2, 0.2 );
-    widget->SetEnabled( 1 );
-    widget->InteractiveOn();
-    
-    if(this->ui->axis_CB->checkState()!=0){
-		widget->On();
-        axes->SetVisibility(true);
-    }else{
-		widget->Off();
-        axes->SetVisibility(false);
-    }
-    
-    if(!reset){domainRenderer->SetActiveCamera(camera);}
-    
-    this->ui->qvtkWidget->GetRenderWindow()->Render();
-    this->ui->qvtkWidget->update();
-    
-    camera=domainRenderer->GetActiveCamera();
-    reset=false;
     
 }
 
@@ -2938,6 +3480,8 @@ void SimpleView::updateCamera(int choice){
 }
 
 void SimpleView::updateExtraction(int x,int y, int z){
+	int totalPoints = 1;
+	int interval = 1;
     if (xmaxAll<x-1) {
         xmaxAll=x-1;
     }
@@ -2962,6 +3506,24 @@ void SimpleView::updateExtraction(int x,int y, int z){
     this->ui->xmax_LE->setText(QString::fromStdString(std::to_string(xmaxAll)));
     this->ui->ymax_LE->setText(QString::fromStdString(std::to_string(ymaxAll)));
     this->ui->zmax_LE->setText(QString::fromStdString(std::to_string(zmaxAll)));
+
+	totalPoints = (xmaxAll - xminAll + 1)*(ymaxAll - yminAll + 1)*(zmaxAll - zminAll + 1);
+	if (xminAll != xmaxAll && yminAll != ymaxAll && zminAll != zmaxAll)
+	{
+		if (totalPoints>1000000)
+		{
+			interval = std::ceil(std::pow(totalPoints / 1000000.0, 1 / 3.0));
+		}
+	}
+	else {
+		if (totalPoints>1000000)
+		{
+			interval = std::ceil(std::pow(totalPoints / 1000000.0, 1 / 2.0));
+		}
+	}
+	this->ui->xDelta_LE->setText(QString::number(interval));
+	this->ui->yDelta_LE->setText(QString::number(interval));
+	this->ui->zDelta_LE->setText(QString::number(interval));
 }
 
 
@@ -3747,4 +4309,9 @@ void SimpleView::on_domainRePlot_PB_released()
 	}
 	domainName = domainDir.absoluteFilePath().toStdString() + ".domain.vtk";
 	drawDomain(domainName);
+}
+
+void SimpleView::on_vectorColorMode_Combo_currentIndexChanged(int index)
+{
+	
 }
