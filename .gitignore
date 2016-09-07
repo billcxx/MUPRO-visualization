@@ -36,3 +36,5 @@ build/
 
 *.vtk
 >>>>>>> Stashed changes
+
+CMakeLists.txt
