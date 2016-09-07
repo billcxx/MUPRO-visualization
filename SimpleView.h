@@ -192,12 +192,9 @@ private:
     // Designer form
     Ui_SimpleView *ui;
     QString printstatus;
-	boolean updateFlag = false;
+	bool updateFlag = false;
 	double cameraPosition[3], cameraFocal[3], pointFraction[27] = { 0.0 };
-	QVector<QString> domainList = { "Check all domains","Check all R domains", "Check all O domains", "Check all T domains", "Substrate", \
-									"R1+(+,+,+)","R1-(-,-,-)","R2+(-,+,+)","R2-(+,-,-)","R3+(+,+,-)","R3-(-,-,+)","R4+(+,-,+)","R4-(-,+,-)", \
-									"O1+(+,+,0)","O1-(-,-,0)","O2+(+,-,0)","O2-(-,+,0)","O3+(+,0,+)","O3-(-,0,-)","O4+(+,0,-)","O4-(-,0,+)",\
-									"O5+(0,+,+)","O5-(0,-,-)","O6+(0,+,-)","O6-(0,-,+)","T1+(+,0,0)","T1-(-,0,0)","T2+(0,+,0)","T2-(0,-,0)","T3+(0,0,+)","T3-(0,0,-)"};
+    QVector<QString> domainList ;
     int xmin=0,xmax=0,ymin=0,ymax=0,zmin=0,zmax=0;
 	int outlineWidth = 1;
     int xminAll=0,xmaxAll=0,yminAll=0,ymaxAll=0,zminAll=0,zmaxAll=0;

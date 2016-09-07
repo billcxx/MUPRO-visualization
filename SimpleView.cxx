@@ -218,6 +218,15 @@ SimpleView::SimpleView()
         this->ui->domain_LW->item(i+4)->setForeground(QColor((int)(domainRGB[i][0] * 255) , (int)(domainRGB[i][1] * 255) , (int)(domainRGB[i][2] * 255)));
     }
     
+    std::string list[31]={ "Check all domains","Check all R domains", "Check all O domains", "Check all T domains", "Substrate", \
+        "R1+(+,+,+)","R1-(-,-,-)","R2+(-,+,+)","R2-(+,-,-)","R3+(+,+,-)","R3-(-,-,+)","R4+(+,-,+)","R4-(-,+,-)", \
+        "O1+(+,+,0)","O1-(-,-,0)","O2+(+,-,0)","O2-(-,+,0)","O3+(+,0,+)","O3-(-,0,-)","O4+(+,0,-)","O4-(-,0,+)",\
+        "O5+(0,+,+)","O5-(0,-,-)","O6+(0,+,-)","O6-(0,-,+)","T1+(+,0,0)","T1-(-,0,0)","T2+(0,+,0)","T2-(0,-,0)","T3+(0,0,+)","T3-(0,0,-)"};
+    
+    
+    for (int i=0; i<31; i++) {
+        domainList.append(QString::fromStdString(list[i]));
+    }
     
     
 
@@ -1793,7 +1802,7 @@ void SimpleView::on_zmax_LE_editingFinished(){
 void SimpleView::slotOpenFile_scalar()
 {
     QFileDialog filedialog;
-	boolean aaa;
+	bool aaa;
     filedialog.setFileMode(QFileDialog::AnyFile);
     filedialog.setNameFilter(tr("Input (*.*)"));
     filedialog.setOption(QFileDialog::ReadOnly);
@@ -2293,7 +2302,8 @@ void SimpleView::outputVector(QString path,int colX,int colY,int colZ, int x, in
 	long holdIndex = 0;
 
 	RGB = new double[3];
-	RGB={ 0};
+    std::fill(RGB, RGB+3, 0);
+
 
     x=x+1;
     y=y+1;

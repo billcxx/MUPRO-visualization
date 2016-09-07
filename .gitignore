@@ -28,6 +28,11 @@
 *.app
 
 build/
+<<<<<<< Updated upstream
 *.vtk
 *.vtk
 *.dat
+=======
+
+*.vtk
+>>>>>>> Stashed changes
