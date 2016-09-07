@@ -116,6 +116,7 @@ SimpleView::SimpleView()
     this->ui->scalarChoice->setView(new QListView());
 	this->ui->domainAlpha_Combo->setView(new QListView());
 	this->ui->vectorColorMode_Combo->setView(new QListView());
+	this->ui->RGBDomain_Combo->setView(new QListView());
 //    this->ui->plot1DGeneral_LW->SetView
     
     for(int nr = 0; nr < 27; nr++){
@@ -170,7 +171,6 @@ SimpleView::SimpleView()
     lineStyleList<<Qt::PenStyle::SolidLine<<Qt::PenStyle::DashLine<<Qt::PenStyle::DotLine<<Qt::PenStyle::DashDotLine<<Qt::PenStyle::DashDotDotLine;
     
     
-    double** domainRGB;
     
     domainRGB=new double*[27];
     for (int i=0;i<27;++i){
@@ -179,7 +179,7 @@ SimpleView::SimpleView()
     domainRGB[0][0]=0.752912;domainRGB[0][1]=0.752912;domainRGB[0][2]=0.752912; //sub
     domainRGB[1][0]=0;domainRGB[1][1]=0;domainRGB[1][2]=1;  //R1+
     domainRGB[2][0]=0.46;domainRGB[2][1]=0.7175;domainRGB[2][2]=0.8135; //R1-
-    domainRGB[3][0]=0;domainRGB[2][1]=0.1537870;domainRGB[3][2]=0.0; //R2+
+    domainRGB[3][0]=0;domainRGB[3][1]=0.1537870;domainRGB[3][2]=0.0; //R2+
     domainRGB[4][0]=0;domainRGB[4][1]=1;domainRGB[4][2]=0; //R2-
     domainRGB[5][0]=1;domainRGB[5][1]=0;domainRGB[5][2]=0; //R3+
     domainRGB[6][0]=1;domainRGB[6][1]=0.566921;domainRGB[6][2]=0.633741; //R3-
@@ -203,9 +203,19 @@ SimpleView::SimpleView()
     domainRGB[24][0]=1.0;domainRGB[24][1]=0.710881;domainRGB[24][2]=0.0; //a2-
     domainRGB[25][0]=0.885813;domainRGB[25][1]=0.813533;domainRGB[25][2]=0.301423; //c+
     domainRGB[26][0]=0.8867188;domainRGB[26][1]=0.4335937;domainRGB[26][2]=0.0273438; //c-
+
+	//for (int i = 0; i < 27; i++)
+	//{
+	//	for (int j = 0; j < 3; j++)
+	//	{
+	//		domainRGB[i][j] = domainRGB[i][j] * 1;
+	//	}
+	//}
+
     
     for (int i=0; i<27; i++) {
-        this->ui->domain_LW->item(i+4)->setForeground(QColor(domainRGB[i][0]*255,255*domainRGB[i][1],domainRGB[i][2]*255));
+		//qDebug() << "i:" << i << (int)(domainRGB[i][0] * 255) << (int)(domainRGB[i][1] * 255) << (int)(domainRGB[i][2] * 255);
+        this->ui->domain_LW->item(i+4)->setForeground(QColor((int)(domainRGB[i][0] * 255) , (int)(domainRGB[i][1] * 255) , (int)(domainRGB[i][2] * 255)));
     }
     
     
@@ -693,7 +703,6 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     if (scalarFile && this->ui->scalar_CB->isChecked()){
         qDebug()<<"scalarName:"<<QString::fromStdString(scalarName);
         readerScalarOrigin->SetFileName(fileNameScalar);
-        qDebug() << readerScalarOrigin->GetOutput()->GetSpacing()[2];
 		readerScalarOrigin->GetOutput()->SetSpacing(this->ui->rescaleX_LE->text().toDouble(), this->ui->rescaleY_LE->text().toDouble(), this->ui->rescaleZ_LE->text().toDouble());
 		//readerScalarOrigin->UpdateInformation();
         //readerScalarOrigin->UpdateWholeExtent();
@@ -714,7 +723,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             zmaxAll=this->ui->zmax_LE->text().toInt();
             readerScalar->SetVOI(xminAll,xmaxAll,yminAll,ymaxAll,zminAll,zmaxAll);
 			qDebug() << "scalar sample rate" << this->ui->xDelta_LE->text().toInt() << this->ui->yDelta_LE->text().toInt() << this->ui->zDelta_LE->text().toInt();
-			readerScalar->SetSampleRate(this->ui->xDelta_LE->text().toInt(), this->ui->yDelta_LE->text().toInt(), this->ui->zDelta_LE->text().toInt());
+			//readerScalar->SetSampleRate(this->ui->xDelta_LE->text().toInt(), this->ui->yDelta_LE->text().toInt(), this->ui->zDelta_LE->text().toInt());
         }else{
         }
         readerScalar->UpdateWholeExtent();
@@ -827,6 +836,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         outlineScalarMapper->SetInputConnection(outlineScalar->GetOutputPort());
         outlineScalarActor->SetMapper(outlineScalarMapper);
         outlineScalarActor->GetProperty()->SetColor(0,0,0);
+		outlineScalarActor->GetProperty()->SetLineWidth(outlineWidth);
         renderer->AddActor(outlineScalarActor);
     }else{
         outlineScalarActor->SetVisibility(false);
@@ -853,6 +863,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
 
         
         readerVector->SetInputData(readerVectorOrigin->GetOutput());
+		readerVector->SetSampleRate(this->ui->xDelta_LE->text().toInt(), this->ui->yDelta_LE->text().toInt(), this->ui->zDelta_LE->text().toInt());
         if (this->ui->extract_CB->checkState()!=0){
             xminAll=this->ui->xmin_LE->text().toInt();
             yminAll=this->ui->ymin_LE->text().toInt();
@@ -861,7 +872,6 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             ymaxAll=this->ui->ymax_LE->text().toInt();
             zmaxAll=this->ui->zmax_LE->text().toInt();
             readerVector->SetVOI(xminAll,xmaxAll,yminAll,ymaxAll,zminAll,zmaxAll);
-			readerVector->SetSampleRate(this->ui->xDelta_LE->text().toInt(), this->ui->yDelta_LE->text().toInt(), this->ui->zDelta_LE->text().toInt());
         }else{
             qDebug()<<xmin<<xmax;
             // readerVector->GetVOI(extent);
@@ -877,8 +887,8 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         if (this->ui->vectorMaskNum_LE->text().isEmpty()) {
             this->ui->vectorMaskNum_LE->setText(tr("5000"));
         }
-        vtkIdType maskNum=this->ui->vectorMaskNum_LE->text().toInt();
-        qDebug()<<"mask number"<<this->ui->vectorMaskNum_LE->text().toInt();
+        vtkIdType maskNum=this->ui->vectorMaskNum_LE->text().toDouble();
+        qDebug()<<"mask number"<<this->ui->vectorMaskNum_LE->text().toDouble();
         maskVector->SetMaximumNumberOfPoints(maskNum);
         maskVector->SetOnRatio(xmax*ymax*zmax/maskNum);
         maskVector->SetRandomMode(1);
@@ -936,6 +946,8 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         outlineVectorMapper->SetInputConnection(outlineVector->GetOutputPort());
         outlineVectorActor->SetMapper(outlineVectorMapper);
         outlineVectorActor->GetProperty()->SetColor(0,0,0);
+		outlineVectorActor->GetProperty()->SetLineWidth(outlineWidth);
+
         renderer->AddActor(outlineVectorActor);
         
 		if (this->ui->vectorColorMode_Combo->currentIndex()==0)
@@ -982,7 +994,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         
         if(this->ui->streamline_CB->isChecked()){
             vectorSeed->SetCenter(this->ui->seedCenterX_LE->text().toDouble(), this->ui->seedCenterY_LE->text().toDouble(), this->ui->seedCenterZ_LE->text().toDouble());
-            vectorSeed->SetNumberOfPoints(this->ui->seedNumber_LE->text().toInt());
+            vectorSeed->SetNumberOfPoints(this->ui->seedNumber_LE->text().toDouble());
             vectorSeed->SetRadius(this->ui->seedRadius_LE->text().toDouble());
             stream->SetSourceConnection(vectorSeed->GetOutputPort());
             stream->SetInputConnection(readerVector->GetOutputPort());
@@ -1325,6 +1337,18 @@ void SimpleView::on_outline_CB_stateChanged(int state){
             outlineDomainActor->SetVisibility(false);
         }
     }
+
+	if (state==0)
+	{
+		this->ui->outlineWidth_LB->setEnabled(false);
+		this->ui->outlineWidth_LE->setEnabled(false);
+		this->ui->outlinePx_LB->setEnabled(false);
+	}
+	else {
+		this->ui->outlineWidth_LB->setEnabled(true);
+		this->ui->outlineWidth_LE->setEnabled(true);
+		this->ui->outlinePx_LB->setEnabled(true);
+	}
     
     this->ui->qvtkWidget->GetRenderWindow()->Render();
 }
@@ -1492,6 +1516,13 @@ void SimpleView::on_vectorGlyph_CB_stateChanged(int state){
         this->ui->vectorScale_LB->setEnabled(true);
         this->ui->vectorScale_LE->setEnabled(true);
         this->ui->vectorRange_CB->setEnabled(true);
+		this->ui->xDelta_LE->setEnabled(true);
+		this->ui->yDelta_LE->setEnabled(true);
+		this->ui->zDelta_LE->setEnabled(true);
+		this->ui->xDelta_LB->setEnabled(true);
+		this->ui->yDelta_LB->setEnabled(true);
+		this->ui->zDelta_LB->setEnabled(true);
+		this->ui->sampleRate_LB->setEnabled(true);
         if (this->ui->vectorRange_CB->isChecked()) {
             this->ui->vectorValueMin_LE->setEnabled(true);
             this->ui->vectorValueMax_LE->setEnabled(true);
@@ -1510,7 +1541,15 @@ void SimpleView::on_vectorGlyph_CB_stateChanged(int state){
         this->ui->vectorValueMin_LE->setEnabled(false);
         this->ui->vectorValueMax_LE->setEnabled(false);
         this->ui->vectorTo_LB->setEnabled(false);
-    }
+		this->ui->xDelta_LE->setEnabled(false);
+		this->ui->yDelta_LE->setEnabled(false);
+		this->ui->zDelta_LE->setEnabled(false);
+		this->ui->xDelta_LB->setEnabled(false);
+		this->ui->yDelta_LB->setEnabled(false);
+		this->ui->zDelta_LB->setEnabled(false);
+		this->ui->sampleRate_LB->setEnabled(false);
+
+	}
     
     
     
@@ -1712,9 +1751,6 @@ void SimpleView::on_extract_CB_stateChanged(int state){
         this->ui->ymax_LE->setEnabled(false);
         this->ui->zmin_LE->setEnabled(false);
         this->ui->zmax_LE->setEnabled(false);
-		this->ui->xDelta_LE->setEnabled(false);
-		this->ui->yDelta_LE->setEnabled(false);
-		this->ui->zDelta_LE->setEnabled(false);
     }else{
 
         this->ui->xmin_LE->setEnabled(true);
@@ -1722,10 +1758,7 @@ void SimpleView::on_extract_CB_stateChanged(int state){
         this->ui->ymin_LE->setEnabled(true);
         this->ui->ymax_LE->setEnabled(true);
         this->ui->zmin_LE->setEnabled(true);
-        this->ui->zmax_LE->setEnabled(true);
-		this->ui->xDelta_LE->setEnabled(true);
-		this->ui->yDelta_LE->setEnabled(true);
-		this->ui->zDelta_LE->setEnabled(true);	
+        this->ui->zmax_LE->setEnabled(true);	
     }
 }
 
@@ -2487,163 +2520,174 @@ void SimpleView::on_scalarRange_CB_stateChanged(int state){
 void SimpleView::on_RGBAdd_PB_released(){
     QString item;
     int row;
-    if (this->ui->RGB_Combo->currentIndex()!=3) {
-        if (this->ui->RGBValue_LE->text().isEmpty() |
-            this->ui->RGBR_LE->text().isEmpty() |
-            this->ui->RGBG_LE->text().isEmpty() |
-            this->ui->RGBB_LE->text().isEmpty()){
-        }else{
-            switch (this->ui->RGB_Stack->currentIndex()) {
-                case 0:
-                    row=this->ui->RGBScalar_Table->rowCount();
-                    qDebug()<<row;
-                    this->ui->RGBScalar_Table->insertRow(row);
-                    //      row=row;
-                    item=this->ui->RGBValue_LE->text();
-                    this->ui->RGBScalar_Table->setItem(row,0,new QTableWidgetItem(item));
-                    item=this->ui->RGBR_LE->text();
-                    this->ui->RGBScalar_Table->setItem(row,1,new QTableWidgetItem(item));
-                    item=this->ui->RGBG_LE->text();
-                    this->ui->RGBScalar_Table->setItem(row,2,new QTableWidgetItem(item));
-                    item=this->ui->RGBB_LE->text();
-                    this->ui->RGBScalar_Table->setItem(row,3,new QTableWidgetItem(item));
-                    // item=this->ui->RGBA_LE->text();
-                    // this->ui->RGBScalar_Table->setItem(row,4,new QTableWidgetItem(item));
-                    this->ui->RGBScalar_Table->sortItems(0,Qt::AscendingOrder);
-                    break;
-                    
-                case 1:
-                    row=this->ui->RGBVector_Table->rowCount();
-                    qDebug()<<row;
-                    this->ui->RGBVector_Table->insertRow(row);
-                    //      row=row;
-                    item=this->ui->RGBValue_LE->text();
-                    this->ui->RGBVector_Table->setItem(row,0,new QTableWidgetItem(item));
-                    item=this->ui->RGBR_LE->text();
-                    this->ui->RGBVector_Table->setItem(row,1,new QTableWidgetItem(item));
-                    item=this->ui->RGBG_LE->text();
-                    this->ui->RGBVector_Table->setItem(row,2,new QTableWidgetItem(item));
-                    item=this->ui->RGBB_LE->text();
-                    this->ui->RGBVector_Table->setItem(row,3,new QTableWidgetItem(item));
-                    // item=this->ui->RGBA_LE->text();
-                    // this->ui->RGBVector_Table->setItem(row,4,new QTableWidgetItem(item));
-                    this->ui->RGBVector_Table->sortItems(0,Qt::AscendingOrder);
-                    break;
-                    
-                default:
-                    break;
-            }
-            
-        }
-    }else{
-        if ((this->ui->isoValue_Combo->count()<=0) |
-            this->ui->RGBR_LE->text().isEmpty() |
-            this->ui->RGBG_LE->text().isEmpty() |
-            this->ui->RGBB_LE->text().isEmpty()){
-        }else{
-            row=this->ui->RGBIso_Table->rowCount();
-            qDebug()<<row;
-            item=this->ui->isoValue_Combo->currentText();
-            bool notExist=true;
-            for (int i=0; i<this->ui->RGBIso_Table->rowCount(); i++) {
-                if(this->ui->RGBIso_Table->item(i, 0)->text()==item){
-                    notExist=false;
-                }
-            }
-            if (notExist) {
-                this->ui->RGBIso_Table->insertRow(row);
-                //      row=row;
-                
-                this->ui->RGBIso_Table->setItem(row,0,new QTableWidgetItem(item));
-                item=this->ui->RGBR_LE->text();
-                this->ui->RGBIso_Table->setItem(row,1,new QTableWidgetItem(item));
-                item=this->ui->RGBG_LE->text();
-                this->ui->RGBIso_Table->setItem(row,2,new QTableWidgetItem(item));
-                item=this->ui->RGBB_LE->text();
-                this->ui->RGBIso_Table->setItem(row,3,new QTableWidgetItem(item));
-                // item=this->ui->RGBA_LE->text();
-                // this->ui->RGBScalar_Table->setItem(row,4,new QTableWidgetItem(item));
-                this->ui->RGBIso_Table->sortItems(0,Qt::AscendingOrder);
-            }
-            
-        }
-        
-    }
+	bool flag = false;
+	flag = this->ui->RGBR_LE->text().isEmpty() |
+		this->ui->RGBG_LE->text().isEmpty() |
+		this->ui->RGBB_LE->text().isEmpty();
+
+	switch (this->ui->RGB_Combo->currentIndex())
+	{
+	case 0:
+		break;
+	case 1: // The scalar case
+		if (!flag && !this->ui->RGBValue_LE->text().isEmpty() )
+		{
+			row = this->ui->RGBScalar_Table->rowCount();
+			this->ui->RGBScalar_Table->insertRow(row);
+			item = this->ui->RGBValue_LE->text();
+			this->ui->RGBScalar_Table->setItem(row, 0, new QTableWidgetItem(item));
+			item = this->ui->RGBR_LE->text();
+			this->ui->RGBScalar_Table->setItem(row, 1, new QTableWidgetItem(item));
+			item = this->ui->RGBG_LE->text();
+			this->ui->RGBScalar_Table->setItem(row, 2, new QTableWidgetItem(item));
+			item = this->ui->RGBB_LE->text();
+			this->ui->RGBScalar_Table->setItem(row, 3, new QTableWidgetItem(item));
+			this->ui->RGBScalar_Table->sortItems(0, Qt::AscendingOrder);
+		}
+		break;
+	case 2:// The vector case
+		if (!flag && !this->ui->RGBValue_LE->text().isEmpty())
+		{
+			row = this->ui->RGBVector_Table->rowCount();
+			this->ui->RGBVector_Table->insertRow(row);
+			item = this->ui->RGBValue_LE->text();
+			this->ui->RGBVector_Table->setItem(row, 0, new QTableWidgetItem(item));
+			item = this->ui->RGBR_LE->text();
+			this->ui->RGBVector_Table->setItem(row, 1, new QTableWidgetItem(item));
+			item = this->ui->RGBG_LE->text();
+			this->ui->RGBVector_Table->setItem(row, 2, new QTableWidgetItem(item));
+			item = this->ui->RGBB_LE->text();
+			this->ui->RGBVector_Table->setItem(row, 3, new QTableWidgetItem(item));
+			this->ui->RGBVector_Table->sortItems(0, Qt::AscendingOrder);
+		}
+		break;
+	case 3:
+		if (!flag && this->ui->isoValue_Combo->count() > 0)
+		{
+			row = this->ui->RGBIso_Table->rowCount();
+			qDebug() << row;
+			item = this->ui->isoValue_Combo->currentText();
+			bool notExist = true;
+			for (int i = 0; i<this->ui->RGBIso_Table->rowCount(); i++) {
+				if (this->ui->RGBIso_Table->item(i, 0)->text() == item) {
+					notExist = false;
+				}
+			}
+			if (notExist) {
+				this->ui->RGBIso_Table->insertRow(row);
+				this->ui->RGBIso_Table->setItem(row, 0, new QTableWidgetItem(item));
+				item = this->ui->RGBR_LE->text();
+				this->ui->RGBIso_Table->setItem(row, 1, new QTableWidgetItem(item));
+				item = this->ui->RGBG_LE->text();
+				this->ui->RGBIso_Table->setItem(row, 2, new QTableWidgetItem(item));
+				item = this->ui->RGBB_LE->text();
+				this->ui->RGBIso_Table->setItem(row, 3, new QTableWidgetItem(item));
+				// item=this->ui->RGBA_LE->text();
+				// this->ui->RGBScalar_Table->setItem(row,4,new QTableWidgetItem(item));
+				this->ui->RGBIso_Table->sortItems(0, Qt::AscendingOrder);
+			}
+		}
+		break;
+	case 4:
+		if (!flag)
+		{
+			row = this->ui->RGBDomain_Table->rowCount();
+			item = this->ui->RGBDomain_Combo->currentText();
+			bool notExist = true;
+			//qDebug() << "adding domain color" << row << item << notExist;
+			for (int i = 0; i<this->ui->RGBDomain_Table->rowCount(); i++) {
+				if (this->ui->RGBDomain_Table->item(i, 0)->text() == item) {
+					notExist = false;
+				}
+			}
+			if (notExist)
+			{
+				this->ui->RGBDomain_Table->insertRow(row);
+				this->ui->RGBDomain_Table->setItem(row, 0, new QTableWidgetItem(item));
+				item = this->ui->RGBR_LE->text();
+				this->ui->RGBDomain_Table->setItem(row, 1, new QTableWidgetItem(item));
+				item = this->ui->RGBG_LE->text();
+				this->ui->RGBDomain_Table->setItem(row, 2, new QTableWidgetItem(item));
+				item = this->ui->RGBB_LE->text();
+				this->ui->RGBDomain_Table->setItem(row, 3, new QTableWidgetItem(item));
+			}
+		}
+		break;
+	default:
+		break;
+	}
+
+
 }
 
 void SimpleView::on_RGBDelete_PB_released(){
-    switch (this->ui->RGB_Stack->currentIndex()) {
-        case 0:
-            this->ui->RGBScalar_Table->removeRow(this->ui->RGBScalar_Table->currentRow());
-            break;
-        case 1:
-            this->ui->RGBVector_Table->removeRow(this->ui->RGBVector_Table->currentRow());
-            break;
-        case 2:{
-            int row=this->ui->RGBIso_Table->currentRow();
-            this->ui->RGBIso_Table->removeRow(row);
-            break;
-        }
-        default:
-            break;
-    }
+	switch (this->ui->RGB_Stack->currentIndex()) {
+	case 0:
+		this->ui->RGBScalar_Table->removeRow(this->ui->RGBScalar_Table->currentRow());
+		break;
+	case 1:
+		this->ui->RGBVector_Table->removeRow(this->ui->RGBVector_Table->currentRow());
+		break;
+	case 2:
+		this->ui->RGBIso_Table->removeRow(this->ui->RGBIso_Table->currentRow());
+		break;
+	case 3:
+		this->ui->RGBDomain_Table->removeRow(this->ui->RGBDomain_Table->currentRow());
+		break;
+	default:
+		break;
+	}
 }
 
 void SimpleView::on_RGB_Combo_currentIndexChanged(int index){
-    if (index==0){
-        this->ui->RGBIso_SW->setCurrentIndex(0);
-        this->ui->RGBIso_SW->setEnabled(false);
-        this->ui->RGBValue_LE->setEnabled(false);
-        this->ui->RGBR_LE->setEnabled(false);
-        this->ui->RGBG_LE->setEnabled(false);
-        this->ui->RGBB_LE->setEnabled(false);
-        // this->ui->RGBA_LE->setEnabled(false);
-        this->ui->RGBScalar_Table->setEnabled(false);
-        this->ui->RGBVector_Table->setEnabled(false);
-        this->ui->RGBIso_Table->setEnabled(false);
-        this->ui->RGB_Stack->setEnabled(false);
-        this->ui->isoValue_Combo->setEnabled(false);
-    }else{
-        if (index!=3) {
-            this->ui->RGBIso_SW->setEnabled(true);
-            this->ui->RGBIso_SW->setCurrentIndex(0);
-            this->ui->RGBValue_LE->setEnabled(true);
-            this->ui->RGBR_LE->setEnabled(true);
-            this->ui->RGBG_LE->setEnabled(true);
-            this->ui->RGBB_LE->setEnabled(true);
-            // this->ui->RGBA_LE->setEnabled(true);
-            this->ui->RGBScalar_Table->setEnabled(true);
-            this->ui->RGBVector_Table->setEnabled(true);
-            
-            this->ui->RGB_Stack->setEnabled(true);
-            if(index==1){
-                this->ui->RGB_Stack->setCurrentIndex(0);
-            }else if(index==2){
-                this->ui->RGB_Stack->setCurrentIndex(1);
-            }
-        }else{
-            this->ui->RGBIso_SW->setEnabled(true);
-            this->ui->RGB_Stack->setCurrentIndex(2);
-            this->ui->RGBIso_SW->setCurrentIndex(1);
-            if (this->ui->isosurface_CB->isChecked()) {
-                this->ui->isoValue_Combo->setEnabled(true);
-                this->ui->RGBR_LE->setEnabled(true);
-                this->ui->RGBG_LE->setEnabled(true);
-                this->ui->RGBB_LE->setEnabled(true);
-                this->ui->RGBIso_Table->setEnabled(true);
-                this->ui->RGB_Stack->setEnabled(true);
-            }else{
-                this->ui->isoValue_Combo->setEnabled(false);
-                this->ui->RGBR_LE->setEnabled(false);
-                this->ui->RGBG_LE->setEnabled(false);
-                this->ui->RGBB_LE->setEnabled(false);
-                this->ui->RGBIso_Table->setEnabled(false);
-                this->ui->RGB_Stack->setEnabled(false);
-            }
-        }
-        
+	this->ui->RGBValue_LE->setEnabled(false);
+	this->ui->RGBValue_LE->setEnabled(false);
+	this->ui->RGBR_LE->setEnabled(true);
+	this->ui->RGBG_LE->setEnabled(true);
+	this->ui->RGBB_LE->setEnabled(true);
+	this->ui->RGBValue_LB->setEnabled(true);
+	this->ui->RGBScalar_Table->setEnabled(false);
+	this->ui->RGBVector_Table->setEnabled(false);
+	this->ui->RGBIso_Table->setEnabled(false);
+	this->ui->isoValue_Combo->setEnabled(false);
+	this->ui->RGBDomain_Combo->setEnabled(false);
+	this->ui->RGBDomain_Table->setEnabled(false);
+	switch (index)
+	{
+	case 0:
+		this->ui->RGBR_LE->setEnabled(false);
+		this->ui->RGBG_LE->setEnabled(false);
+		this->ui->RGBB_LE->setEnabled(false);
+		this->ui->RGBValue_LB->setEnabled(false);
+		break;
+	case 1:
+		this->ui->RGB_Stack->setCurrentIndex(0);
+		this->ui->RGBIso_SW->setCurrentIndex(0);
+		this->ui->RGBValue_LE->setEnabled(true);
+		this->ui->RGBScalar_Table->setEnabled(true);
+		break;
+	case 2:
+		this->ui->RGBIso_SW->setCurrentIndex(0);
+		this->ui->RGB_Stack->setCurrentIndex(1);
+		this->ui->RGBValue_LE->setEnabled(true);
+		this->ui->RGBVector_Table->setEnabled(true);
+		break;
+	case 3:
+		this->ui->RGBIso_SW->setCurrentIndex(1);
+		this->ui->RGB_Stack->setCurrentIndex(2);
+		this->ui->isoValue_Combo->setEnabled(true);
+		this->ui->RGBIso_Table->setEnabled(true);
+		break;
+	case 4:
+		this->ui->RGBIso_SW->setCurrentIndex(2);
+		this->ui->RGB_Stack->setCurrentIndex(3);
+		this->ui->RGBDomain_Table->setEnabled(true);
+		this->ui->RGBDomain_Combo->setEnabled(true);
+		break;
 
-    }
+	default:
+		break;
+	}
     
 }
 
@@ -2795,7 +2839,9 @@ int SimpleView::domainProcessing(QString filedir){
 void SimpleView::outputDomain(QString filedir,int x, int y, int z){
     int rowNumber=(x+3)*(y+3)*(z+3);
     int mR=0,mO=0,mT=0,mN=0,mfilm=0; //mN is for null, mfilm is for total film
-	int pointNumber[27] = {0};
+	int *pointNumber;
+	pointNumber= new int[27];
+	std::fill(pointNumber, pointNumber + 27, 0);
 	int index = 0;
 	double fR, fT, fO, fN;
     int i=0,j=0,k=0;
@@ -2894,7 +2940,7 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
             }
         }
     }
-    mfilm=mR+mO+mT+mN;
+    mfilm=mR+mO+mT;
 	pointFraction[0] = 0.0;
 	if (mfilm!=0)
 	{
@@ -2957,6 +3003,22 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
     }
     delete[] outputData;
 
+	this->ui->domain_LW->item(0)->setText(domainList[0] + "\t" + QString::number(std::accumulate(pointFraction, pointFraction + 27, 0.0, std::plus<double>()) * 100) + "%");
+	this->ui->domain_LW->item(1)->setText(domainList[1] + "\t" + QString::number(std::accumulate(pointFraction + 1, pointFraction + 9, 0.0, std::plus<double>()) * 100) + "%");
+	this->ui->domain_LW->item(2)->setText(domainList[2] + "\t" + QString::number(std::accumulate(pointFraction + 9, pointFraction + 21, 0.0, std::plus<double>()) * 100) + "%");
+	this->ui->domain_LW->item(3)->setText(domainList[3] + "\t" + QString::number(std::accumulate(pointFraction + 21, pointFraction + 27, 0.0, std::plus<double>()) * 100) + "%");
+	for (int i = 1; i<27; i++) {
+		//qDebug() << i << pointFraction[i] << existDomain[i] << domainList[i + 4] + " " + QString::number(pointFraction[i]);
+		this->ui->domain_LW->item(i + 4)->setText(domainList[i + 4] + "\t" + QString::number(pointFraction[i] * 100) + "%");
+		if (existDomain[i]) {
+			this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Checked);
+		}
+		else {
+			this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Unchecked);
+		}
+
+	}
+
 }
 
 int SimpleView::domainType(double px,double py, double pz){
@@ -3018,22 +3080,6 @@ void SimpleView::slotOpenFile_domain(){
 
 			outputDomain(domainDir.absoluteFilePath(), xmax, ymax, zmax);
 
-			this->ui->domain_LW->item(0)->setText(domainList[0] + "\t" + QString::number(std::accumulate(pointFraction, pointFraction + 27, 0.0, std::plus<double>()) * 100) + "%");
-			this->ui->domain_LW->item(1)->setText(domainList[1] + "\t" + QString::number(std::accumulate(pointFraction + 1, pointFraction + 9, 0, std::plus<double>()) * 100) + "%");
-			this->ui->domain_LW->item(2)->setText(domainList[2] + "\t" + QString::number(std::accumulate(pointFraction + 9, pointFraction + 21, 0, std::plus<double>()) * 100) + "%");
-			this->ui->domain_LW->item(3)->setText(domainList[3] + "\t" + QString::number(std::accumulate(pointFraction + 21, pointFraction + 27, 0, std::plus<double>()) * 100) + "%");
-			for (int i = 0; i<27; i++) {
-				//qDebug() << i << pointFraction[i] << existDomain[i] << domainList[i + 4] + " " + QString::number(pointFraction[i]);
-				this->ui->domain_LW->item(i + 4)->setText(domainList[i + 4] + "\t" + QString::number(pointFraction[i]*100)+"%");
-				if (existDomain[i]) {
-					this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Checked);
-				}
-				else {
-					this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Unchecked);
-				}
-				
-			}
-
 
 
 
@@ -3085,53 +3131,30 @@ void SimpleView::drawDomain(std::string domainName){
 //    double domain_range[2];
     //  double sumValue;
     //  double vmin,vmax;
-    double** domainRGB;
     std::ifstream domainFile(domainName);
     
-    domainRGB=new double*[27];
-    for (int i=0;i<27;++i){
-        domainRGB[i] = new double[3];
-    }
     qDebug()<<"before color";
     
 	if (domainFile && this->ui->domain_CB->isChecked()) {
 
 		VTK_CREATE(vtkRenderer, domainRenderer);
 		VTK_CREATE(vtkDataSetReader, readerDomainOrigin);
-		domainRGB[0][0] = 0.752912; domainRGB[0][1] = 0.752912; domainRGB[0][2] = 0.752912; //sub
-		domainRGB[1][0] = 0; domainRGB[1][1] = 0; domainRGB[1][2] = 1;  //R1+
-		domainRGB[2][0] = 0.46; domainRGB[2][1] = 0.7175; domainRGB[2][2] = 0.8135; //R1-
-		domainRGB[3][0] = 0; domainRGB[2][1] = 0.1537870; domainRGB[3][2] = 0.0; //R2+
-		domainRGB[4][0] = 0; domainRGB[4][1] = 1; domainRGB[4][2] = 0; //R2-
-		domainRGB[5][0] = 1; domainRGB[5][1] = 0; domainRGB[5][2] = 0; //R3+
-		domainRGB[6][0] = 1; domainRGB[6][1] = 0.566921; domainRGB[6][2] = 0.633741; //R3-
-		domainRGB[7][0] = 1; domainRGB[7][1] = 0.418685; domainRGB[7][2] = 0; //R4+
-		domainRGB[8][0] = 1; domainRGB[8][1] = 1; domainRGB[8][2] = 0; //R4-
-		domainRGB[9][0] = 1; domainRGB[9][1] = 0; domainRGB[9][2] = 1; //O1+
-		domainRGB[10][0] = 0.64629; domainRGB[10][1] = 0.130165; domainRGB[10][2] = 0.130165; //O1-
-		domainRGB[11][0] = 0.9; domainRGB[11][1] = 0.566921; domainRGB[11][2] = 0.633741; //O2+
-		domainRGB[12][0] = 0.751111; domainRGB[12][1] = 0.393695; domainRGB[12][2] = 0.751111; //O2-
-		domainRGB[13][0] = 0.418685; domainRGB[13][1] = 0.027128; domainRGB[13][2] = 0.027128; //O3+
-		domainRGB[14][0] = 0.678201; domainRGB[14][1] = 0.498270; domainRGB[14][2] = 0.301423; //O3-
-		domainRGB[15][0] = 0.476371; domainRGB[15][1] = 0.035432; domainRGB[15][2] = 0.14173; //O4+
-		domainRGB[16][0] = 0.961169; domainRGB[16][1] = 0.251965; domainRGB[16][2] = 0.199862; //O4-
-		domainRGB[17][0] = 0.355309; domainRGB[17][1] = 0.968874; domainRGB[17][2] = 0.355309; //O5+
-		domainRGB[18][0] = 0.038446; domainRGB[18][1] = 0.646290; domainRGB[18][2] = 0.038446; //O5-
-		domainRGB[19][0] = 0.766921; domainRGB[19][1] = 0.766921; domainRGB[19][2] = 0.766921; //O6+
-		domainRGB[20][0] = 0.169550; domainRGB[20][1] = 0.169550; domainRGB[20][2] = 0.169550; //O6-
-		domainRGB[21][0] = 0.566921; domainRGB[21][1] = 0.566921; domainRGB[21][2] = 0.566921; //a1+
-		domainRGB[22][0] = 0.393695; domainRGB[22][1] = 0.015747; domainRGB[22][2] = 0.885813; //a1-
-		domainRGB[23][0] = 0.0; domainRGB[23][1] = 0.0; domainRGB[23][2] = 0.0; //a2+
-		domainRGB[24][0] = 1.0; domainRGB[24][1] = 0.710881; domainRGB[24][2] = 0.0; //a2-
-		domainRGB[25][0] = 0.885813; domainRGB[25][1] = 0.813533; domainRGB[25][2] = 0.301423; //c+
-		domainRGB[26][0] = 0.8867188; domainRGB[26][1] = 0.4335937; domainRGB[26][2] = 0.0273438; //c-
-		qDebug() << "after color" << domainRGB[0][2];
 
+		
+		for (int i = 0; i < this->ui->RGBDomain_Table->rowCount(); i++)
+		{
+			int index = this->ui->RGBDomain_Combo->findText(this->ui->RGBDomain_Table->item(i, 0)->text());
+			domainRGB[index][0] = this->ui->RGBDomain_Table->item(i, 1)->text().toDouble()/255;
+			domainRGB[index][1] = this->ui->RGBDomain_Table->item(i, 2)->text().toDouble()/255;
+			domainRGB[index][2] = this->ui->RGBDomain_Table->item(i, 3)->text().toDouble()/255;
+			this->ui->domain_LW->item(index + 4)->setForeground(QColor((int)domainRGB[index][0]*255 ,  (int)domainRGB[index][1]*255, (int)domainRGB[index][2]*255));
+			qDebug() << "domainRGB" << index << domainRGB[index][0] << domainRGB[index][1] << domainRGB[index][2];
+		}
 		VTK_CREATE(vtkExtractVOI, readerDomain);
 		// renWinInteractor->SetRenderWindow(this->ui->qvtkWidget->GetRenderWindow());
 
 		readerDomainOrigin->SetFileName(fileNameDomain);
-		qDebug() << readerDomainOrigin << fileNameDomain;
+		
 		readerDomainOrigin->UpdateWholeExtent();
 		//    readerDomainOrigin->GetOutput()->GetPointData()->GetScalars()->GetRange(domain_range);
 		//    qDebug()<<domain_range;
@@ -3159,7 +3182,7 @@ void SimpleView::drawDomain(std::string domainName){
 				VTK_CREATE(vtkPolyDataNormals, normalGenerator);
 				VTK_CREATE(vtkDataSetMapper, domainMapper);
 				//        qDebug()<<"create the domain"<<i;
-				readerDomain->UpdateWholeExtent();
+				readerDomain->Update();
 				domainThreshold->SetInputConnection(readerDomain->GetOutputPort());
 				domainThreshold->AllScalarsOff();
 				domainThreshold->ThresholdBetween(i - 0.5, i + 0.5);
@@ -3172,16 +3195,16 @@ void SimpleView::drawDomain(std::string domainName){
 				domainSmooth->SetRelaxationFactor(0.1);
 				domainSmooth->FeatureEdgeSmoothingOff();
 				domainSmooth->BoundarySmoothingOn();
-				domainSmooth->UpdateWholeExtent();
+				domainSmooth->Update();
 				normalGenerator->SetInputData(domainSmooth->GetOutput());
 				normalGenerator->ComputePointNormalsOn();
 				normalGenerator->ComputeCellNormalsOn();
 				normalGenerator->UpdateWholeExtent();
 				domainMapper->SetInputConnection(normalGenerator->GetOutputPort());
 				domainMapper->ScalarVisibilityOff();
-				domainMapper->UpdateWholeExtent();
+				domainMapper->Update();
 				actorDomain[i]->SetMapper(domainMapper);
-				//        qDebug()<<domainRGB[i][0]<<" "<<domainRGB[i][1]<<" "<<domainRGB[i][2];
+				qDebug()<<"drawing" <<domainRGB[i][0]<<" "<<domainRGB[i][1]<<" "<<domainRGB[i][2];
 				actorDomain[i]->GetProperty()->SetColor(domainRGB[i][0], domainRGB[i][1], domainRGB[i][2]);
 				actorDomain[i]->GetProperty()->GetColor(R);
 				actorDomain[i]->GetProperty()->SetOpacity(1);
@@ -3199,7 +3222,7 @@ void SimpleView::drawDomain(std::string domainName){
 		{
 			int index = this->ui->domainAlpha_Combo->findText(this->ui->alphaDomain_Table->item(i, 0)->text());
 			double value = this->ui->alphaDomain_Table->item(i, 1)->text().toDouble();
-			this->ui->cameraFocalX_LE->setText(QString::number(index));
+			//this->ui->cameraFocalX_LE->setText(QString::number(index));
 			if (index >= 4)
 			{
 				actorDomain[index - 4]->GetProperty()->SetOpacity(value);
@@ -3251,7 +3274,7 @@ void SimpleView::drawDomain(std::string domainName){
 		outlineDomainMapper->SetInputConnection(outlineDomain->GetOutputPort());
 		outlineDomainActor->SetMapper(outlineDomainMapper);
 		outlineDomainActor->GetProperty()->SetColor(0, 1, 0);
-
+		outlineDomainActor->GetProperty()->SetLineWidth(outlineWidth);
 		domainRenderer->SetBackground(0.9, 0.9, 0.9);
 		domainRenderer->AddActor(outlineDomainActor);
 		if (this->ui->outline_CB->checkState()) {
@@ -3279,13 +3302,12 @@ void SimpleView::drawDomain(std::string domainName){
 			axes->SetVisibility(false);
 		}
 
-		if (!reset) { domainRenderer->SetActiveCamera(camera); }
-
-		this->ui->qvtkWidget->GetRenderWindow()->Render();
-		this->ui->qvtkWidget->update();
-
-		camera = domainRenderer->GetActiveCamera();
-		reset = false;
+		if (reset) {
+			updateCamera(-1);
+		}
+		else {
+			updateCamera(0);
+		}
 	}
     
 }
@@ -3383,7 +3405,7 @@ void SimpleView::saveImage(){
 void SimpleView::outputImage(QString load){
     VTK_CREATE(vtkWindowToImageFilter, windowToImage);
     windowToImage->SetInput(this->ui->qvtkWidget->GetRenderWindow());
-    windowToImage->SetMagnification(5);
+    windowToImage->SetMagnification(1);
     windowToImage->SetInputBufferTypeToRGBA();
     windowToImage->FixBoundaryOff();
     windowToImage->ReadFrontBufferOn();
@@ -3952,17 +3974,17 @@ void SimpleView::on_cameraSet_PB_released(){
 void SimpleView::outputStatus(QFileInfo filedir){
     std::ofstream output;
     output.open(filedir.absoluteFilePath().toStdString().c_str());
-    output << this->ui->outline_CB->checkState() << endl;
-    output << this->ui->scalarLegendBar_CB->checkState() << endl;
-	output << this->ui->vectorLegendBar_CB->checkState() << endl;
+    output << this->ui->outline_CB->checkState() << " " << this->ui->outlineWidth_LE->text().toStdString() <<endl;
     output << this->ui->axis_CB->checkState() << endl;
     output << this->ui->extract_CB->checkState() << endl;
-    output << this->ui->xmin_LE->text().toDouble() << " " << this->ui->xmax_LE->text().toDouble() << endl;
-    output << this->ui->ymin_LE->text().toDouble() << " " << this->ui->ymax_LE->text().toDouble() << endl;
-    output << this->ui->zmin_LE->text().toDouble() << " " << this->ui->zmax_LE->text().toDouble() << endl;
+    output << this->ui->xmin_LE->text().toDouble() << " " << this->ui->xmax_LE->text().toDouble() << " " << this->ui->xDelta_LE->text().toDouble() << endl;
+    output << this->ui->ymin_LE->text().toDouble() << " " << this->ui->ymax_LE->text().toDouble() << " " << this->ui->yDelta_LE->text().toDouble() << endl;
+    output << this->ui->zmin_LE->text().toDouble() << " " << this->ui->zmax_LE->text().toDouble() << " " << this->ui->zDelta_LE->text().toDouble() << endl;
+	output << this->ui->rescaleX_LE->text().toDouble() << " " << this->ui->rescaleY_LE->text().toDouble() << " " << this->ui->rescaleZ_LE->text().toDouble() << endl;
     output << this->ui->cameraPositionX_LE->text().toDouble() << " " << this->ui->cameraPositionY_LE->text().toDouble() << " " << this->ui->cameraPositionZ_LE->text().toDouble() << endl;
     output << this->ui->cameraFocalX_LE->text().toDouble() << " " << this->ui->cameraFocalY_LE->text().toDouble() << " " << this->ui->cameraFocalZ_LE->text().toDouble() << endl;
     output << this->ui->cameraViewUpX_LE->text().toDouble()<< " " << this->ui->cameraViewUpY_LE->text().toDouble()<< " " << this->ui->cameraViewUpZ_LE->text().toDouble()<< endl;
+
     
     output << this->ui->RGB_Combo->currentIndex() << endl;
     output << this->ui->RGBScalar_Table->rowCount() <<endl;
@@ -3980,17 +4002,30 @@ void SimpleView::outputStatus(QFileInfo filedir){
     for (int i=0; i<this->ui->RGBIso_Table->rowCount(); i++) {
         output << this->ui->RGBIso_Table->item(i, 0)->text().toDouble()<< " " << this->ui->RGBIso_Table->item(i, 1)->text().toInt()<< " " << this->ui->RGBIso_Table->item(i, 2)->text().toInt()<< " " << this->ui->RGBIso_Table->item(i, 3)->text().toInt()<< endl;
     }
+	//output for the domain RGB table
+	output << this->ui->RGBDomain_Table->rowCount() << endl;
+	for (int i = 0; i < this->ui->RGBDomain_Table->rowCount(); i++)
+	{
+		output << this->ui->RGBDomain_Table->item(i, 0)->text().toDouble() << " " << this->ui->RGBDomain_Table->item(i, 1)->text().toInt() << " " << this->ui->RGBDomain_Table->item(i, 2)->text().toInt() << " " << this->ui->RGBDomain_Table->item(i, 3)->text().toInt() << endl;
+	}
     //output for the scalar alpha table
     output << this->ui->alpha_Combo->currentIndex()<<endl;
     output << this->ui->alphaScalar_Table->rowCount()<<endl;
     for (int i=0; i<this->ui->alphaScalar_Table->rowCount(); i++) {
         output << this->ui->alphaScalar_Table->item(i, 0)->text().toDouble()<< " " << this->ui->alphaScalar_Table->item(i, 1)->text().toDouble()<< endl;
     }
+	// output the domain alpha table
+	output << this->ui->alphaDomain_Table->rowCount() << endl;
+	for (int i = 0; i < this->ui->alphaDomain_Table->rowCount(); i++)
+	{
+		output << this->ui->alphaDomain_Table->item(i, 0)->text().toStdString() << " " << this->ui->alphaDomain_Table->item(i, 1)->text().toDouble() << endl;
+	}
     
     //output for the scalar tab
     output << this->ui->scalar_CB->checkState() << endl;
-    output << this->ui->scalarChoice->count() << endl;
-    output << this->ui->scalarChoice->currentIndex() << endl;
+    output << this->ui->scalarChoice->count() << " " << this->ui->scalarChoice->currentIndex() << endl;
+	output << this->ui->scalarLegendBar_CB->checkState() << " " << this->ui->scalarLegend_LE->text().toStdString() <<endl;
+
     output << this->ui->volume_CB->checkState() << endl;
     output << this->ui->scalarRange_CB->checkState() << endl;
     output << this->ui->scalarValueMin_LE->text().toDouble() << " " << this->ui->scalarValueMax_LE->text().toDouble()<< endl;
@@ -4006,8 +4041,10 @@ void SimpleView::outputStatus(QFileInfo filedir){
     
     //output for the vector tab
     output << this->ui->vector_CB->checkState()<<endl;
-    output << this->ui->vectorChoice->count()<<endl;
-    output << this->ui->vectorChoice->currentIndex()<<endl;
+    output << this->ui->vectorChoice->count()<< " " << this->ui->vectorChoice->currentIndex() <<endl;
+	output << this->ui->vectorColorMode_Combo->currentIndex() << endl;
+	output << this->ui->vectorLegendBar_CB->checkState() << " " << this->ui->vectorLegend_LE->text().toStdString() <<endl;
+
     output << this->ui->vectorGlyph_CB->checkState()<<endl;
 	output << this->ui->vectorMaskNum_LE->text().toDouble() << endl;
     output << this->ui->vectorScale_LE->text().toDouble()<<endl;
@@ -4025,6 +4062,7 @@ void SimpleView::outputStatus(QFileInfo filedir){
     for (int i=0; i<this->ui->domain_LW->count(); i++) {
         output << this->ui->domain_LW->item(i)->checkState()<<endl;
     }
+	output << this->ui->domainStdAngle_LE->text().toDouble() << " " << this->ui->domainStdValue_LE->text().toDouble() <<endl;
 
     output.close();
 }
@@ -4049,31 +4087,37 @@ void SimpleView::loadStatus(QFileInfo filedir){
     
     int checkstate;
     int index;
-    std::string min,max;
+    std::string min,max,delta;
     std::string x,y,z;
     std::string value,r,g,b,a;
     int count;
     
     input.open(filedir.absoluteFilePath().toStdString().c_str());
-    input >> checkstate ;
+    input >> checkstate >> value;
     this->ui->outline_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
-    input >> checkstate ;
-    this->ui->scalarLegendBar_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
-	input >> checkstate;
-	this->ui->vectorLegendBar_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
+	this->ui->outlineWidth_LE->setText(QString::fromStdString(value));
     input >> checkstate;
     this->ui->axis_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
     input >> checkstate;
     this->ui->extract_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
-    input >> min >> max;
+    input >> min >> max >> delta;
     this->ui->xmin_LE->setText(QString::fromStdString(min));
     this->ui->xmax_LE->setText(QString::fromStdString(max));
-    input >> min >> max;
+	this->ui->xDelta_LE->setText(QString::fromStdString(delta));
+    input >> min >> max >> delta;
     this->ui->ymin_LE->setText(QString::fromStdString(min));
     this->ui->ymax_LE->setText(QString::fromStdString(max));
-    input >> min >> max;
+	this->ui->yDelta_LE->setText(QString::fromStdString(delta));
+    input >> min >> max >> delta;
     this->ui->zmin_LE->setText(QString::fromStdString(min));
     this->ui->zmax_LE->setText(QString::fromStdString(max));
+	this->ui->zDelta_LE->setText(QString::fromStdString(delta));
+
+	input >> x >> y >> z;
+	this->ui->rescaleX_LE->setText(QString::fromStdString(x));
+	this->ui->rescaleY_LE->setText(QString::fromStdString(y));
+	this->ui->rescaleZ_LE->setText(QString::fromStdString(z));
+
     input >> x >> y >> z;
     this->ui->cameraPositionX_LE->setText(QString::fromStdString(x));
     this->ui->cameraPositionY_LE->setText(QString::fromStdString(y));
@@ -4090,84 +4134,94 @@ void SimpleView::loadStatus(QFileInfo filedir){
     input >> count;
     this->ui->RGB_Combo->setCurrentIndex(count);
     input >> count;
-    while (this->ui->RGBScalar_Table->rowCount()>count) {
+    while (this->ui->RGBScalar_Table->rowCount()>0) {
         this->ui->RGBScalar_Table->removeRow(0);
     }
 
-    while (this->ui->RGBScalar_Table->rowCount()<count) {
-        this->ui->RGBScalar_Table->insertRow(0);
-    }
     for (int i=0; i<count; i++) {
         input >> value >> r >> g >> b;
+		this->ui->RGBScalar_Table->insertRow(i);
         this->ui->RGBScalar_Table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(value)));
         this->ui->RGBScalar_Table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(r)));
         this->ui->RGBScalar_Table->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(g)));
-        this->ui->RGBScalar_Table->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(b)));
-        
+        this->ui->RGBScalar_Table->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(b)));     
     }
     
     qDebug()<<"vector";
     input >> count;
-    while (this->ui->RGBVector_Table->rowCount()>count) {
+    while (this->ui->RGBVector_Table->rowCount()>0) {
         this->ui->RGBVector_Table->removeRow(0);
-    }
-    while (this->ui->RGBVector_Table->rowCount()<count) {
-        this->ui->RGBVector_Table->insertRow(0);
     }
     for (int i=0; i<count; i++) {
         input >> value >> r >> g >> b;
+		this->ui->RGBVector_Table->insertRow(i);
         this->ui->RGBVector_Table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(value)));
         this->ui->RGBVector_Table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(r)));
         this->ui->RGBVector_Table->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(g)));
-        this->ui->RGBVector_Table->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(b)));
-        
+        this->ui->RGBVector_Table->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(b))); 
     }
     
     qDebug()<<"Iso";
     input >> count;
-    while (this->ui->RGBIso_Table->rowCount()>count) {
+    while (this->ui->RGBIso_Table->rowCount()>0) {
         this->ui->RGBIso_Table->removeRow(0);
-    }
-    while (this->ui->RGBIso_Table->rowCount()<count) {
-        this->ui->RGBIso_Table->insertRow(0);
     }
     for (int i=0; i<count; i++) {
         input >> value >> r >> g >> b;
+		this->ui->RGBIso_Table->insertRow(0);
         this->ui->RGBIso_Table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(value)));
         this->ui->RGBIso_Table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(r)));
         this->ui->RGBIso_Table->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(g)));
-        this->ui->RGBIso_Table->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(b)));
-        
+        this->ui->RGBIso_Table->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(b)));      
     }
-    
+
+	qDebug() << "domain";
+	input >> count;
+	while (this->ui->RGBDomain_Table->rowCount()>0) {
+		this->ui->RGBDomain_Table->removeRow(0);
+	}
+	for (int i = 0; i<count; i++) {
+		input >> value >> r >> g >> b;
+		this->ui->RGBDomain_Table->insertRow(0);
+		this->ui->RGBDomain_Table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(value)));
+		this->ui->RGBDomain_Table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(r)));
+		this->ui->RGBDomain_Table->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(g)));
+		this->ui->RGBDomain_Table->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(b)));
+	}
+
+
     input >> count;
     this->ui->alpha_Combo->setCurrentIndex(count);
     input >> count;
-    while (this->ui->alphaScalar_Table->rowCount()>count) {
+    while (this->ui->alphaScalar_Table->rowCount()>0) {
         this->ui->alphaScalar_Table->removeRow(0);
-    }
-    while (this->ui->alphaScalar_Table->rowCount()<count) {
-        this->ui->alphaScalar_Table->insertRow(0);
     }
     for (int i=0; i<count; i++) {
         input >> value >> a;
+		this->ui->alphaScalar_Table->insertRow(0);
         this->ui->alphaScalar_Table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(value)));
         this->ui->alphaScalar_Table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(a)));
     }
+	input >> count;
+	while (this->ui->alphaDomain_Table->rowCount()>0) {
+		this->ui->alphaDomain_Table->removeRow(0);
+	}
+	for (int i = 0; i<count; i++) {
+		input >> value >> a;
+		this->ui->alphaDomain_Table->insertRow(0);
+		this->ui->alphaDomain_Table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(value)));
+		this->ui->alphaDomain_Table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(a)));
+	}
     
     input >> checkstate;
     this->ui->scalar_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
     scalar=checkstate;
-    input >> count;
-    //    while (this->ui->scalarChoice->count()>0) {
-    //        this->ui->scalarChoice->removeItem(0);
-    //    }
-    //    for (int i=0; i<count; i++) {
-    //        this->ui->scalarChoice->insertItem(i, QString::number(i+1));
-    //    }
-    input >> index;
+    input >> count >> index;
     this->ui->scalarChoice->setCurrentIndex(index);
     scalarColumn=index;
+	input >> checkstate >> value ;
+	this->ui->scalarLegendBar_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
+	this->ui->scalarLegend_LE->setText(QString::fromStdString(value));
     input >> checkstate;
     this->ui->volume_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
     input >> checkstate;
@@ -4190,25 +4244,28 @@ void SimpleView::loadStatus(QFileInfo filedir){
     this->ui->isosurface_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
     input >> count;
     while (this->ui->isosurface_LW->count()>0) {
-        this->ui->isosurface_LW->takeItem(0);
+		this->ui->isosurface_LW->setCurrentRow(0);
+        this->on_isoDelete_PB_released() ;
     }
     for (int i=0; i<count; i++) {
         input >> value >> checkstate;
         this->ui->isoValue_LE->setText(QString::fromStdString(value));
-        this->on_isoAdd_PB_released();
-//        this->ui->isosurface_LW->insertItem(i, QString::fromStdString(value));
-        this->ui->isosurface_LW->item(i)->setFlags(this->ui->isosurface_LW->item(i)->flags() | Qt::ItemIsUserCheckable);
+        this->on_isoAdd_PB_released(); //The reason we use this function rather than adding the item explicitly, is because new things needs to be added for the rgb part
+       // this->ui->isosurface_LW->item(i)->setFlags(this->ui->isosurface_LW->item(i)->flags() | Qt::ItemIsUserCheckable);
         this->ui->isosurface_LW->item(i)->setCheckState(static_cast<Qt::CheckState>(checkstate));
     }
-    
     
     input >> checkstate;
     this->ui->vector_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
     vector=checkstate;
-    input >> count;
-    input >> index;
+    input >> count >> index ;
     this->ui->vectorChoice->setCurrentIndex(index);
     vectorColumn=index;
+	input >> index;
+	this->ui->vectorColorMode_Combo->setCurrentIndex(index);
+	input >> checkstate >> value;
+	this->ui->vectorLegendBar_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
+	this->ui->vectorLegend_LE->setText(QString::fromStdString(value));
     input >> checkstate;
     this->ui->vectorGlyph_CB->setCheckState(static_cast<Qt::CheckState>(checkstate));
 	input >> value;
@@ -4242,6 +4299,9 @@ void SimpleView::loadStatus(QFileInfo filedir){
         input >> checkstate;
         this->ui->domain_LW->item(i)->setCheckState(static_cast<Qt::CheckState>(checkstate));
     }
+	input >> min >> max;
+	this->ui->domainStdAngle_LE->setText(QString::fromStdString(min));
+	this->ui->domainStdValue_LE->setText(QString::fromStdString(max));
     
     input.close();
 
@@ -4315,3 +4375,17 @@ void SimpleView::on_vectorColorMode_Combo_currentIndexChanged(int index)
 {
 	
 }
+
+
+void SimpleView::on_outlineWidth_LE_editingFinished() {
+	bool isNum;
+	int value = this->ui->outlineWidth_LE->text().toInt(&isNum);
+	if (isNum)
+	{
+		outlineWidth = value;
+	}
+	else {
+		qDebug() << "outlineWidth is not a number";
+	}
+}
+

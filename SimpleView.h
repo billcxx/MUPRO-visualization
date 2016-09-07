@@ -162,6 +162,9 @@ public:
 	void on_domainStdAngle_LE_editingFinished();
 	void on_domainStdValue_LE_editingFinished();
 	void on_domainRePlot_PB_released();
+	void on_outlineWidth_LE_editingFinished();
+
+
 	void on_vectorColorMode_Combo_currentIndexChanged(int index);
 	double * getRGB(double px, double py, double pz, double magnitudeRange[2], double xyRange[2], double zRange[2]);
 	double * convertHSLToRGB(double hue, double saturation, double lightness);
@@ -185,6 +188,7 @@ private:
     int columns;
     std::string scalarName,vectorName,domainName;
     QFileInfo scalarDir,vectorDir,domainDir;
+	double** domainRGB;
     // Designer form
     Ui_SimpleView *ui;
     QString printstatus;
@@ -195,7 +199,7 @@ private:
 									"O1+(+,+,0)","O1-(-,-,0)","O2+(+,-,0)","O2-(-,+,0)","O3+(+,0,+)","O3-(-,0,-)","O4+(+,0,-)","O4-(-,0,+)",\
 									"O5+(0,+,+)","O5-(0,-,-)","O6+(0,+,-)","O6-(0,-,+)","T1+(+,0,0)","T1-(-,0,0)","T2+(0,+,0)","T2-(0,-,0)","T3+(0,0,+)","T3-(0,0,-)"};
     int xmin=0,xmax=0,ymin=0,ymax=0,zmin=0,zmax=0;
-
+	int outlineWidth = 1;
     int xminAll=0,xmaxAll=0,yminAll=0,ymaxAll=0,zminAll=0,zmaxAll=0;
 	double domainStandardValue = 0.3, domainStandardAngle = 4.0, domainStandardAngleRad=4.0*3.141592653589/180;
 	double domainOrth[27][3] = {
