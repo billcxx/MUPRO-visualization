@@ -782,7 +782,6 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             mapperScalar1->SetInputConnection(0,tetra->GetOutputPort(0));
             mapperScalar1->UpdateWholeExtent();
             actorScalar->SetMapper(mapperScalar1);
-            qDebug()<<actorScalar;
         }else{
             range->InsertNextValue(scalar_range[0]);
             range->InsertNextValue(scalar_range[1]);
@@ -794,6 +793,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             // mapperScalar->SetLookupTable(tableScalar);
             actorScalar->SetMapper(mapperScalar);
         }
+		qDebug() << "scalar range:" << vmin << vmax;
         if(this->ui->isosurface_CB->isChecked()){
             drawIsoSurface(readerScalar->GetOutputPort());
         }
