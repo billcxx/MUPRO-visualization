@@ -174,14 +174,20 @@ void column1D::on_load1DFile_PB_clicked(){
         this->ui->plot1DRelationFile_Combo->setEnabled(true);
         this->ui->plot1DRelationValueFile_LE->setEnabled(true);
 
-            while(this->ui->plot1DColFile_Combo->count()>0){
-                this->ui->plot1DColFile_Combo->removeItem(0);
-            }
+        while(this->ui->plot1DColFile_Combo->count()>0){
+            this->ui->plot1DColFile_Combo->removeItem(0);
+        }
         for (int i = 0; i < columns; ++i)
         {
             this->ui->plot1DColFile_Combo->addItem(QString::fromStdString(std::to_string(i+1)));
         }
-        
+
+		while (this->ui->plot1DLines_LW->count() > 0) {
+			this->ui->plot1DLines_LW->takeItem(0);
+		}
+		while (this->ui->plot1DRelationFile_Table->rowCount() > 0) {
+			this->ui->plot1DRelationFile_Table->removeRow(0);
+		}
         
         this->ui->plot1DFileName_LE->setText(filehold.fileName());
         
