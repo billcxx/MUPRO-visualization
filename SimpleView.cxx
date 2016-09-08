@@ -117,6 +117,7 @@ SimpleView::SimpleView()
 	this->ui->domainAlpha_Combo->setView(new QListView());
 	this->ui->vectorColorMode_Combo->setView(new QListView());
 	this->ui->RGBDomain_Combo->setView(new QListView());
+    this->ui->isoValue_Combo->setView(new QListView());
 //    this->ui->plot1DGeneral_LW->SetView
     
     for(int nr = 0; nr < 27; nr++){
@@ -807,6 +808,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         VTK_CREATE(vtkPolyDataMapper, cutterMapper);
         cutterScalar->SetInputConnection(0, readerScalar->GetOutputPort(0));
         cutterMapper->SetInputConnection(0, cutterScalar->GetOutputPort(0));
+        cutterMapper->SetLookupTable(colorScalar);
         actorCutter->SetMapper(cutterMapper);
         renderer->AddActor(actorCutter);
         
@@ -828,6 +830,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             planeOZ=this->ui->sliceOriginZ->text().toDouble();
             planeNX=this->ui->sliceNormalX->text().toDouble();
             planeNY=this->ui->sliceNormalY->text().toDouble();
+            planeNZ=this->ui->sliceNormalZ->text().toDouble();
             plane->SetOrigin(planeOX, planeOY, planeOZ);
             plane->SetNormal(planeNX, planeNY, planeNZ);
             cutterScalar->SetCutFunction(plane);
@@ -1370,6 +1373,8 @@ void SimpleView::on_scalar_CB_stateChanged(int state){
         this->ui->slice_CB->setEnabled(false);
         this->ui->isosurface_CB->setEnabled(false);
         this->ui->scalarChoice->setEnabled(false);
+        this->ui->scalarLegendBar_CB->setEnabled(false);
+        this->ui->scalarLegend_LE->setEnabled(false);
         
         
         this->ui->scalarRange_CB->setEnabled(false);
@@ -1401,6 +1406,8 @@ void SimpleView::on_scalar_CB_stateChanged(int state){
         this->ui->slice_CB->setEnabled(true);
         this->ui->isosurface_CB->setEnabled(true);
         this->ui->scalarChoice->setEnabled(true);
+        this->ui->scalarLegend_LE->setEnabled(true);
+        this->ui->scalarLegendBar_CB->setEnabled(true);
         
         
         if (this->ui->volume_CB->isChecked()) {
@@ -1638,13 +1645,20 @@ void SimpleView::on_vector_CB_stateChanged(int state){
         this->ui->streamSeedCenter_LB->setEnabled(false);
         this->ui->streamMaxLength_LB->setEnabled(false);
         this->ui->streamSampleRadius_LB->setEnabled(false);
+        this->ui->vectorLegend_LE->setEnabled(false);
+        this->ui->vectorLegendBar_CB->setEnabled(false);
+        this->ui->vectorColorMode_Combo->setEnabled(false);
+        this->ui->vectorColorMode_LB->setEnabled(false);
         
     }else{
         this->ui->vectorGlyph_CB->setEnabled(true);
         this->ui->streamline_CB->setEnabled(true);
         this->ui->vectorChoice->setEnabled(true);
         this->ui->vector_LB->setEnabled(true);
-        
+        this->ui->vectorLegend_LE->setEnabled(true);
+        this->ui->vectorLegendBar_CB->setEnabled(true);
+        this->ui->vectorColorMode_Combo->setEnabled(true);
+        this->ui->vectorColorMode_LB->setEnabled(true);
         if (this->ui->vectorGlyph_CB->isChecked()) {
             this->ui->vectorMaskNum_LE->setEnabled(true);
             this->ui->vectorMaxPoints_LB->setEnabled(true);
@@ -2656,12 +2670,10 @@ void SimpleView::on_RGB_Combo_currentIndexChanged(int index){
 	this->ui->RGBG_LE->setEnabled(true);
 	this->ui->RGBB_LE->setEnabled(true);
 	this->ui->RGBValue_LB->setEnabled(true);
-	this->ui->RGBScalar_Table->setEnabled(false);
-	this->ui->RGBVector_Table->setEnabled(false);
-	this->ui->RGBIso_Table->setEnabled(false);
+
 	this->ui->isoValue_Combo->setEnabled(false);
 	this->ui->RGBDomain_Combo->setEnabled(false);
-	this->ui->RGBDomain_Table->setEnabled(false);
+
 	switch (index)
 	{
 	case 0:
@@ -2669,6 +2681,10 @@ void SimpleView::on_RGB_Combo_currentIndexChanged(int index){
 		this->ui->RGBG_LE->setEnabled(false);
 		this->ui->RGBB_LE->setEnabled(false);
 		this->ui->RGBValue_LB->setEnabled(false);
+        this->ui->RGBScalar_Table->setEnabled(false);
+        this->ui->RGBVector_Table->setEnabled(false);
+        this->ui->RGBIso_Table->setEnabled(false);
+        this->ui->RGBDomain_Table->setEnabled(false);
 		break;
 	case 1:
 		this->ui->RGB_Stack->setCurrentIndex(0);

@@ -38,3 +38,5 @@ build/
 >>>>>>> Stashed changes
 
 CMakeLists.txt
+
+*.txt
