@@ -17,6 +17,13 @@ ui(new Ui::column1D)
     lineStyleList<<Qt::PenStyle::SolidLine<<Qt::PenStyle::DashLine<<Qt::PenStyle::DotLine<<Qt::PenStyle::DashDotLine<<Qt::PenStyle::DashDotDotLine;
     this->ui->plot1DFileX_Combo->setView(new QListView);
 
+	this->ui->plot1DFile_Table->setColumnWidth(0, 60);
+	this->ui->plot1DFile_Table->setColumnWidth(1, 60);
+	this->ui->plot1DFile_Table->setColumnWidth(2, 60);
+	this->ui->plot1DRelationFile_Table->setColumnWidth(0, 60);
+	this->ui->plot1DRelationFile_Table->setColumnWidth(1, 60);
+	this->ui->plot1DRelationFile_Table->setColumnWidth(2, 60);
+
 }
 
 column1D::~column1D()
@@ -100,28 +107,28 @@ int column1D::filter(){
 
     std::string str;
     
-    str="filter_before.txt";
-    const char *outdir1=str.c_str();
+    //str="filter_before.txt";
+    //const char *outdir1=str.c_str();
     
-    output1.open(outdir1);
-    output1 << "size" << "\n";
-    output1 << sizeof(vtkData)<<"\n";
+    //output1.open(outdir1);
+    //output1 << "size" << "\n";
+    //output1 << sizeof(vtkData)<<"\n";
+    //for(int i=0;i<rows;i++){
+        //output1 << "i:" << i << ", vtkData:"<<vtkData[i][0] << "\n";
+    //}
+    //output1.close();
+    
+    //str="filter.txt";
+    //const char *outdir=str.c_str();
+    
+    //output2.open(outdir);
     for(int i=0;i<rows;i++){
-        output1 << "i:" << i << ", vtkData:"<<vtkData[i][0] << "\n";
-    }
-    output1.close();
-    
-    str="filter.txt";
-    const char *outdir=str.c_str();
-    
-    output2.open(outdir);
-    for(int i=0;i<rows;i++){
-        output2 << "i:" << i << ", vtkData:"<<vtkData[i][1] << "\n";
+        //output2 << "i:" << i << ", vtkData:"<<vtkData[i][1] << "\n";
         if(filter1DData(vtkData[i])){
             dataFiltered.append(vtkData[i]);
         }
     }
-    output2.close();
+    //output2.close();
     qDebug()<<"rows:"<<rows;
     return dataFiltered.count();
 }
@@ -354,7 +361,7 @@ int column1D::loadData1D(QString filedir){
                 std::cout <<  "fail,";
 //                iss.ignore(256,' ');
             }else{
-                std::cout << vtkData[j][k] <<",";
+                //std::cout << vtkData[j][k] <<",";
 
             }
         }
@@ -362,18 +369,18 @@ int column1D::loadData1D(QString filedir){
     }
     input.close();
     
-    str="load.txt";
-    const char *outdir=str.c_str();
-    
-    output.open(outdir);
-    for(int i=0;i<rowNumber;i++){
-        output << "i:" << i << ", vtkData:";
-        for(int j=0;j<columnNumber;j++){
-            output<<vtkData[i][j] << " ";
-        }
-        output << "\n";
-    }
-    output.close();
+    //str="load.txt";
+    //const char *outdir=str.c_str();
+    //
+    //output.open(outdir);
+    //for(int i=0;i<rowNumber;i++){
+    //    output << "i:" << i << ", vtkData:";
+    //    for(int j=0;j<columnNumber;j++){
+    //        output<<vtkData[i][j] << " ";
+    //    }
+    //    output << "\n";
+    //}
+    //output.close();
     
     
 //    xmax=x;

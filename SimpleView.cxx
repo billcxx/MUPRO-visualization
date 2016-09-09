@@ -119,7 +119,38 @@ SimpleView::SimpleView()
 	this->ui->RGBDomain_Combo->setView(new QListView());
     this->ui->isoValue_Combo->setView(new QListView());
 //    this->ui->plot1DGeneral_LW->SetView
-    
+
+
+
+	this->ui->scalar_Table->setColumnWidth(0, 75);
+	this->ui->scalar_Table->setColumnWidth(1, 75);
+	this->ui->scalar_Table->setColumnWidth(2, 75);
+	this->ui->vector_Table->setColumnWidth(0, 75);
+	this->ui->vector_Table->setColumnWidth(1, 75);
+	this->ui->vector_Table->setColumnWidth(2, 75);
+
+	this->ui->RGBScalar_Table->setColumnWidth(0, 40);
+	this->ui->RGBScalar_Table->setColumnWidth(1, 50);
+	this->ui->RGBScalar_Table->setColumnWidth(2, 50);
+	this->ui->RGBScalar_Table->setColumnWidth(3, 50);
+	this->ui->RGBVector_Table->setColumnWidth(0, 40);
+	this->ui->RGBVector_Table->setColumnWidth(1, 50);
+	this->ui->RGBVector_Table->setColumnWidth(2, 50);
+	this->ui->RGBVector_Table->setColumnWidth(3, 50);
+	this->ui->RGBIso_Table->setColumnWidth(0, 40);
+	this->ui->RGBIso_Table->setColumnWidth(1, 50);
+	this->ui->RGBIso_Table->setColumnWidth(2, 50);
+	this->ui->RGBIso_Table->setColumnWidth(3, 50);
+	this->ui->RGBDomain_Table->setColumnWidth(0, 40);
+	this->ui->RGBDomain_Table->setColumnWidth(1, 50);
+	this->ui->RGBDomain_Table->setColumnWidth(2, 50);
+	this->ui->RGBDomain_Table->setColumnWidth(3, 50);
+
+	this->ui->alphaScalar_Table->setColumnWidth(0, 90);
+	this->ui->alphaScalar_Table->setColumnWidth(1, 90);
+	this->ui->alphaDomain_Table->setColumnWidth(0, 90);
+	this->ui->alphaDomain_Table->setColumnWidth(1, 90);
+
     for(int nr = 0; nr < 27; nr++){
         actorDomain.push_back(vtkActor::New());
         existDomain.push_back(false);
@@ -790,6 +821,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             VTK_CREATE(vtkSmartVolumeMapper,mapperScalar);
 //            VTK_CREATE(vtkVolumeMapper,mapperScalar)
             mapperScalar->SetInputConnection(0,readerScalar->GetOutputPort(0));
+			mapperScalar->SetRequestedRenderModeToRayCast();
             // mapperScalar->SetLookupTable(tableScalar);
             actorScalar->SetMapper(mapperScalar);
         }
@@ -3827,6 +3859,30 @@ void SimpleView::on_plot1DFont_CB_stateChanged(int state){
 }
 
 void SimpleView::on_isosurface_CB_stateChanged(int state){
+	int index = this->ui->RGB_Combo->currentIndex();
+
+	if (index == 3) {
+		this->ui->RGBIso_SW->setEnabled(true);
+		if (state) {
+			this->ui->isoValue_Combo->setEnabled(true);
+			this->ui->RGBValue_LE->setEnabled(true);
+			this->ui->RGBR_LE->setEnabled(true);
+			this->ui->RGBG_LE->setEnabled(true);
+			this->ui->RGBB_LE->setEnabled(true);
+			this->ui->RGBIso_Table->setEnabled(true);
+			this->ui->RGB_Stack->setEnabled(true);
+		}
+		else {
+			this->ui->isoValue_Combo->setEnabled(false);
+			this->ui->RGBValue_LE->setEnabled(false);
+			this->ui->RGBR_LE->setEnabled(false);
+			this->ui->RGBG_LE->setEnabled(false);
+			this->ui->RGBB_LE->setEnabled(false);
+			this->ui->RGBIso_Table->setEnabled(false);
+			this->ui->RGB_Stack->setEnabled(false);
+		}
+	}
+
     if(state){
         this->ui->isoValue_LE->setEnabled(true);
         this->ui->isoValue_LB->setEnabled(true);
@@ -3834,7 +3890,10 @@ void SimpleView::on_isosurface_CB_stateChanged(int state){
         this->ui->isoDelete_PB->setEnabled(true);
         this->ui->isosurface_LW->setEnabled(true);
         this->ui->isosurfaces_LB->setEnabled(true);
-        
+		for (int i = 0; i < actorIso.length();i++) {
+			actorIso[i]->SetVisibility(true);
+		}
+
     }else{
         this->ui->isoValue_LE->setEnabled(false);
         this->ui->isoValue_LB->setEnabled(false);
@@ -3842,30 +3901,12 @@ void SimpleView::on_isosurface_CB_stateChanged(int state){
         this->ui->isoDelete_PB->setEnabled(false);
         this->ui->isosurface_LW->setEnabled(false);
         this->ui->isosurfaces_LB->setEnabled(false);
+		for (int i = 0; i < actorIso.length(); i++) {
+			actorIso[i]->SetVisibility(false);
+		}
 
     }
-    int index=this->ui->RGB_Combo->currentIndex();
-    
-    if (index==3){
-        this->ui->RGBIso_SW->setEnabled(true);
-        if (this->ui->isosurface_CB->isChecked()) {
-            this->ui->isoValue_Combo->setEnabled(true);
-            this->ui->RGBValue_LE->setEnabled(true);
-            this->ui->RGBR_LE->setEnabled(true);
-            this->ui->RGBG_LE->setEnabled(true);
-            this->ui->RGBB_LE->setEnabled(true);
-            this->ui->RGBIso_Table->setEnabled(true);
-            this->ui->RGB_Stack->setEnabled(true);
-        }else{
-            this->ui->isoValue_Combo->setEnabled(false);
-            this->ui->RGBValue_LE->setEnabled(false);
-            this->ui->RGBR_LE->setEnabled(false);
-            this->ui->RGBG_LE->setEnabled(false);
-            this->ui->RGBB_LE->setEnabled(false);
-            this->ui->RGBIso_Table->setEnabled(false);
-            this->ui->RGB_Stack->setEnabled(false);
-        }
-    }
+
 
 }
 
@@ -4194,7 +4235,7 @@ void SimpleView::loadStatus(QFileInfo filedir){
     }
     for (int i=0; i<count; i++) {
         input >> value >> r >> g >> b;
-		this->ui->RGBIso_Table->insertRow(0);
+		this->ui->RGBIso_Table->insertRow(i);
         this->ui->RGBIso_Table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(value)));
         this->ui->RGBIso_Table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(r)));
         this->ui->RGBIso_Table->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(g)));
@@ -4208,7 +4249,7 @@ void SimpleView::loadStatus(QFileInfo filedir){
 	}
 	for (int i = 0; i<count; i++) {
 		input >> value >> r >> g >> b;
-		this->ui->RGBDomain_Table->insertRow(0);
+		this->ui->RGBDomain_Table->insertRow(i);
 		this->ui->RGBDomain_Table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(value)));
 		this->ui->RGBDomain_Table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(r)));
 		this->ui->RGBDomain_Table->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(g)));
@@ -4224,7 +4265,7 @@ void SimpleView::loadStatus(QFileInfo filedir){
     }
     for (int i=0; i<count; i++) {
         input >> value >> a;
-		this->ui->alphaScalar_Table->insertRow(0);
+		this->ui->alphaScalar_Table->insertRow(i);
         this->ui->alphaScalar_Table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(value)));
         this->ui->alphaScalar_Table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(a)));
     }
@@ -4234,7 +4275,7 @@ void SimpleView::loadStatus(QFileInfo filedir){
 	}
 	for (int i = 0; i<count; i++) {
 		input >> value >> a;
-		this->ui->alphaDomain_Table->insertRow(0);
+		this->ui->alphaDomain_Table->insertRow(i);
 		this->ui->alphaDomain_Table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(value)));
 		this->ui->alphaDomain_Table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(a)));
 	}
