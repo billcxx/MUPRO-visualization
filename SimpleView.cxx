@@ -122,12 +122,15 @@ SimpleView::SimpleView()
 
 
 
-	this->ui->scalar_Table->setColumnWidth(0, 75);
-	this->ui->scalar_Table->setColumnWidth(1, 75);
-	this->ui->scalar_Table->setColumnWidth(2, 75);
-	this->ui->vector_Table->setColumnWidth(0, 75);
-	this->ui->vector_Table->setColumnWidth(1, 75);
-	this->ui->vector_Table->setColumnWidth(2, 75);
+	this->ui->scalar_Table->setColumnWidth(0, 70);
+	this->ui->scalar_Table->setColumnWidth(1, 70);
+	this->ui->scalar_Table->setColumnWidth(2, 70);
+	this->ui->vector_Table->setColumnWidth(0, 70);
+	this->ui->vector_Table->setColumnWidth(1, 70);
+	this->ui->vector_Table->setColumnWidth(2, 70);
+    this->ui->domain_Table->setColumnWidth(0,70);
+    this->ui->domain_Table->setColumnWidth(1,70);
+    this->ui->domain_Table->setColumnWidth(2,70);
 
 	this->ui->RGBScalar_Table->setColumnWidth(0, 40);
 	this->ui->RGBScalar_Table->setColumnWidth(1, 50);
@@ -260,7 +263,10 @@ SimpleView::SimpleView()
         domainList.append(QString::fromStdString(list[i]));
     }
     
-    
+    slotUpdate();
+    camera->SetPosition(100, 100, 100);
+    camera->SetFocalPoint(0, 0, 0);
+    camera->SetViewUp(0, 0, 1);
 
 };
 
@@ -1323,11 +1329,15 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     // VTK/Qt wedded
     // this->ui->qvtkWidget->GetRenderWindow()->RemoveRenderer(renderer);
     
+    qDebug()<<"reset"<<reset;
     
     if(reset){
         updateCamera(-1);
     }else{
         updateCamera(0);
+    }
+    if (!vectorFile && !scalarFile) {
+        reset=true;
     }
     
 }
@@ -1858,7 +1868,7 @@ void SimpleView::slotOpenFile_scalar()
     qDebug()<<"Filename:"<<load << fileExtension.suffix() << aaa;
     if (!load.isEmpty() && fileExtension.suffix() != "vtk") {
         columns=loadData(load);
-        
+        this->ui->inputTab->setCurrentIndex(0);
         if(tempX==1){
             data2Dx=true;
         }else{
@@ -1995,6 +2005,7 @@ void SimpleView::slotOpenFile_vector()
     qDebug()<<"Filename:"<<load;
     if (!load.isEmpty() && fileExtension.suffix().toStdString() != "vtk") {
         columns=loadData(load);
+        this->ui->inputTab->setCurrentIndex(1);
         int rows=(xmax+1)*(ymax+1)*(zmax+1);
         double *dataHold= new double[rows];
         this->ui->scalar_CB->setCheckState(Qt::Unchecked);
@@ -3115,7 +3126,7 @@ void SimpleView::slotOpenFile_domain(){
     if (!load.isEmpty()) {
 		domainCriteria *domainC = new domainCriteria(this);
 		if (domainC->exec()==QDialog::Accepted)
-		{
+        {
 
 			domainStandardAngle = domainC->getDomainStdAngle();
 			domainStandardAngleRad = domainStandardAngle*piValue / 180;
@@ -3123,6 +3134,7 @@ void SimpleView::slotOpenFile_domain(){
 			this->ui->domainStdAngle_LE->setText(QString::number(domainStandardAngle));
 			this->ui->domainStdValue_LE->setText(QString::number(domainStandardValue));
 			columns = loadData(load);
+            this->ui->inputTab->setCurrentIndex(2);
 			qDebug() << "angle" << domainStandardAngle;
 			qDebug() << "value" << domainStandardValue;
 			qDebug() << "after domain processing";
@@ -3507,8 +3519,8 @@ void SimpleView::slotUpdateCamera6(){
 void SimpleView::updateCamera(int choice){
     switch (choice) {
         case -1:
-            camera->SetPosition(3*ymax+ymax+zmax, 3*xmax+ymax+zmax, zmax+xmax+ymax);
-            camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
+            camera->SetPosition(xmax/2.0, ymax*2+xmax*2+zmax*2, zmax);
+            camera->SetFocalPoint(xmax/2.0, ymax/2.0, zmax/2.0);
             camera->SetViewUp(0, 0, 1);
             break;
         case 0:
@@ -3544,8 +3556,8 @@ void SimpleView::updateCamera(int choice){
             camera->SetViewUp(0, 1, 0);
             break;
         default:
-            camera->SetPosition(xmax/2, 3*ymax+xmax*2+zmax*2, zmax/2);
-            camera->SetFocalPoint(xmax/2, ymax/2, zmax/2);
+            camera->SetPosition(100, 100, 100);
+            camera->SetFocalPoint(0, 0, 0);
             camera->SetViewUp(0, 0, 1);
             break;
     }

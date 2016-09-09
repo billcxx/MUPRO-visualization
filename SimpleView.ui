@@ -418,7 +418,7 @@ qproperty-alignment: AlignCenter;*/
 </string>
             </property>
             <property name="currentIndex">
-             <number>0</number>
+             <number>2</number>
             </property>
             <property name="iconSize">
              <size>
@@ -3065,7 +3065,7 @@ color:white;
                      </rect>
                     </property>
                     <property name="text">
-                     <string>4</string>
+                     <string>180</string>
                     </property>
                    </widget>
                    <widget class="QLineEdit" name="domainStdValue_LE">

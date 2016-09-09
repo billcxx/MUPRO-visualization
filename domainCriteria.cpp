@@ -6,7 +6,7 @@ domainCriteria::domainCriteria(SimpleView *simpleView, QDialog *parent) :
 QDialog(parent),
 domainui(new Ui::DomainCriteria)
 {
-	domainStdAngle = 4.0 ;
+	domainStdAngle = 180.0 ;
 	domainStdValue = 0.5;
 	qDebug() << "domain :::" << domainStdAngle << domainStdValue;
 	domainui->setupUi(this);

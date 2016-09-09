@@ -198,7 +198,7 @@ private:
     int xmin=0,xmax=0,ymin=0,ymax=0,zmin=0,zmax=0;
 	int outlineWidth = 1;
     int xminAll=0,xmaxAll=0,yminAll=0,ymaxAll=0,zminAll=0,zmaxAll=0;
-	double domainStandardValue = 0.3, domainStandardAngle = 4.0, domainStandardAngleRad=4.0*3.141592653589/180;
+	double domainStandardValue = 0.3, domainStandardAngle = 180.0, domainStandardAngleRad=180.0*3.141592653589/180;
 	double domainOrth[27][3] = {
 		{0,0,0},
 		{1/std::sqrt(3),1/std::sqrt(3),1/std::sqrt(3) },
