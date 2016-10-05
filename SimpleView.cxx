@@ -84,7 +84,9 @@
 #include <vtkStreamLine.h>
 #include <vtkExtractGrid.h>
 #include <vtkFloatArray.h>
+#include <vtkCellDerivatives.h>
 #include <vtkAssignAttribute.h>
+#include <vtkTransform.h>
 
 #include <vtkUnstructuredGridVolumeZSweepMapper.h>
 #include <fstream>
@@ -254,7 +256,7 @@ SimpleView::SimpleView()
     }
     
     std::string list[31]={ "Check all domains","Check all R domains", "Check all O domains", "Check all T domains", "Substrate", \
-        "R1+(+,+,+)","R1-(-,-,-)","R2+(-,+,+)","R2-(+,-,-)","R3+(+,+,-)","R3-(-,-,+)","R4+(+,-,+)","R4-(-,+,-)", \
+        "R1+(+,+,+)","R1-(-,-,-)","R2+(-,+,+)","R2-(+,-,-)","R3+(-,-,+)","R3-(+,+,-)","R4+(+,-,+)","R4-(-,+,-)", \
         "O1+(+,+,0)","O1-(-,-,0)","O2+(+,-,0)","O2-(-,+,0)","O3+(+,0,+)","O3-(-,0,-)","O4+(+,0,-)","O4-(-,0,+)",\
         "O5+(0,+,+)","O5-(0,-,-)","O6+(0,+,-)","O6-(0,-,+)","T1+(+,0,0)","T1-(-,0,0)","T2+(0,+,0)","T2-(0,-,0)","T3+(0,0,+)","T3-(0,0,-)"};
     
@@ -697,8 +699,11 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
    // VTK_CREATE(vtkDataSetReader,readerVectorOrigin);
     VTK_CREATE(vtkExtractVOI,readerVector);
     VTK_CREATE(vtkArrowSource,arrowVector);
+	VTK_CREATE(vtkTransform, translateHalf);
+	translateHalf->Translate(0.5, 0, 1);
     VTK_CREATE(vtkMaskPoints,maskVector);
     VTK_CREATE(vtkGlyph3D,glyphVector);
+	glyphVector->SetSourceTransform(translateHalf);
     VTK_CREATE(vtkPolyDataMapper,mapperVector);
 //    VTK_CREATE(vtkGlyph3DMapper,mapperVector);
     VTK_CREATE(vtkHedgeHog,hedgehog);
@@ -945,9 +950,11 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         maskVector->Update();
         if (this->ui->vectorRange_CB->isChecked()) {
             thresholdVector->SetInputConnection(maskVector->GetOutputPort());
+			//thresholdVector->SetInputArrayToProcess(1,0,0,0,"vector");
             thresholdVector->ThresholdBetween(vector_range[0],vector_range[1]);
             thresholdVector->UpdateWholeExtent();
             glyphVector->SetInputConnection(thresholdVector->GetOutputPort());
+			//qDebug() << "vector range:" << vector_range[0] << vector_range[1];
 //            mapperVector->SetInputConnection(thresholdVector->GetOutputPort());
         }else{
             glyphVector->SetInputConnection(maskVector->GetOutputPort());
@@ -1022,6 +1029,9 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
 
 			colorVector->SetVectorModeToRGBColors();
 			qDebug() << "RGB";
+		}
+		else if (this->ui->vectorColorMode_Combo->currentIndex() == 5) {
+			mapperVector->SelectColorArray("");
 		}
 		else
 		{
@@ -2386,16 +2396,17 @@ void SimpleView::outputVector(QString path,int colX,int colY,int colZ, int x, in
 	output << "SPACING " << this->ui->rescaleX_LE->text().toStdString() << " " << this->ui->rescaleY_LE->text().toStdString() << " " << this->ui->rescaleZ_LE->text().toStdString() << "\n";
     output << "\n";
     output << "POINT_DATA " << std::to_string(rowNumber)+"\n";
-    //output << "SCALARS Magnitude float \n";
-    //output << "LOOKUP_TABLE default \n";
-    //output << std::scientific;
-    //for (int m=0;m<z;++m){
-    //    for (int n=0;n<y;++n){
-    //        for (int w=0;w<x;++w){
-    //            output << setw(14) << sqrt(pow(vtkData[w*y*z+n*z+m][colX],2)+pow(vtkData[w*y*z+n*z+m][colY],2)+pow(vtkData[w*y*z+n*z+m][colZ],2)) << "\n";
-    //        }
-    //    }
-    //}
+
+    output << "SCALARS Magnitude float \n";
+    output << "LOOKUP_TABLE default \n";
+    output << std::scientific;
+    for (int m=0;m<z;++m){
+        for (int n=0;n<y;++n){
+            for (int w=0;w<x;++w){
+                output << setw(14) << sqrt(pow(vtkData[w*y*z+n*z+m][colX],2)+pow(vtkData[w*y*z+n*z+m][colY],2)+pow(vtkData[w*y*z+n*z+m][colZ],2)) << "\n";
+            }
+        }
+    }
     
     output << "\n";
     output << "VECTORS vector float\n";
@@ -2477,7 +2488,6 @@ int SimpleView::loadData(QString filedir){
     QFileInfo filehold(filedir);
     QByteArray dir1=filedir.toLatin1();
     const char *dir=dir1.data();
-    qDebug()<<dir;
     input.open(dir);
     std::string str,line,line1,line2;
     std::getline(input,line1);
@@ -2485,6 +2495,7 @@ int SimpleView::loadData(QString filedir){
     std::istringstream iss1(line1);
     std::istringstream iss2(line2);
     input.close();
+	qDebug() << "iss:" << QString::fromStdString(line1) << QString::fromStdString(line2);
     
     
     
@@ -2494,11 +2505,12 @@ int SimpleView::loadData(QString filedir){
     while(iss2 >> a){
         count2++;
     }
+	qDebug() << "data loaded:" << dir << count1 << count2;
+
 //    input.open(dir);
 //    for (rowNumber=0; std::getline(input, line); rowNumber++) {
 //    }
 //    input.close();
-    
     if (count1!=count2){
         input.open(dir);
         std::getline(input,line1);
@@ -2534,7 +2546,7 @@ int SimpleView::loadData(QString filedir){
         
     }
 
-    
+	qDebug() << "x:y:z" << x << y << z;
     columnNumber=count2-3;
     rowNumber=(x)*(y)*(z);
     
@@ -2561,13 +2573,14 @@ int SimpleView::loadData(QString filedir){
         }
     }
     input.close();
+	qDebug() << "load data successfully" << x << y << z;
 
     updateExtraction(x,y,z);
     tempX=x;
     tempY=y;
     tempZ=z;
     
-	qDebug() << "load data successfully";
+	qDebug() << "load data successfully"<<x<<y<<z;
     return columnNumber;
 }
 
@@ -3022,7 +3035,7 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
 		{
 			
 			pointFraction[i] = pointNumber[i] / double(mfilm);
-			qDebug() << "fraction" << pointFraction[i] << mfilm;
+			//qDebug() << "fraction" << pointFraction[i] << mfilm;
 		}
 	}
 	else {
@@ -3108,7 +3121,7 @@ int SimpleView::domainType(double px,double py, double pz){
 			{
 				hold = angle;
 				returnValue=i;
-				//qDebug() << "angle:" << i << angle << domainStandardAngleRad << hold << px << py << pz << returnValue;
+				//qDebug() << "angle:" << i << angle << domainStandardAngleRad << domainOrth[i][0] << domainOrth[i][1] << domainOrth[i][2] << px << py << pz << returnValue;
 			}
 			//
 		}
@@ -3208,7 +3221,7 @@ void SimpleView::drawDomain(std::string domainName){
 	if (domainFile && this->ui->domain_CB->isChecked()) {
 
 		VTK_CREATE(vtkRenderer, domainRenderer);
-		VTK_CREATE(vtkDataSetReader, readerDomainOrigin);
+		VTK_CREATE(vtkStructuredPointsReader, readerDomainOrigin);
 
 		
 		for (int i = 0; i < this->ui->RGBDomain_Table->rowCount(); i++)
@@ -3224,13 +3237,15 @@ void SimpleView::drawDomain(std::string domainName){
 		// renWinInteractor->SetRenderWindow(this->ui->qvtkWidget->GetRenderWindow());
 
 		readerDomainOrigin->SetFileName(fileNameDomain);
-		
-		readerDomainOrigin->UpdateWholeExtent();
+		readerDomainOrigin->Update();
+		readerDomainOrigin->GetOutput()->SetSpacing(this->ui->rescaleX_LE->text().toDouble(), this->ui->rescaleY_LE->text().toDouble(), this->ui->rescaleZ_LE->text().toDouble());
+
 		//    readerDomainOrigin->GetOutput()->GetPointData()->GetScalars()->GetRange(domain_range);
 		//    qDebug()<<domain_range;
 		readerDomain->SetInputConnection(readerDomainOrigin->GetOutputPort());
 		readerDomain->SetVOI(0, xmax + 2, 0, ymax + 2, 0, zmax + 2);
-		readerDomain->UpdateWholeExtent();
+		readerDomain->Update();
+		qDebug() << readerDomain->GetOutput()->GetSpacing()[0] << readerDomain->GetOutput()->GetSpacing()[1] << readerDomain->GetOutput()->GetSpacing()[2];
 
 		double R[3];
 
@@ -3274,7 +3289,7 @@ void SimpleView::drawDomain(std::string domainName){
 				domainMapper->ScalarVisibilityOff();
 				domainMapper->Update();
 				actorDomain[i]->SetMapper(domainMapper);
-				qDebug()<<"drawing" <<domainRGB[i][0]<<" "<<domainRGB[i][1]<<" "<<domainRGB[i][2];
+				//qDebug()<<"drawing" <<domainRGB[i][0]<<" "<<domainRGB[i][1]<<" "<<domainRGB[i][2];
 				actorDomain[i]->GetProperty()->SetColor(domainRGB[i][0], domainRGB[i][1], domainRGB[i][2]);
 				actorDomain[i]->GetProperty()->GetColor(R);
 				actorDomain[i]->GetProperty()->SetOpacity(1);
@@ -4386,7 +4401,7 @@ void SimpleView::loadStatus(QFileInfo filedir){
 
 }
 
-void SimpleView::slotLoadStatus(){
+QString SimpleView::slotLoadStatus(){
     QFileDialog filedialog;
     
     filedialog.setFileMode(QFileDialog::AnyFile);
@@ -4397,6 +4412,7 @@ void SimpleView::slotLoadStatus(){
     if (!load.isEmpty()) {
         loadStatus(QFileInfo(load));
     }
+	return load;
 }
 
 void SimpleView::slotBatch3D(){
@@ -4409,7 +4425,7 @@ void SimpleView::slotBatch3D(){
 void SimpleView::on_domainStdAngle_LE_editingFinished() {
 	domainStandardAngle = this->ui->domainStdAngle_LE->text().toDouble();
 	domainStandardAngleRad = domainStandardAngle*piValue / 180;
-	qDebug() << "domain angle:" << domainStandardAngle << domainStandardAngleRad;
+	//qDebug() << "domain angle:" << domainStandardAngle << domainStandardAngleRad;
 }
 
 void SimpleView::on_domainStdValue_LE_editingFinished()

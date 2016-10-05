@@ -24,7 +24,8 @@ batch3D::~batch3D(){
 }
 
 void batch3D::on_loadStatusFile_PB_released(){
-    this->main3D->slotLoadStatus();
+
+    statusFile=this->main3D->slotLoadStatus();
     if (this->main3D->scalar) {
         this->batchui->loadScalar_PB->setEnabled(true);
     }else{
@@ -101,7 +102,7 @@ void batch3D::on_exportDir_PB_released(){
     filedialog.setNameFilter(tr("Export directory (*)"));
     filedialog.setOption(QFileDialog::ReadOnly);
     QString load=filedialog.getExistingDirectory();
-    //    this->batchui->exportDir_LB->setText(QFileInfo(load).baseName());
+    this->batchui->exportDir_LB->setText(QFileInfo(load).baseName());
     if(!load.isEmpty()){
         exportDir=QFileInfo(load).absoluteFilePath();
         outputFlag=true;
@@ -186,11 +187,13 @@ bool batch3D::loopThroughKt(){
             if(this->batchui->loadVector_PB->isEnabled()){
                 fileName=vectorDir+"/"+this->batchui->vectorName_LB->text();
                 vectorData=formDataName(fileName, i);
+				qDebug() << "vectorData" << vectorData;
                 this->main3D->loadData(vectorData);
                 vectorName=exportDir+"/vector/"+this->batchui->vectorName_LB->text();
                 fileName=formName(vectorName,i);
+				hold = this->main3D->vectorColumn;
                 this->main3D->outputVector(fileName, hold, hold+1, hold+2, this->main3D->tempX-1, this->main3D->tempY-1, this->main3D->tempZ-1);
-                qDebug()<<fileName;
+                qDebug()<<fileName<< this->main3D->tempX - 1<< this->main3D->tempY - 1<< this->main3D->tempZ - 1;
                 hold=hold+1;
                 vectorName=fileName+"."+QString::number(hold)+QString::number(hold+1)+QString::number(hold+2)+".vtk";
                 qDebug()<<vectorName;
@@ -208,6 +211,8 @@ bool batch3D::loopThroughKt(){
                 qDebug()<<"filewtf:"<<fileName;
                 qDebug()<<"domainwtf:"<<domainName;
             }
+			this->main3D->loadStatus(QFileInfo(statusFile));
+			this->main3D->slotUpdate();
             fileName=formName(exportDir+"/images/"+this->batchui->outputName_LE->text(), i)+".png";
             this->main3D->outputImage(QFileInfo(fileName).absoluteFilePath());
         }

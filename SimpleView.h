@@ -131,7 +131,7 @@ public:
     void slotSwitch3D();
     void slotSwitch1D();
     void slotOutputStatus();
-    void slotLoadStatus();
+    QString slotLoadStatus();
     void slotBatch3D();
     void setup1DFigure(QCustomPlot *customPlot);
     

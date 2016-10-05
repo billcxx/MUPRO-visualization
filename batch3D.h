@@ -37,7 +37,7 @@ private:
     QString formName(QString fileName,int timeStep);
     QString formDataName(QString fileName,int timeStep);
     void accept();
-    QString exportDir,scalarDir,vectorDir,domainDir;
+    QString exportDir,scalarDir,vectorDir,domainDir,statusFile;
     bool scalarFlag=false,vectorFlag=false,domainFlag=false,startFlag=false,intervalFlag=false,endFlag=false,outputFlag=false;
 };
 
