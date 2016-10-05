@@ -4161,11 +4161,25 @@ qproperty-alignment: AlignCenter;*/
                   <x>210</x>
                   <y>30</y>
                   <width>40</width>
-                  <height>60</height>
+                  <height>31</height>
                  </rect>
                 </property>
                 <property name="text">
                  <string>Set 
+ view</string>
+                </property>
+               </widget>
+               <widget class="QPushButton" name="cameraGet_PB">
+                <property name="geometry">
+                 <rect>
+                  <x>210</x>
+                  <y>60</y>
+                  <width>40</width>
+                  <height>31</height>
+                 </rect>
+                </property>
+                <property name="text">
+                 <string>Get 
  view</string>
                 </property>
                </widget>

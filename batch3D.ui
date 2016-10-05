@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>462</width>
-    <height>391</height>
+    <height>392</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -455,7 +455,7 @@ background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8DAEBE, 
          <string>Set output path</string>
         </property>
        </widget>
-       <widget class="QLabel" name="label_6">
+       <widget class="QLabel" name="exportDir_LB">
         <property name="geometry">
          <rect>
           <x>250</x>

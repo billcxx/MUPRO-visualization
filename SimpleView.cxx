@@ -700,7 +700,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     VTK_CREATE(vtkExtractVOI,readerVector);
     VTK_CREATE(vtkArrowSource,arrowVector);
 	VTK_CREATE(vtkTransform, translateHalf);
-	translateHalf->Translate(0.5, 0, 1);
+	translateHalf->Translate(-0.5, 0, 0);
     VTK_CREATE(vtkMaskPoints,maskVector);
     VTK_CREATE(vtkGlyph3D,glyphVector);
 	glyphVector->SetSourceTransform(translateHalf);
@@ -4063,6 +4063,36 @@ void SimpleView::on_cameraSet_PB_released(){
     camera->SetFocalPoint(focalX, focalY, focalZ);
     camera->SetViewUp(viewX, viewY, viewZ);
     updateCamera(0);
+}
+
+
+void SimpleView::on_cameraGet_PB_released() {
+	double positionX, positionY, positionZ;
+	double focalX, focalY, focalZ;
+	double viewX, viewY, viewZ;
+
+	positionX = camera->GetPosition()[0];
+	positionY = camera->GetPosition()[1];
+	positionZ = camera->GetPosition()[2];
+	focalX = camera->GetFocalPoint()[0];
+	focalY = camera->GetFocalPoint()[1];	
+	focalZ = camera->GetFocalPoint()[2];
+	viewX = camera->GetViewUp()[0];
+	viewY = camera->GetViewUp()[1];
+	viewZ = camera->GetViewUp()[2];
+
+	qDebug() << "position:" << positionX << positionY << positionZ;
+	qDebug() << "position:" << focalX << focalY << focalZ;
+	qDebug() << "position:" << viewX << viewY << viewZ;
+	this->ui->cameraPositionX_LE->setText(QString::number(positionX));
+	this->ui->cameraPositionY_LE->setText(QString::number(positionX));
+	this->ui->cameraPositionZ_LE->setText(QString::number(positionX));
+	this->ui->cameraFocalX_LE->setText(QString::number(focalX));
+	this->ui->cameraFocalY_LE->setText(QString::number(focalY));
+	this->ui->cameraFocalZ_LE->setText(QString::number(focalZ));
+	this->ui->cameraViewUpX_LE->setText(QString::number(positionX));
+	this->ui->cameraViewUpY_LE->setText(QString::number(positionX));
+	this->ui->cameraViewUpZ_LE->setText(QString::number(positionX));
 }
 
 void SimpleView::outputStatus(QFileInfo filedir){

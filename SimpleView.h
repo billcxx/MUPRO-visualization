@@ -173,6 +173,7 @@ public:
     void on_isosurface_LW_itemChanged(QListWidgetItem *item);
     void on_vectorGlyph_CB_stateChanged(int state);
     void on_cameraSet_PB_released();
+	void on_cameraGet_PB_released();
     void outputStatus(QFileInfo filedir);
     void loadStatus(QFileInfo filedir);
     void outputImage(QString load);
