@@ -212,7 +212,8 @@ bool batch3D::loopThroughKt(){
                 qDebug()<<"domainwtf:"<<domainName;
             }
 			this->main3D->loadStatus(QFileInfo(statusFile));
-			this->main3D->slotUpdate();
+			//this->main3D->slotUpdate();
+			this->main3D->on_cameraSet_PB_released();
             fileName=formName(exportDir+"/images/"+this->batchui->outputName_LE->text(), i)+".png";
             this->main3D->outputImage(QFileInfo(fileName).absoluteFilePath());
         }

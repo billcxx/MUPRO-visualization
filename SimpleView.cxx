@@ -423,37 +423,37 @@ void SimpleView::setup1DFigure(QCustomPlot *customPlot){
     }
     if (!this->ui->plot1DRangeMinX1_LE->text().isEmpty()) {
         qDebug()<<this->ui->plot1DRangeMinX1_LE->text();
-        qDebug()<<isnan(this->ui->plot1DRangeMinX1_LE->text().toDouble());
-        if (!isnan(this->ui->plot1DRangeMinX1_LE->text().toDouble())) {
+        qDebug()<<std::isnan(this->ui->plot1DRangeMinX1_LE->text().toDouble());
+        if (!std::isnan(this->ui->plot1DRangeMinX1_LE->text().toDouble())) {
             xmin1D1=this->ui->plot1DRangeMinX1_LE->text().toDouble();
         }
     }
     if (!this->ui->plot1DRangeMaxX1_LE->text().isEmpty()) {
-        if (!isnan(this->ui->plot1DRangeMaxX1_LE->text().toDouble())) {
+        if (!std::isnan(this->ui->plot1DRangeMaxX1_LE->text().toDouble())) {
             xmax1D1=this->ui->plot1DRangeMaxX1_LE->text().toDouble();
         }
     }
     if (!this->ui->plot1DRangeMinY1_LE->text().isEmpty()) {
-        if (!isnan(this->ui->plot1DRangeMinY1_LE->text().toDouble())) {
+        if (!std::isnan(this->ui->plot1DRangeMinY1_LE->text().toDouble())) {
             ymin1D1=this->ui->plot1DRangeMinY1_LE->text().toDouble();
         }
     }
     if (!this->ui->plot1DRangeMaxY1_LE->text().isEmpty()) {
-        if (!isnan(this->ui->plot1DRangeMaxY1_LE->text().toDouble())) {
+        if (!std::isnan(this->ui->plot1DRangeMaxY1_LE->text().toDouble())) {
             ymax1D1=this->ui->plot1DRangeMaxY1_LE->text().toDouble();
         }
     }
     
-    if(isnan(xmin1D1)){
+    if(std::isnan(xmin1D1)){
         xmin1D1=0;
     }
-    if(isnan(xmax1D1)){
+    if(std::isnan(xmax1D1)){
         xmax1D1=1;
     }
-    if(isnan(ymin1D1)){
+    if(std::isnan(ymin1D1)){
         ymin1D1=0;
     }
-    if(isnan(ymax1D1)){
+    if(std::isnan(ymax1D1)){
         ymax1D1=1;
     }
 
@@ -484,36 +484,36 @@ void SimpleView::setup1DFigure(QCustomPlot *customPlot){
     }
     
     if (!this->ui->plot1DRangeMinX2_LE->text().isEmpty()) {
-        if (!isnan(this->ui->plot1DRangeMinX2_LE->text().toDouble())) {
+        if (!std::isnan(this->ui->plot1DRangeMinX2_LE->text().toDouble())) {
             xmin1D2=this->ui->plot1DRangeMinX2_LE->text().toDouble();
         }
     }
     if (!this->ui->plot1DRangeMaxX2_LE->text().isEmpty()) {
-        if (!isnan(this->ui->plot1DRangeMaxX2_LE->text().toDouble())) {
+        if (!std::isnan(this->ui->plot1DRangeMaxX2_LE->text().toDouble())) {
             xmax1D2=this->ui->plot1DRangeMaxX2_LE->text().toDouble();
         }
     }
     if (!this->ui->plot1DRangeMinY2_LE->text().isEmpty()) {
-        if (!isnan(this->ui->plot1DRangeMinY2_LE->text().toDouble())) {
+        if (!std::isnan(this->ui->plot1DRangeMinY2_LE->text().toDouble())) {
             ymin1D2=this->ui->plot1DRangeMinY2_LE->text().toDouble();
         }
     }
     if (!this->ui->plot1DRangeMaxY2_LE->text().isEmpty()) {
-        if (!isnan(this->ui->plot1DRangeMaxY2_LE->text().toDouble())) {
+        if (!std::isnan(this->ui->plot1DRangeMaxY2_LE->text().toDouble())) {
             ymax1D2=this->ui->plot1DRangeMaxY2_LE->text().toDouble();
         }
     }
     
-    if(isnan(xmin1D2)){
+    if(std::isnan(xmin1D2)){
         xmin1D2=0;
     }
-    if(isnan(xmax1D2)){
+    if(std::isnan(xmax1D2)){
         xmax1D2=1;
     }
-    if(isnan(ymin1D2)){
+    if(std::isnan(ymin1D2)){
         ymin1D2=0;
     }
-    if(isnan(ymax1D2)){
+    if(std::isnan(ymax1D2)){
         ymax1D2=1;
     }
 
@@ -625,7 +625,7 @@ void SimpleView::setup1DFigure(QCustomPlot *customPlot){
 
 
 void SimpleView::slotUpdate(){
-	updateFlag = true;
+	
     qDebug()<<"Slot update"<<scalarName.c_str()<<vectorName.c_str();
     if(this->ui->stackedWidget->currentIndex()==0){
         updateVTK(scalarName,vectorName);
@@ -633,6 +633,7 @@ void SimpleView::slotUpdate(){
     }else if(this->ui->stackedWidget->currentIndex()==1){
         setup1DFigure(this->ui->customPlot);
     }
+	updateFlag = true;
 }
 void SimpleView::slotClear(){
 //    this->ui->qvtkWidget->GetRenderWindow()->GetRenderers()->GetFirstRenderer()->GetActors()->InitTraversal();
@@ -664,24 +665,29 @@ void SimpleView::slotClear(){
     }
 }
 
-void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
+void SimpleView::updateVTK(std::string scalarname, std::string vectorname){
     // Qt Table View
     
     // Place the table view in the designer form
     // this->ui->container->layout()->addWidget(this->TableView->GetWidget());
     
     //Define the reader
-    const char* fileNameScalar=scalarName.c_str();
-    const char* fileNameVector=vectorName.c_str();
+    const char* fileNameScalar=scalarname.c_str();
+    const char* fileNameVector=vectorname.c_str();
     //  int extent[6];
     double scalar_range[2];
     double vector_range[2];
     double valueRange[2];
     //  double sumValue;
     double vmin,vmax;
-    std::ifstream scalarFile(scalarName);
-    std::ifstream vectorFile(vectorName);
-    
+    std::ifstream scalarFile(scalarname);
+	if (scalarFile) {
+		scalarName = scalarname;
+	}
+    std::ifstream vectorFile(vectorname);
+	if (vectorFile) {
+		vectorName = vectorname;
+	}
     
     VTK_CREATE(vtkRenderer,renderer);
     
@@ -810,8 +816,10 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         //        }
         
         if (this->ui->scalarRange_CB->checkState()){
-            vmin=this->ui->scalarValueMin_LE->text().toDouble();
-            vmax=this->ui->scalarValueMax_LE->text().toDouble();
+			scalar_range[0] =this->ui->scalarValueMin_LE->text().toDouble();
+			scalar_range[1] =this->ui->scalarValueMax_LE->text().toDouble();
+			vmin = scalar_range[0];
+			vmax = scalar_range[1];
             range->InsertNextValue(vmin);
             range->InsertNextValue(vmax);
             thresholdScalar->SetInputConnection(readerScalar->GetOutputPort());
@@ -832,7 +840,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
             VTK_CREATE(vtkSmartVolumeMapper,mapperScalar);
 //            VTK_CREATE(vtkVolumeMapper,mapperScalar)
             mapperScalar->SetInputConnection(0,readerScalar->GetOutputPort(0));
-			mapperScalar->SetRequestedRenderModeToRayCast();
+//			mapperScalar->SetRequestedRenderModeToRayCast();
             // mapperScalar->SetLookupTable(tableScalar);
             actorScalar->SetMapper(mapperScalar);
         }
@@ -898,6 +906,8 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     }
     
     if (vectorFile && this->ui->vector_CB->isChecked()){
+		qDebug() << "vectorname:" << QString::fromStdString(vectorname);
+
         //Then is the vector part
 		if (!updateFlag)
 		{
@@ -936,8 +946,7 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         
         //arrowVector->UpdateWholeExtent();
         
-        vector_range[0]=this->ui->vectorValueMin_LE->text().toDouble();
-        vector_range[1]=this->ui->vectorValueMax_LE->text().toDouble();
+
         maskVector->SetInputConnection(readerVector->GetOutputPort());
         if (this->ui->vectorMaskNum_LE->text().isEmpty()) {
             this->ui->vectorMaskNum_LE->setText(tr("5000"));
@@ -949,6 +958,8 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
         maskVector->SetRandomMode(1);
         maskVector->Update();
         if (this->ui->vectorRange_CB->isChecked()) {
+			vector_range[0] = this->ui->vectorValueMin_LE->text().toDouble();
+			vector_range[1] = this->ui->vectorValueMax_LE->text().toDouble();
             thresholdVector->SetInputConnection(maskVector->GetOutputPort());
 			//thresholdVector->SetInputArrayToProcess(1,0,0,0,"vector");
             thresholdVector->ThresholdBetween(vector_range[0],vector_range[1]);
@@ -1343,11 +1354,9 @@ void SimpleView::updateVTK(std::string scalarName, std::string vectorName){
     
     if(reset){
         updateCamera(-1);
+		reset = false;
     }else{
         updateCamera(0);
-    }
-    if (!vectorFile && !scalarFile) {
-        reset=true;
     }
     
 }
@@ -2143,6 +2152,7 @@ void SimpleView::on_vectorChoice_currentIndexChanged(int index){
 //    if(index!=this->ui->vectorChoice->currentIndex()){
         vectorName=(vectorDir.absoluteFilePath().toStdString()+"."+std::to_string(3*index+1)+std::to_string(3*index+2)+std::to_string(3*index+3)+".vtk").c_str();
         qDebug()<<"vectorname:"<<QString::fromStdString(vectorName);
+		updateFlag = false;
         //updateVTK(scalarName,vectorName);
 //    }
 }
@@ -3104,7 +3114,7 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
 }
 
 int SimpleView::domainType(double px,double py, double pz){
-    double angle=0,hold= piValue,length=0;
+    double angle=0,hold=piValue,length=0,cosValue;
     bool isDomain=false,isR=false,isO=false,isT=false;
     int returnValue=-1;
     int isROT;
@@ -3115,13 +3125,22 @@ int SimpleView::domainType(double px,double py, double pz){
 		isDomain = true;
 		for (int i = 1; i < 27; i++)
 		{
-			angle = std::acos((px*domainOrth[i][0] + py*domainOrth[i][1] + pz*domainOrth[i][2])/length);
-			
+			cosValue = (px*domainOrth[i][0] + py*domainOrth[i][1] + pz*domainOrth[i][2]) / length;
+			if (cosValue > 1)
+			{
+				angle = 0;
+			}
+			else if(cosValue<-1){
+				angle = piValue;
+			}
+			else {
+				angle = std::acos(cosValue);
+			}
+			//qDebug() << "angle:" << i << (px*domainOrth[i][0] + py*domainOrth[i][1] + pz*domainOrth[i][2]) / length  << angle << domainStandardAngleRad << domainOrth[i][0] << domainOrth[i][1] << domainOrth[i][2] << px << py << pz << returnValue;
 			if (angle < domainStandardAngleRad && angle < hold)
 			{
 				hold = angle;
 				returnValue=i;
-				//qDebug() << "angle:" << i << angle << domainStandardAngleRad << domainOrth[i][0] << domainOrth[i][1] << domainOrth[i][2] << px << py << pz << returnValue;
 			}
 			//
 		}
@@ -3208,13 +3227,16 @@ void SimpleView::slotOpenFile_domain(){
 }
 
 
-void SimpleView::drawDomain(std::string domainName){
-    const char* fileNameDomain=domainName.c_str();
+void SimpleView::drawDomain(std::string domainname){
+    const char* fileNameDomain=domainname.c_str();
     //  int extent[6];
 //    double domain_range[2];
     //  double sumValue;
     //  double vmin,vmax;
-    std::ifstream domainFile(domainName);
+    std::ifstream domainFile(domainname);
+	if (domainFile) {
+		domainName = domainname;
+	}
     
     qDebug()<<"before color";
     
@@ -3389,6 +3411,7 @@ void SimpleView::drawDomain(std::string domainName){
 
 		if (reset) {
 			updateCamera(-1);
+			reset = false;
 		}
 		else {
 			updateCamera(0);
@@ -3490,7 +3513,12 @@ void SimpleView::saveImage(){
 void SimpleView::outputImage(QString load){
     VTK_CREATE(vtkWindowToImageFilter, windowToImage);
     windowToImage->SetInput(this->ui->qvtkWidget->GetRenderWindow());
-    windowToImage->SetMagnification(1);
+	int magnify = 1;
+	if (!this->ui->exportRatio->text().isNull())
+	{
+		magnify = this->ui->exportRatio->text().toInt();
+	}
+    windowToImage->SetMagnification(magnify);
     windowToImage->SetInputBufferTypeToRGBA();
     windowToImage->FixBoundaryOff();
     windowToImage->ReadFrontBufferOn();
@@ -3538,7 +3566,7 @@ void SimpleView::updateCamera(int choice){
             camera->SetFocalPoint(xmax/2.0, ymax/2.0, zmax/2.0);
             camera->SetViewUp(0, 0, 1);
             break;
-        case 0:
+		case 0:
             break;
         case 1:
             camera->SetPosition(-3*xmax-ymax*2-zmax*2, ymax/2, zmax/2);
@@ -4050,6 +4078,7 @@ void SimpleView::on_cameraSet_PB_released(){
     double positionX,positionY,positionZ;
     double focalX,focalY,focalZ;
     double viewX,viewY,viewZ;
+	int sizeX, sizeY,newX,newY;
     positionX=this->ui->cameraPositionX_LE->text().toDouble();
     positionY=this->ui->cameraPositionY_LE->text().toDouble();
     positionZ=this->ui->cameraPositionZ_LE->text().toDouble();
@@ -4062,6 +4091,23 @@ void SimpleView::on_cameraSet_PB_released(){
     camera->SetPosition(positionX, positionY, positionZ);
     camera->SetFocalPoint(focalX, focalY, focalZ);
     camera->SetViewUp(viewX, viewY, viewZ);
+	sizeX = this->ui->viewportSizeX->text().toInt();
+	sizeY = this->ui->viewportSizeY->text().toInt();
+	
+	QList<int> splitterSize;
+	splitterSize.append(this->ui->inputTab->width());
+	splitterSize.append(sizeX);
+	splitterSize.append(this->ui->toolBox->width());
+	
+	//this->ui->page_6->updateGeometry();
+	newX = this->width() - this->ui->qvtkWidget->width() + sizeX;
+	newY = this->height() - this->ui->qvtkWidget->height() + sizeY;
+	qDebug() << this->width() << this->ui->qvtkWidget->width()<< newX;
+	qDebug()<< this->height() << this->ui->qvtkWidget->width() << newY;
+	this->resize(newX,newY);
+	this->ui->qvtkWidget->resize(sizeX, sizeY);
+	//this->ui->splitter_2->setSizes(splitterSize);
+	//	this->ui->qvtkWidget->updateGeometry();
     updateCamera(0);
 }
 
@@ -4081,18 +4127,18 @@ void SimpleView::on_cameraGet_PB_released() {
 	viewY = camera->GetViewUp()[1];
 	viewZ = camera->GetViewUp()[2];
 
-	qDebug() << "position:" << positionX << positionY << positionZ;
-	qDebug() << "position:" << focalX << focalY << focalZ;
-	qDebug() << "position:" << viewX << viewY << viewZ;
+	//qDebug() << "position:" << positionX << positionY << positionZ;
+	//qDebug() << "position:" << focalX << focalY << focalZ;
+	//qDebug() << "position:" << viewX << viewY << viewZ;
 	this->ui->cameraPositionX_LE->setText(QString::number(positionX));
-	this->ui->cameraPositionY_LE->setText(QString::number(positionX));
-	this->ui->cameraPositionZ_LE->setText(QString::number(positionX));
+	this->ui->cameraPositionY_LE->setText(QString::number(positionY));
+	this->ui->cameraPositionZ_LE->setText(QString::number(positionZ));
 	this->ui->cameraFocalX_LE->setText(QString::number(focalX));
 	this->ui->cameraFocalY_LE->setText(QString::number(focalY));
 	this->ui->cameraFocalZ_LE->setText(QString::number(focalZ));
-	this->ui->cameraViewUpX_LE->setText(QString::number(positionX));
-	this->ui->cameraViewUpY_LE->setText(QString::number(positionX));
-	this->ui->cameraViewUpZ_LE->setText(QString::number(positionX));
+	this->ui->cameraViewUpX_LE->setText(QString::number(viewX));
+	this->ui->cameraViewUpY_LE->setText(QString::number(viewY));
+	this->ui->cameraViewUpZ_LE->setText(QString::number(viewZ));
 }
 
 void SimpleView::outputStatus(QFileInfo filedir){
@@ -4108,7 +4154,7 @@ void SimpleView::outputStatus(QFileInfo filedir){
     output << this->ui->cameraPositionX_LE->text().toDouble() << " " << this->ui->cameraPositionY_LE->text().toDouble() << " " << this->ui->cameraPositionZ_LE->text().toDouble() << endl;
     output << this->ui->cameraFocalX_LE->text().toDouble() << " " << this->ui->cameraFocalY_LE->text().toDouble() << " " << this->ui->cameraFocalZ_LE->text().toDouble() << endl;
     output << this->ui->cameraViewUpX_LE->text().toDouble()<< " " << this->ui->cameraViewUpY_LE->text().toDouble()<< " " << this->ui->cameraViewUpZ_LE->text().toDouble()<< endl;
-
+	output << this->ui->viewportSizeX->text().toDouble() << " " << this->ui->viewportSizeY->text().toDouble() << " " << this->ui->exportRatio->text().toDouble() << endl;
     
     output << this->ui->RGB_Combo->currentIndex() << endl;
     output << this->ui->RGBScalar_Table->rowCount() <<endl;
@@ -4130,7 +4176,8 @@ void SimpleView::outputStatus(QFileInfo filedir){
 	output << this->ui->RGBDomain_Table->rowCount() << endl;
 	for (int i = 0; i < this->ui->RGBDomain_Table->rowCount(); i++)
 	{
-		output << this->ui->RGBDomain_Table->item(i, 0)->text().toDouble() << " " << this->ui->RGBDomain_Table->item(i, 1)->text().toInt() << " " << this->ui->RGBDomain_Table->item(i, 2)->text().toInt() << " " << this->ui->RGBDomain_Table->item(i, 3)->text().toInt() << endl;
+		
+		output << this->ui->RGBDomain_Combo->findText(this->ui->RGBDomain_Table->item(i, 0)->text()) << " " << this->ui->RGBDomain_Table->item(i, 1)->text().toInt() << " " << this->ui->RGBDomain_Table->item(i, 2)->text().toInt() << " " << this->ui->RGBDomain_Table->item(i, 3)->text().toInt() << endl;
 	}
     //output for the scalar alpha table
     output << this->ui->alpha_Combo->currentIndex()<<endl;
@@ -4142,7 +4189,7 @@ void SimpleView::outputStatus(QFileInfo filedir){
 	output << this->ui->alphaDomain_Table->rowCount() << endl;
 	for (int i = 0; i < this->ui->alphaDomain_Table->rowCount(); i++)
 	{
-		output << this->ui->alphaDomain_Table->item(i, 0)->text().toStdString() << " " << this->ui->alphaDomain_Table->item(i, 1)->text().toDouble() << endl;
+		output << this->ui->domainAlpha_Combo->findText(this->ui->alphaDomain_Table->item(i, 0)->text()) << " " << this->ui->alphaDomain_Table->item(i, 1)->text().toDouble() << endl;
 	}
     
     //output for the scalar tab
@@ -4254,7 +4301,12 @@ void SimpleView::loadStatus(QFileInfo filedir){
     this->ui->cameraViewUpX_LE->setText(QString::fromStdString(x));
     this->ui->cameraViewUpY_LE->setText(QString::fromStdString(y));
     this->ui->cameraViewUpZ_LE->setText(QString::fromStdString(z));
-    
+
+	input >> x >> y >> delta;
+	this->ui->viewportSizeX->setText(QString::fromStdString(x));
+	this->ui->viewportSizeY->setText(QString::fromStdString(y));
+	this->ui->exportRatio->setText(QString::fromStdString(delta));
+
     input >> count;
     this->ui->RGB_Combo->setCurrentIndex(count);
     input >> count;
@@ -4307,7 +4359,7 @@ void SimpleView::loadStatus(QFileInfo filedir){
 	for (int i = 0; i<count; i++) {
 		input >> value >> r >> g >> b;
 		this->ui->RGBDomain_Table->insertRow(i);
-		this->ui->RGBDomain_Table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(value)));
+		this->ui->RGBDomain_Table->setItem(i, 0, new QTableWidgetItem(this->ui->RGBDomain_Combo->itemText(QString::fromStdString(value).toInt())));
 		this->ui->RGBDomain_Table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(r)));
 		this->ui->RGBDomain_Table->setItem(i, 2, new QTableWidgetItem(QString::fromStdString(g)));
 		this->ui->RGBDomain_Table->setItem(i, 3, new QTableWidgetItem(QString::fromStdString(b)));
@@ -4333,7 +4385,7 @@ void SimpleView::loadStatus(QFileInfo filedir){
 	for (int i = 0; i<count; i++) {
 		input >> value >> a;
 		this->ui->alphaDomain_Table->insertRow(i);
-		this->ui->alphaDomain_Table->setItem(i, 0, new QTableWidgetItem(QString::fromStdString(value)));
+		this->ui->alphaDomain_Table->setItem(i, 0, new QTableWidgetItem(this->ui->domainAlpha_Combo->itemText(QString::fromStdString(value).toInt())));
 		this->ui->alphaDomain_Table->setItem(i, 1, new QTableWidgetItem(QString::fromStdString(a)));
 	}
     

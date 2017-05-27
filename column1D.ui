@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>270</width>
-    <height>710</height>
+    <width>280</width>
+    <height>320</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -163,161 +163,325 @@ background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8DAEBE, 
     <number>0</number>
    </property>
    <item row="0" column="0">
-    <widget class="QWidget" name="widget_2" native="true">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+    <widget class="QToolBox" name="toolBox">
      <property name="minimumSize">
       <size>
-       <width>270</width>
-       <height>710</height>
+       <width>280</width>
+       <height>320</height>
       </size>
      </property>
      <property name="maximumSize">
       <size>
-       <width>270</width>
+       <width>480</width>
        <height>16777215</height>
       </size>
      </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <property name="leftMargin">
-       <number>0</number>
+     <property name="currentIndex">
+      <number>0</number>
+     </property>
+     <widget class="QWidget" name="page">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>280</width>
+        <height>176</height>
+       </rect>
       </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
-      <property name="spacing">
-       <number>0</number>
-      </property>
-      <item row="0" column="0">
-       <widget class="QWidget" name="widget" native="true">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>130</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>160</height>
-         </size>
-        </property>
-        <widget class="QComboBox" name="plot1DFileX_Combo">
-         <property name="geometry">
-          <rect>
-           <x>180</x>
-           <y>30</y>
-           <width>71</width>
-           <height>30</height>
-          </rect>
+      <attribute name="label">
+       <string>Data</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QWidget" name="widget" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
-         <property name="editable">
-          <bool>false</bool>
+         <property name="minimumSize">
+          <size>
+           <width>230</width>
+           <height>130</height>
+          </size>
          </property>
-        </widget>
-        <widget class="QLabel" name="filterY_LB">
-         <property name="geometry">
-          <rect>
-           <x>100</x>
-           <y>70</y>
-           <width>81</width>
-           <height>50</height>
-          </rect>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>160</height>
+          </size>
          </property>
-         <property name="text">
-          <string>Vertical:</string>
-         </property>
-        </widget>
-        <widget class="QLabel" name="filterX_LB">
-         <property name="geometry">
-          <rect>
-           <x>100</x>
-           <y>30</y>
-           <width>81</width>
-           <height>30</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Horizontal:</string>
-         </property>
-        </widget>
-        <widget class="QListWidget" name="plot1DFileY_LW">
-         <property name="geometry">
-          <rect>
-           <x>180</x>
-           <y>70</y>
-           <width>71</width>
-           <height>50</height>
-          </rect>
-         </property>
-        </widget>
-        <widget class="QLabel" name="label_4">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>10</y>
-           <width>121</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Data to plot</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="load1DFile_PB">
-         <property name="geometry">
-          <rect>
-           <x>30</x>
-           <y>30</y>
-           <width>51</width>
-           <height>90</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Load 
+         <layout class="QVBoxLayout" name="verticalLayout">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="label_4">
+            <property name="minimumSize">
+             <size>
+              <width>100</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Data to plot</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>230</width>
+              <height>80</height>
+             </size>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QPushButton" name="load1DFile_PB">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>50</width>
+                 <height>80</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>150</width>
+                 <height>300</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Load 
 File</string>
-         </property>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QWidget" name="widget" native="true">
+               <property name="minimumSize">
+                <size>
+                 <width>180</width>
+                 <height>80</height>
+                </size>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_2">
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="filterX_LB">
+                  <property name="minimumSize">
+                   <size>
+                    <width>80</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Horizontal:</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QComboBox" name="plot1DFileX_Combo">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>60</height>
+                   </size>
+                  </property>
+                  <property name="editable">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="filterY_LB">
+                  <property name="minimumSize">
+                   <size>
+                    <width>80</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>240</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>Vertical:</string>
+                  </property>
+                  <property name="alignment">
+                   <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QListWidget" name="plot1DFileY_LW">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>240</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
         </widget>
-       </widget>
-      </item>
-      <item row="6" column="0">
-       <widget class="QWidget" name="widget_9" native="true">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>160</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>190</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLineEdit{
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_2">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>280</width>
+        <height>176</height>
+       </rect>
+      </property>
+      <attribute name="label">
+       <string>Page</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_8">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QWidget" name="widget_9" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>160</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>190</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">QLineEdit{
 	min-height:30px;
 	min-width:40px;
 	border:0px solid;
@@ -326,759 +490,955 @@ File</string>
 .QWidget{
 	border-top:1px solid rgb(179, 179, 179);
 }</string>
-        </property>
-        <widget class="QPushButton" name="plot1DRemoveRelationFile_PB">
-         <property name="geometry">
-          <rect>
-           <x>220</x>
-           <y>30</y>
-           <width>30</width>
-           <height>30</height>
-          </rect>
          </property>
-         <property name="maximumSize">
-          <size>
-           <width>70</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>-</string>
-         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QLabel" name="filterName_LB">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>50</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <weight>75</weight>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Filters:</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget_2" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>240</width>
+              <height>40</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>60</height>
+             </size>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QComboBox" name="plot1DColFile_Combo">
+               <property name="minimumSize">
+                <size>
+                 <width>60</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>60</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="plot1DRelationFile_Combo">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>60</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <item>
+                <property name="text">
+                 <string>=</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>&gt;</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>&gt;=</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>&lt;</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>&lt;=</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLineEdit" name="plot1DRelationValueFile_LE">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>40</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background: rgb(255, 213, 205)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="plot1DAddRelationFile_PB">
+               <property name="minimumSize">
+                <size>
+                 <width>40</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>60</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>+</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="plot1DRemoveRelationFile_PB">
+               <property name="minimumSize">
+                <size>
+                 <width>40</width>
+                 <height>40</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>60</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>-</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="plot1DRelationFile_Table">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>1000</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <attribute name="horizontalHeaderDefaultSectionSize">
+             <number>80</number>
+            </attribute>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>true</bool>
+            </attribute>
+            <attribute name="verticalHeaderDefaultSectionSize">
+             <number>25</number>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Column</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Relation</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Value</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
         </widget>
-        <widget class="QLineEdit" name="plot1DRelationValueFile_LE">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="geometry">
-          <rect>
-           <x>130</x>
-           <y>30</y>
-           <width>60</width>
-           <height>30</height>
-          </rect>
-         </property>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_3">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>280</width>
+        <height>176</height>
+       </rect>
+      </property>
+      <attribute name="label">
+       <string>Line style</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QWidget" name="widget_15" native="true">
          <property name="minimumSize">
           <size>
-           <width>40</width>
-           <height>30</height>
+           <width>280</width>
+           <height>170</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>1000</width>
-           <height>16777215</height>
+           <width>16777215</width>
+           <height>500</height>
           </size>
          </property>
          <property name="styleSheet">
-          <string notr="true">background: rgb(255, 213, 205)</string>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="plot1DAddRelationFile_PB">
-         <property name="geometry">
-          <rect>
-           <x>190</x>
-           <y>30</y>
-           <width>30</width>
-           <height>30</height>
-          </rect>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>70</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>+</string>
-         </property>
-        </widget>
-        <widget class="QComboBox" name="plot1DColFile_Combo">
-         <property name="geometry">
-          <rect>
-           <x>30</x>
-           <y>30</y>
-           <width>51</width>
-           <height>30</height>
-          </rect>
-         </property>
-        </widget>
-        <widget class="QComboBox" name="plot1DRelationFile_Combo">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="geometry">
-          <rect>
-           <x>80</x>
-           <y>30</y>
-           <width>51</width>
-           <height>30</height>
-          </rect>
-         </property>
-         <item>
-          <property name="text">
-           <string>=</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>&gt;</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>&gt;=</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>&lt;</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>&lt;=</string>
-          </property>
-         </item>
-        </widget>
-        <widget class="QTableWidget" name="plot1DRelationFile_Table">
-         <property name="enabled">
-          <bool>false</bool>
-         </property>
-         <property name="geometry">
-          <rect>
-           <x>30</x>
-           <y>60</y>
-           <width>221</width>
-           <height>90</height>
-          </rect>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>1000</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <attribute name="horizontalHeaderDefaultSectionSize">
-          <number>80</number>
-         </attribute>
-         <attribute name="horizontalHeaderStretchLastSection">
-          <bool>true</bool>
-         </attribute>
-         <attribute name="verticalHeaderDefaultSectionSize">
-          <number>25</number>
-         </attribute>
-         <column>
-          <property name="text">
-           <string>Column</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Relation</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Value</string>
-          </property>
-         </column>
-        </widget>
-        <widget class="QLabel" name="filterName_LB">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>10</y>
-           <width>111</width>
-           <height>20</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Filters:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </widget>
-      </item>
-      <item row="9" column="0">
-       <widget class="QWidget" name="widget_15" native="true">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>200</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>230</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">.QWidget{
+          <string notr="true">.QWidget{
 	border-top:1px solid rgb(179, 179, 179);
 }</string>
-        </property>
-        <widget class="QLabel" name="label_63">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>10</y>
-           <width>111</width>
-           <height>21</height>
-          </rect>
          </property>
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Line style</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-        <widget class="QComboBox" name="plot1DScatterStyle_Combo">
-         <property name="geometry">
-          <rect>
-           <x>90</x>
-           <y>40</y>
-           <width>100</width>
-           <height>30</height>
-          </rect>
-         </property>
-         <item>
-          <property name="text">
-           <string>No symbol</string>
+         <layout class="QVBoxLayout" name="verticalLayout_4">
+          <property name="spacing">
+           <number>0</number>
           </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Dot</string>
+          <property name="leftMargin">
+           <number>0</number>
           </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Cross</string>
+          <property name="topMargin">
+           <number>0</number>
           </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Plus</string>
+          <property name="rightMargin">
+           <number>0</number>
           </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Circle</string>
+          <property name="bottomMargin">
+           <number>0</number>
           </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Filled circle</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Square</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Diamond</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Star</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Triangle, upwards</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Triangle, downwards</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Square with cross</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Square with plus</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Circle with cross</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Circle with plus</string>
-          </property>
-         </item>
-        </widget>
-        <widget class="QListWidget" name="plot1DLines_LW">
-         <property name="geometry">
-          <rect>
-           <x>30</x>
-           <y>40</y>
-           <width>60</width>
-           <height>60</height>
-          </rect>
-         </property>
-        </widget>
-        <widget class="QLineEdit" name="plot1DLineRGBG_LE">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="geometry">
-          <rect>
-           <x>170</x>
-           <y>110</y>
-           <width>40</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>40</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background:rgb(196, 255, 195);</string>
-         </property>
-        </widget>
-        <widget class="QLineEdit" name="plot1DLineRGBB_LE">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="geometry">
-          <rect>
-           <x>210</x>
-           <y>110</y>
-           <width>40</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>40</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background: rgb(185, 205, 255);</string>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-        <widget class="QLineEdit" name="plot1DLineRGBR_LE">
-         <property name="enabled">
-          <bool>true</bool>
-         </property>
-         <property name="geometry">
-          <rect>
-           <x>130</x>
-           <y>110</y>
-           <width>40</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>40</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">background: rgb(255, 213, 205)</string>
-         </property>
-        </widget>
-        <widget class="QComboBox" name="plot1DLineStyle_Combo">
-         <property name="geometry">
-          <rect>
-           <x>90</x>
-           <y>70</y>
-           <width>100</width>
-           <height>30</height>
-          </rect>
-         </property>
-         <item>
-          <property name="text">
-           <string>Solid line</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Dash line</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Dot line</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Dash dot line</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>Dash dot dot line</string>
-          </property>
-         </item>
-        </widget>
-        <widget class="QLineEdit" name="plot1DLineWeight_LE">
-         <property name="geometry">
-          <rect>
-           <x>130</x>
-           <y>140</y>
-           <width>40</width>
-           <height>21</height>
-          </rect>
-         </property>
-        </widget>
-        <widget class="QPushButton" name="plot1DSetLine_PB">
-         <property name="geometry">
-          <rect>
-           <x>190</x>
-           <y>40</y>
-           <width>61</width>
-           <height>61</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Set
+          <item>
+           <widget class="QWidget" name="widget" native="true">
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>160</height>
+             </size>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_3">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <item row="0" column="0" rowspan="2">
+              <widget class="QListWidget" name="plot1DLines_LW">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>60</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>160</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QComboBox" name="plot1DScatterStyle_Combo">
+               <property name="minimumSize">
+                <size>
+                 <width>120</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>80</height>
+                </size>
+               </property>
+               <item>
+                <property name="text">
+                 <string>No symbol</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Dot</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Cross</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Plus</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Circle</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Filled circle</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Square</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Diamond</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Star</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Triangle, upwards</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Triangle, downwards</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Square with cross</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Square with plus</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Circle with cross</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Circle with plus</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+             <item row="0" column="2" rowspan="2">
+              <widget class="QPushButton" name="plot1DSetLine_PB">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>60</width>
+                 <height>60</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>160</width>
+                 <height>160</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Set
  line</string>
-         </property>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QComboBox" name="plot1DLineStyle_Combo">
+               <property name="minimumSize">
+                <size>
+                 <width>120</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>80</height>
+                </size>
+               </property>
+               <item>
+                <property name="text">
+                 <string>Solid line</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Dash line</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Dot line</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Dash dot line</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Dash dot dot line</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QWidget" name="widget" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>270</width>
+              <height>90</height>
+             </size>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_4">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="label_3">
+               <property name="minimumSize">
+                <size>
+                 <width>120</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>150</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Line color(RGB):</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLineEdit" name="plot1DLineRGBR_LE">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>50</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background: rgb(255, 213, 205)</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="2">
+              <widget class="QLineEdit" name="plot1DLineRGBG_LE">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>50</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background:rgb(196, 255, 195);</string>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="3">
+              <widget class="QLineEdit" name="plot1DLineRGBB_LE">
+               <property name="enabled">
+                <bool>true</bool>
+               </property>
+               <property name="minimumSize">
+                <size>
+                 <width>50</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background: rgb(185, 205, 255);</string>
+               </property>
+               <property name="text">
+                <string/>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="label_2">
+               <property name="minimumSize">
+                <size>
+                 <width>120</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Line width:</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLineEdit" name="plot1DLineWeight_LE">
+               <property name="minimumSize">
+                <size>
+                 <width>50</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>80</width>
+                 <height>50</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label">
+               <property name="minimumSize">
+                <size>
+                 <width>120</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>Line name:</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1" colspan="2">
+              <widget class="QLineEdit" name="plot1DLineName_LE">
+               <property name="minimumSize">
+                <size>
+                 <width>100</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>150</width>
+                 <height>50</height>
+                </size>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+         </layout>
         </widget>
-        <widget class="QLabel" name="label">
-         <property name="geometry">
-          <rect>
-           <x>30</x>
-           <y>170</y>
-           <width>81</width>
-           <height>21</height>
-          </rect>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="page_4">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>280</width>
+        <height>176</height>
+       </rect>
+      </property>
+      <attribute name="label">
+       <string>File info</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_7">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
+       </property>
+       <property name="spacing">
+        <number>0</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="QWidget" name="widget_10" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>170</height>
+          </size>
          </property>
-         <property name="text">
-          <string>Line name:</string>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>10000</height>
+          </size>
          </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-        <widget class="QLabel" name="label_2">
-         <property name="geometry">
-          <rect>
-           <x>30</x>
-           <y>140</y>
-           <width>71</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Line width:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-        <widget class="QLineEdit" name="plot1DLineName_LE">
-         <property name="geometry">
-          <rect>
-           <x>130</x>
-           <y>170</y>
-           <width>121</width>
-           <height>21</height>
-          </rect>
-         </property>
-        </widget>
-        <widget class="QLabel" name="label_3">
-         <property name="geometry">
-          <rect>
-           <x>29</x>
-           <y>110</y>
-           <width>101</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string>Line color(RGB):</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </widget>
-      </item>
-      <item row="10" column="0">
-       <spacer name="verticalSpacer">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>132</width>
-          <height>3</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="1" column="0">
-       <spacer name="verticalSpacer_4">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>32</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="7" column="0">
-       <spacer name="verticalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>31</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item row="3" column="0">
-       <widget class="QWidget" name="widget_10" native="true">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>190</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>16777215</width>
-          <height>220</height>
-         </size>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">.QWidget{
+         <property name="styleSheet">
+          <string notr="true">.QWidget{
 	border-top:1px solid rgb(179, 179, 179);
 }
 
 #plot1DFileName_LE,#plot1DFileColNum_LE{
 	padding-left:10px;
 }</string>
-        </property>
-        <widget class="QLabel" name="plot1DFileName_LE">
-         <property name="geometry">
-          <rect>
-           <x>130</x>
-           <y>30</y>
-           <width>121</width>
-           <height>21</height>
-          </rect>
          </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel{
+         <layout class="QVBoxLayout" name="verticalLayout_5">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+          <property name="leftMargin">
+           <number>0</number>
+          </property>
+          <property name="topMargin">
+           <number>0</number>
+          </property>
+          <property name="rightMargin">
+           <number>0</number>
+          </property>
+          <property name="bottomMargin">
+           <number>0</number>
+          </property>
+          <item>
+           <widget class="QWidget" name="widget" native="true">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>60</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>10000</height>
+             </size>
+            </property>
+            <layout class="QGridLayout" name="gridLayout_6">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <property name="spacing">
+              <number>0</number>
+             </property>
+             <item row="0" column="0">
+              <widget class="QLabel" name="inputFile_LB">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Input file:</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="0" column="1">
+              <widget class="QLabel" name="plot1DFileName_LE">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
 	background-color:white;
 }</string>
-         </property>
-         <property name="text">
-          <string>input file name</string>
-         </property>
-        </widget>
-        <widget class="QLabel" name="inputFile_LB">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>30</y>
-           <width>91</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Input file:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-        <widget class="QLabel" name="numberColumn_LB">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>50</y>
-           <width>91</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Columns:</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-        <widget class="QLabel" name="plot1DFileColNum_LE">
-         <property name="geometry">
-          <rect>
-           <x>130</x>
-           <y>50</y>
-           <width>121</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel{
+               </property>
+               <property name="text">
+                <string>input file name</string>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="0">
+              <widget class="QLabel" name="numberColumn_LB">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>100</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="text">
+                <string>Columns:</string>
+               </property>
+               <property name="alignment">
+                <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+               </property>
+              </widget>
+             </item>
+             <item row="1" column="1">
+              <widget class="QLabel" name="plot1DFileColNum_LE">
+               <property name="minimumSize">
+                <size>
+                 <width>0</width>
+                 <height>30</height>
+                </size>
+               </property>
+               <property name="maximumSize">
+                <size>
+                 <width>16777215</width>
+                 <height>50</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel{
 	background-color:white;
 }</string>
-         </property>
-         <property name="text">
-          <string>Colums number</string>
-         </property>
+               </property>
+               <property name="text">
+                <string>Colums number</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QTableWidget" name="plot1DFile_Table">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>60</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>100000</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="editTriggers">
+             <set>QAbstractItemView::NoEditTriggers</set>
+            </property>
+            <attribute name="horizontalHeaderDefaultSectionSize">
+             <number>70</number>
+            </attribute>
+            <attribute name="horizontalHeaderMinimumSectionSize">
+             <number>40</number>
+            </attribute>
+            <attribute name="horizontalHeaderStretchLastSection">
+             <bool>true</bool>
+            </attribute>
+            <column>
+             <property name="text">
+              <string>Min</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Max</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>Avg</string>
+             </property>
+            </column>
+           </widget>
+          </item>
+         </layout>
         </widget>
-        <widget class="QTableWidget" name="plot1DFile_Table">
-         <property name="geometry">
-          <rect>
-           <x>30</x>
-           <y>80</y>
-           <width>221</width>
-           <height>101</height>
-          </rect>
-         </property>
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>100000</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="editTriggers">
-          <set>QAbstractItemView::NoEditTriggers</set>
-         </property>
-         <attribute name="horizontalHeaderDefaultSectionSize">
-          <number>70</number>
-         </attribute>
-         <attribute name="horizontalHeaderMinimumSectionSize">
-          <number>40</number>
-         </attribute>
-         <attribute name="horizontalHeaderStretchLastSection">
-          <bool>true</bool>
-         </attribute>
-         <column>
-          <property name="text">
-           <string>Min</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Max</string>
-          </property>
-         </column>
-         <column>
-          <property name="text">
-           <string>Avg</string>
-          </property>
-         </column>
-        </widget>
-        <widget class="QLabel" name="fileInfo_LB">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>10</y>
-           <width>161</width>
-           <height>20</height>
-          </rect>
-         </property>
-         <property name="font">
-          <font>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text">
-          <string>Loaded file information</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-         </property>
-        </widget>
-       </widget>
-      </item>
-      <item row="4" column="0">
-       <spacer name="verticalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Vertical</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>20</width>
-          <height>32</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>

@@ -15,6 +15,7 @@ endif()
 
 project(SimpleView)
 
+set(VTK_DIR "/usr/local/lib")
 
 # use, i.e. don't skip the full RPATH for the build tree
 SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
@@ -36,7 +37,7 @@ IF("${isSystemDir}" STREQUAL "-1")
    SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 ENDIF("${isSystemDir}" STREQUAL "-1")
 
-
+find_package(VTK REQUIRED)
 find_package(VTK COMPONENTS
   vtkRenderingVolumeOpenGL2
   vtkFiltersGeometry
@@ -100,4 +101,5 @@ target_link_libraries(SimpleView
   vtkFiltersGeometry
   vtkFiltersFlowPaths
   vtkFiltersSources
+  ${VTK_LIBRARIES}
 )
