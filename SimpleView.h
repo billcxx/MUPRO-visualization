@@ -108,6 +108,7 @@ public:
     void on_alphaAdd_PB_released();
     void on_alphaDelete_PB_released();
     void on_domain_LW_itemChanged(QListWidgetItem *item);
+	void on_vo2Domain_LW_itemChanged(QListWidgetItem *item);
     void on_domain_CB_stateChanged(int state);
     void on_slice_CB_stateChanged(int state);
     void on_streamline_CB_stateChanged(int state);
@@ -116,9 +117,11 @@ public:
     
     
     void drawDomain(std::string domainName);
+	void drawVO2Domain(std::string domainName);
     int loadData(QString filedir);
     int domainProcessing(QString filedir);
     int domainType(double px,double py, double pz);
+	int vo2DomainType(double u1, double u2, double u3, double u4, double n1, double n2, double n3, double n4);
     double getMin(double *list,int length);
     double getMax(double *list,int length);
     double getAvg(double *list,int length);
@@ -163,6 +166,9 @@ public:
 	void on_domainStdValue_LE_editingFinished();
 	void on_domainRePlot_PB_released();
 	void on_outlineWidth_LE_editingFinished();
+	void on_domain_Combo_currentIndexChanged(int index);
+	void on_domainColor_Combo_currentIndexChanged(int index);
+	void on_opacityDomain_Combo_currentIndexChanged(int index);
 
 
 	void on_vectorColorMode_Combo_currentIndexChanged(int index);
@@ -178,6 +184,7 @@ public:
     void loadStatus(QFileInfo filedir);
     void outputImage(QString load);
     void outputDomain(QString filedir,int x, int y, int z);
+	void outputVO2Domain(QString filedir, int x, int y, int z);
     
 protected:
     
@@ -189,17 +196,18 @@ private:
     int columns;
     std::string scalarName,vectorName,domainName;
     QFileInfo scalarDir,vectorDir,domainDir;
-	double** domainRGB;
+	double** domainRGB, **domainRGBHold,** vo2DomainRGB, **vo2DomainRGBHold;
     // Designer form
     Ui_SimpleView *ui;
     QString printstatus;
 	bool updateFlag = false;
 	double cameraPosition[3], cameraFocal[3], pointFraction[27] = { 0.0 };
-    QVector<QString> domainList ;
+    QVector<QString> domainList ,vo2DomainList;
     int xmin=0,xmax=0,ymin=0,ymax=0,zmin=0,zmax=0;
 	int outlineWidth = 1;
     int xminAll=0,xmaxAll=0,yminAll=0,ymaxAll=0,zminAll=0,zmaxAll=0;
 	double domainStandardValue = 0.3, domainStandardAngle = 180.0, domainStandardAngleRad=180.0*3.141592653589/180;
+	double M1mod = 0.1, M2mod = 0.1, M1ang = 10.0*3.141592653589 / 180, M2ang = 10.0*3.141592653589 / 180;
 	double domainOrth[27][3] = {
 		{0,0,0},
 		{1/std::sqrt(3),1/std::sqrt(3),1/std::sqrt(3) },

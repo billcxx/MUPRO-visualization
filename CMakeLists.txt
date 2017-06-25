@@ -53,13 +53,13 @@ include_directories(
 )
 
 # Set your files and resources here
-set( Srcs main.cxx SimpleView.cxx qcustomplot.cpp column1D.cpp batch3D.cpp domainCriteria.cpp)
+set( Srcs main.cxx SimpleView.cxx qcustomplot.cpp column1D.cpp batch3D.cpp domainCriteria.cpp VO2Criteria.cpp)
 
-set( Hdrs SimpleView.h qcustomplot.h column1D.h batch3D.h domainCriteria.h)
+set( Hdrs SimpleView.h qcustomplot.h column1D.h batch3D.h domainCriteria.h VO2Criteria.h)
 
-set( MOC_Hdrs SimpleView.h column1D.h batch3D.h domainCriteria.h)
+set( MOC_Hdrs SimpleView.h column1D.h batch3D.h domainCriteria.h VO2Criteria.h)
 
-set( UIs SimpleView.ui column1D.ui batch3D.ui domainCriteria.ui)
+set( UIs SimpleView.ui column1D.ui batch3D.ui domainCriteria.ui VO2Criteria.ui)
 
 set( QRCs Icons/icons.qrc )
 
@@ -90,7 +90,7 @@ MESSAGE("vtk library" ${VTK_LIBRARIES} )
 MESSAGE("QT library" ${QT_LIBRARIES} )
 
 
-add_executable(SimpleView MACOSX_BUNDLE
+add_executable(SimpleView WIN32
   ${Srcs} ${Hdrs} ${UI_Srcs} ${MOC_Hdrs} ${QRC_Srcs})
 qt5_use_modules(SimpleView Core Gui Widgets PrintSupport)
 target_link_libraries(SimpleView 
