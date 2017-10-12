@@ -34,7 +34,7 @@
 #include <vtkActor.h>
 #include <vtkVolume.h>
 #include <vtkExtractVOI.h>
-#include <vtkStreamLine.h>
+#include <vtkStreamTracer.h>
 #include "qcustomplot.h"
 #include <vtkOrientationMarkerWidget.h>
 #include <vtkScalarBarWidget.h>
@@ -107,7 +107,8 @@ public:
     void on_RGBDelete_PB_released();
     void on_alphaAdd_PB_released();
     void on_alphaDelete_PB_released();
-    void on_domain_LW_itemChanged(QListWidgetItem *item);
+	//void on_domain_LW_itemChanged(QListWidgetItem *item);    
+	void on_domain_TW_itemChanged(QTableWidgetItem *item);
 	void on_vo2Domain_LW_itemChanged(QListWidgetItem *item);
     void on_domain_CB_stateChanged(int state);
     void on_slice_CB_stateChanged(int state);

@@ -1,0 +1,1309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>240</y>
+     <width>341</width>
+     <height>32</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="domain_LW">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>256</width>
+     <height>192</height>
+    </rect>
+   </property>
+   <attribute name="horizontalHeaderVisible">
+    <bool>false</bool>
+   </attribute>
+   <attribute name="verticalHeaderVisible">
+    <bool>false</bool>
+   </attribute>
+   <row>
+    <property name="text">
+     <string>All domains</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>All R domains</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>All O domains</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>All T domains</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>Substrate</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>R1+(+,+,+)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>R1-(-,-,-)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>R2+(-,+,+)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>R2-(+,-,-)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>R3+(-,-,+)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>R3-(+,+,-)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>R4+(+,-,+)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>R4-(-,+,-)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>O1+(+,+,0)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>O1-(-,-,0)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>O2+(+,-,0)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>O2-(-,+,0)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>O3+(+,0,+)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>O3-(-,0,-)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>O4+(+,0,-)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>O4-(-,0,+)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>O5+(0,+,+)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>O5-(0,-,-)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>O6+(0,+,-)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>O6-(0,-,+)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>T1+(+,0,0)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>T1-(-,0,0)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>T2+(0,+,0)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>T2-(0,-,0)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>T3+(0,0,+)</string>
+    </property>
+   </row>
+   <row>
+    <property name="text">
+     <string>T3-(0,0,-)</string>
+    </property>
+   </row>
+   <column>
+    <property name="text">
+     <string>name</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>percent</string>
+    </property>
+   </column>
+   <item row="0" column="0">
+    <property name="text">
+     <string>All domain</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="0" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="1" column="0">
+    <property name="text">
+     <string>All R domains</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="1" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="2" column="0">
+    <property name="text">
+     <string>All O domains</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="2" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="3" column="0">
+    <property name="text">
+     <string>All T domains</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="3" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="4" column="0">
+    <property name="text">
+     <string>Substrate</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="4" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="5" column="0">
+    <property name="text">
+     <string>R1+(+,+,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="5" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="6" column="0">
+    <property name="text">
+     <string>R1-(-,-,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="6" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="7" column="0">
+    <property name="text">
+     <string>R2+(-,+,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="7" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="8" column="0">
+    <property name="text">
+     <string>R2-(+,-,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="8" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="9" column="0">
+    <property name="text">
+     <string>R3+(-,-,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="9" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="10" column="0">
+    <property name="text">
+     <string>R3-(+,+,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="10" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="11" column="0">
+    <property name="text">
+     <string>R4+(+,-,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="11" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="12" column="0">
+    <property name="text">
+     <string>R4-(-,+,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="12" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="13" column="0">
+    <property name="text">
+     <string>O1+(+,+,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="13" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="14" column="0">
+    <property name="text">
+     <string>O1-(-,-,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="14" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="15" column="0">
+    <property name="text">
+     <string>O2+(+,-,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="15" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="16" column="0">
+    <property name="text">
+     <string>O2-(-,+,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="16" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="17" column="0">
+    <property name="text">
+     <string>O3+(+,0,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="17" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="18" column="0">
+    <property name="text">
+     <string>O3-(-,0,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="18" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="19" column="0">
+    <property name="text">
+     <string>O4+(+,0,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="19" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="20" column="0">
+    <property name="text">
+     <string>O4-(-,0,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="20" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="21" column="0">
+    <property name="text">
+     <string>O5+(0,+,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="21" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="22" column="0">
+    <property name="text">
+     <string>O5-(0,-,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="22" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="23" column="0">
+    <property name="text">
+     <string>O6+(0,+,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="23" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="24" column="0">
+    <property name="text">
+     <string>O6-(0,-,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="24" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="25" column="0">
+    <property name="text">
+     <string>T1+(+,0,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="25" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="26" column="0">
+    <property name="text">
+     <string>T1-(-,0,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="26" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="27" column="0">
+    <property name="text">
+     <string>T2+(0,+,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="27" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="28" column="0">
+    <property name="text">
+     <string>T2-(0,-,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="28" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="29" column="0">
+    <property name="text">
+     <string>T3+(0,0,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="29" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+   <item row="30" column="0">
+    <property name="text">
+     <string>T3-(0,0,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+    <property name="flags">
+     <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+    </property>
+   </item>
+   <item row="30" column="1">
+    <property name="text">
+     <string>0%</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QListWidget" name="domain_LW_2">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>220</x>
+     <y>50</y>
+     <width>251</width>
+     <height>301</height>
+    </rect>
+   </property>
+   <property name="selectionMode">
+    <enum>QAbstractItemView::SingleSelection</enum>
+   </property>
+   <item>
+    <property name="text">
+     <string>All domains</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>All R domains</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>All O domains</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>All T domains</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Substrate</string>
+    </property>
+    <property name="background">
+     <brush brushstyle="NoBrush">
+      <color alpha="255">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
+    </property>
+    <property name="foreground">
+     <brush brushstyle="NoBrush">
+      <color alpha="255">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R1+ (+,+,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R1- (-,-,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R2+ (-,+,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R2- (+,-,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R3+ (-,-,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R3- (+,+,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R4+ (+,-,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R4- (-,+,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O1+ (+,+,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O1- (-,-,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O2+ (+,-,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O2- (-,+,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O3+ (+,0,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O3- (-,0,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O4+ (+,0,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O4- (-,0,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O5+ (0,+,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O5- (0,-,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O6+ (0,+,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O6- (0,-,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>T1+ (+,0,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>T1- (-,0,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>T2+ (0,+,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>T2- (0,-,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>T3+ (0,0,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>T3- (0,0,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+  </widget>
+  <widget class="QListWidget" name="domain_LW_3">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>-20</x>
+     <y>120</y>
+     <width>256</width>
+     <height>192</height>
+    </rect>
+   </property>
+   <property name="selectionMode">
+    <enum>QAbstractItemView::SingleSelection</enum>
+   </property>
+   <item>
+    <property name="text">
+     <string>All domains</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>All R domains</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>All O domains</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>All T domains</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>Substrate</string>
+    </property>
+    <property name="background">
+     <brush brushstyle="NoBrush">
+      <color alpha="255">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
+    </property>
+    <property name="foreground">
+     <brush brushstyle="NoBrush">
+      <color alpha="255">
+       <red>0</red>
+       <green>0</green>
+       <blue>0</blue>
+      </color>
+     </brush>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R1+ (+,+,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R1- (-,-,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R2+ (-,+,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R2- (+,-,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R3+ (-,-,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R3- (+,+,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R4+ (+,-,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>R4- (-,+,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O1+ (+,+,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O1- (-,-,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O2+ (+,-,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O2- (-,+,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O3+ (+,0,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O3- (-,0,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O4+ (+,0,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O4- (-,0,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O5+ (0,+,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O5- (0,-,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O6+ (0,+,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>O6- (0,-,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>T1+ (+,0,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>T1- (-,0,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>T2+ (0,+,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>T2- (0,-,0)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>T3+ (0,0,+)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>T3- (0,0,-)</string>
+    </property>
+    <property name="checkState">
+     <enum>Checked</enum>
+    </property>
+   </item>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>Dialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>254</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>Dialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>316</x>
+     <y>260</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

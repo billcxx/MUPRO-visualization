@@ -198,7 +198,7 @@ bool batch3D::loopThroughKt(){
                 vectorName=fileName+"."+QString::number(hold)+QString::number(hold+1)+QString::number(hold+2)+".vtk";
                 qDebug()<<vectorName;
             }
-            this->main3D->updateVTK(scalarName.toStdString(), vectorName.toStdString());
+            //this->main3D->updateVTK(scalarName.toStdString(), vectorName.toStdString());
             if(this->batchui->loadDomain_PB->isEnabled()){
                 fileName=domainDir+"/"+this->batchui->domainName_LB->text();
                 domainData=formDataName(fileName, i);
@@ -212,6 +212,7 @@ bool batch3D::loopThroughKt(){
                 qDebug()<<"domainwtf:"<<domainName;
             }
 			this->main3D->loadStatus(QFileInfo(statusFile));
+			this->main3D->updateVTK(scalarName.toStdString(), vectorName.toStdString());
 			//this->main3D->slotUpdate();
 			this->main3D->on_cameraSet_PB_released();
             fileName=formName(exportDir+"/images/"+this->batchui->outputName_LE->text(), i)+".png";

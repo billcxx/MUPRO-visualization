@@ -494,7 +494,7 @@ background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8DAEBE, 
                   <x>0</x>
                   <y>0</y>
                   <width>280</width>
-                  <height>364</height>
+                  <height>210</height>
                  </rect>
                 </property>
                 <property name="minimumSize">
@@ -1986,7 +1986,7 @@ background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8DAEBE, 
                   <x>0</x>
                   <y>0</y>
                   <width>280</width>
-                  <height>364</height>
+                  <height>300</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -3592,277 +3592,795 @@ background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8DAEBE, 
                       <number>0</number>
                      </property>
                      <item row="0" column="0">
-                      <widget class="QListWidget" name="domain_LW">
-                       <property name="enabled">
+                      <widget class="QTableWidget" name="domain_TW">
+                       <property name="autoScroll">
+                        <bool>true</bool>
+                       </property>
+                       <property name="autoScrollMargin">
+                        <number>10</number>
+                       </property>
+                       <attribute name="horizontalHeaderVisible">
                         <bool>false</bool>
-                       </property>
-                       <property name="selectionMode">
-                        <enum>QAbstractItemView::SingleSelection</enum>
-                       </property>
-                       <item>
+                       </attribute>
+                       <attribute name="horizontalHeaderDefaultSectionSize">
+                        <number>125</number>
+                       </attribute>
+                       <attribute name="horizontalHeaderMinimumSectionSize">
+                        <number>80</number>
+                       </attribute>
+                       <attribute name="horizontalHeaderShowSortIndicator" stdset="0">
+                        <bool>false</bool>
+                       </attribute>
+                       <attribute name="horizontalHeaderStretchLastSection">
+                        <bool>true</bool>
+                       </attribute>
+                       <attribute name="verticalHeaderVisible">
+                        <bool>false</bool>
+                       </attribute>
+                       <attribute name="verticalHeaderDefaultSectionSize">
+                        <number>30</number>
+                       </attribute>
+                       <attribute name="verticalHeaderMinimumSectionSize">
+                        <number>30</number>
+                       </attribute>
+                       <row>
                         <property name="text">
                          <string>All domains</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
-                        </property>
-                       </item>
-                       <item>
+                       </row>
+                       <row>
                         <property name="text">
-                         <string>All R domains</string>
+                         <string>R domains</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
-                        </property>
-                       </item>
-                       <item>
+                       </row>
+                       <row>
                         <property name="text">
-                         <string>All O domains</string>
+                         <string>O domains</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
-                        </property>
-                       </item>
-                       <item>
+                       </row>
+                       <row>
                         <property name="text">
-                         <string>All T domains</string>
+                         <string>T domains</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
-                        </property>
-                       </item>
-                       <item>
+                       </row>
+                       <row>
                         <property name="text">
                          <string>Substrate</string>
                         </property>
-                        <property name="background">
-                         <brush brushstyle="NoBrush">
-                          <color alpha="255">
-                           <red>0</red>
-                           <green>0</green>
-                           <blue>0</blue>
-                          </color>
-                         </brush>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>R1+(+,+,+)</string>
                         </property>
-                        <property name="foreground">
-                         <brush brushstyle="NoBrush">
-                          <color alpha="255">
-                           <red>0</red>
-                           <green>0</green>
-                           <blue>0</blue>
-                          </color>
-                         </brush>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>R1-(-,-,-)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>R2+(-,+,+)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>R2-(+,-,-)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>R3+(-,-,+)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>R3-(+,+,-)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>R4+(+,-,+)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>R4-(-,+,-)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>O1+(+,+,0)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>O1-(-,-,0)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>O2+(+,-,0)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>O2-(-,+,0)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>O3+(+,0,+)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>O3-(-,0,-)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>O4+(+,0,-)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>O4-(-,0,+)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>O5+(0,+,+)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>O5-(0,-,-)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>O6+(0,+,-)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>O6-(0,-,+)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>T1+(+,0,0)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>T1-(-,0,0)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>T2+(0,+,0)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>T2-(0,-,0)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>T3+(0,0,+)</string>
+                        </property>
+                       </row>
+                       <row>
+                        <property name="text">
+                         <string>T3-(0,0,-)</string>
+                        </property>
+                       </row>
+                       <column>
+                        <property name="text">
+                         <string>Domain types</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignLeading|AlignVCenter</set>
+                        </property>
+                       </column>
+                       <column>
+                        <property name="text">
+                         <string>Domain percentage</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignLeading|AlignVCenter</set>
+                        </property>
+                       </column>
+                       <item row="0" column="0">
+                        <property name="text">
+                         <string>All domain</string>
                         </property>
                         <property name="checkState">
                          <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="0" column="1">
                         <property name="text">
-                         <string>R1+ (+,+,+)</string>
+                         <string>0%</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="1" column="0">
                         <property name="text">
-                         <string>R1- (-,-,-)</string>
+                         <string>R domains</string>
                         </property>
                         <property name="checkState">
                          <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="1" column="1">
                         <property name="text">
-                         <string>R2+ (-,+,+)</string>
+                         <string>0%</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="2" column="0">
                         <property name="text">
-                         <string>R2- (+,-,-)</string>
+                         <string>O domains</string>
                         </property>
                         <property name="checkState">
                          <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="2" column="1">
                         <property name="text">
-                         <string>R3+ (-,-,+)</string>
+                         <string>0%</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="3" column="0">
                         <property name="text">
-                         <string>R3- (+,+,-)</string>
+                         <string>T domains</string>
                         </property>
                         <property name="checkState">
                          <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="3" column="1">
                         <property name="text">
-                         <string>R4+ (+,-,+)</string>
+                         <string>0%</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="4" column="0">
                         <property name="text">
-                         <string>R4- (-,+,-)</string>
+                         <string>Substrate</string>
                         </property>
                         <property name="checkState">
                          <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="4" column="1">
                         <property name="text">
-                         <string>O1+ (+,+,0)</string>
+                         <string>0%</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="5" column="0">
                         <property name="text">
-                         <string>O1- (-,-,0)</string>
+                         <string>R1+(+,+,+)</string>
                         </property>
                         <property name="checkState">
                          <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="5" column="1">
                         <property name="text">
-                         <string>O2+ (+,-,0)</string>
+                         <string>0%</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="6" column="0">
                         <property name="text">
-                         <string>O2- (-,+,0)</string>
+                         <string>R1-(-,-,-)</string>
                         </property>
                         <property name="checkState">
                          <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="6" column="1">
                         <property name="text">
-                         <string>O3+ (+,0,+)</string>
+                         <string>0%</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="7" column="0">
                         <property name="text">
-                         <string>O3- (-,0,-)</string>
+                         <string>R2+(-,+,+)</string>
                         </property>
                         <property name="checkState">
                          <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="7" column="1">
                         <property name="text">
-                         <string>O4+ (+,0,-)</string>
+                         <string>0%</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="8" column="0">
                         <property name="text">
-                         <string>O4- (-,0,+)</string>
+                         <string>R2-(+,-,-)</string>
                         </property>
                         <property name="checkState">
                          <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="8" column="1">
                         <property name="text">
-                         <string>O5+ (0,+,+)</string>
+                         <string>0%</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="9" column="0">
                         <property name="text">
-                         <string>O5- (0,-,-)</string>
+                         <string>R3+(-,-,+)</string>
                         </property>
                         <property name="checkState">
                          <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="9" column="1">
                         <property name="text">
-                         <string>O6+ (0,+,-)</string>
+                         <string>0%</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="10" column="0">
                         <property name="text">
-                         <string>O6- (0,-,+)</string>
+                         <string>R3-(+,+,-)</string>
                         </property>
                         <property name="checkState">
                          <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="10" column="1">
                         <property name="text">
-                         <string>T1+ (+,0,0)</string>
+                         <string>0%</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="11" column="0">
                         <property name="text">
-                         <string>T1- (-,0,0)</string>
+                         <string>R4+(+,-,+)</string>
                         </property>
                         <property name="checkState">
                          <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="11" column="1">
                         <property name="text">
-                         <string>T2+ (0,+,0)</string>
+                         <string>0%</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="12" column="0">
                         <property name="text">
-                         <string>T2- (0,-,0)</string>
+                         <string>R4-(-,+,-)</string>
                         </property>
                         <property name="checkState">
                          <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="12" column="1">
                         <property name="text">
-                         <string>T3+ (0,0,+)</string>
+                         <string>0%</string>
                         </property>
-                        <property name="checkState">
-                         <enum>Checked</enum>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
                         </property>
                        </item>
-                       <item>
+                       <item row="13" column="0">
                         <property name="text">
-                         <string>T3- (0,0,-)</string>
+                         <string>O1+(+,+,0)</string>
                         </property>
                         <property name="checkState">
                          <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="13" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="14" column="0">
+                        <property name="text">
+                         <string>O1-(-,-,0)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="14" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="15" column="0">
+                        <property name="text">
+                         <string>O2+(+,-,0)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="15" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="16" column="0">
+                        <property name="text">
+                         <string>O2-(-,+,0)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="16" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="17" column="0">
+                        <property name="text">
+                         <string>O3+(+,0,+)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="17" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="18" column="0">
+                        <property name="text">
+                         <string>O3-(-,0,-)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="18" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="19" column="0">
+                        <property name="text">
+                         <string>O4+(+,0,-)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="19" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="20" column="0">
+                        <property name="text">
+                         <string>O4-(-,0,+)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="20" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="21" column="0">
+                        <property name="text">
+                         <string>O5+(0,+,+)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="21" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="22" column="0">
+                        <property name="text">
+                         <string>O5-(0,-,-)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="22" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="23" column="0">
+                        <property name="text">
+                         <string>O6+(0,+,-)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="23" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="24" column="0">
+                        <property name="text">
+                         <string>O6-(0,-,+)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="24" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="25" column="0">
+                        <property name="text">
+                         <string>T1+(+,0,0)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="25" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="26" column="0">
+                        <property name="text">
+                         <string>T1-(-,0,0)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="26" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="27" column="0">
+                        <property name="text">
+                         <string>T2+(0,+,0)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="27" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="28" column="0">
+                        <property name="text">
+                         <string>T2-(0,-,0)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="28" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="29" column="0">
+                        <property name="text">
+                         <string>T3+(0,0,+)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="29" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
+                        </property>
+                       </item>
+                       <item row="30" column="0">
+                        <property name="text">
+                         <string>T3-(0,0,-)</string>
+                        </property>
+                        <property name="checkState">
+                         <enum>Checked</enum>
+                        </property>
+                        <property name="flags">
+                         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
+                        </property>
+                       </item>
+                       <item row="30" column="1">
+                        <property name="text">
+                         <string>0%</string>
+                        </property>
+                        <property name="textAlignment">
+                         <set>AlignTrailing|AlignVCenter</set>
                         </property>
                        </item>
                       </widget>
@@ -3973,8 +4491,8 @@ background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8DAEBE, 
                  <rect>
                   <x>0</x>
                   <y>0</y>
-                  <width>280</width>
-                  <height>364</height>
+                  <width>180</width>
+                  <height>76</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -4024,7 +4542,7 @@ background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8DAEBE, 
                  <item>
                   <widget class="QStackedWidget" name="domainCriteria_Stack">
                    <property name="currentIndex">
-                    <number>1</number>
+                    <number>0</number>
                    </property>
                    <widget class="QWidget" name="page_41">
                     <widget class="QWidget" name="widget" native="true">
@@ -4375,7 +4893,7 @@ color:white;
                   <x>0</x>
                   <y>0</y>
                   <width>280</width>
-                  <height>364</height>
+                  <height>260</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -4783,7 +5301,7 @@ color:white;
             </layout>
            </widget>
           </widget>
-          <widget class="QVTKWidget" name="qvtkWidget">
+          <widget class="QVTKWidget" name="qvtkWidget" native="true">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
              <horstretch>0</horstretch>
@@ -4814,7 +5332,7 @@ color:white;
             </size>
            </property>
            <property name="currentIndex">
-            <number>2</number>
+            <number>1</number>
            </property>
            <widget class="QWidget" name="page_22">
             <property name="geometry">
@@ -4822,7 +5340,7 @@ color:white;
               <x>0</x>
               <y>0</y>
               <width>280</width>
-              <height>358</height>
+              <height>220</height>
              </rect>
             </property>
             <attribute name="label">
@@ -6209,6 +6727,9 @@ color:white;
                        <height>40</height>
                       </size>
                      </property>
+                     <property name="text">
+                      <string>500</string>
+                     </property>
                     </widget>
                    </item>
                    <item>
@@ -6224,6 +6745,9 @@ color:white;
                        <width>100</width>
                        <height>40</height>
                       </size>
+                     </property>
+                     <property name="text">
+                      <string>500</string>
                      </property>
                     </widget>
                    </item>
@@ -6287,6 +6811,9 @@ color:white;
                        <height>40</height>
                       </size>
                      </property>
+                     <property name="text">
+                      <string>1</string>
+                     </property>
                     </widget>
                    </item>
                   </layout>
@@ -6303,7 +6830,7 @@ color:white;
               <x>0</x>
               <y>0</y>
               <width>280</width>
-              <height>358</height>
+              <height>180</height>
              </rect>
             </property>
             <attribute name="label">
@@ -7303,7 +7830,7 @@ background: rgb(255, 213, 205);
               <x>0</x>
               <y>0</y>
               <width>280</width>
-              <height>358</height>
+              <height>180</height>
              </rect>
             </property>
             <attribute name="label">

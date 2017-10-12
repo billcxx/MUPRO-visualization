@@ -81,12 +81,14 @@
 #include <vtkContourFilter.h>
 #include <vtkMarchingCubes.h>
 #include <vtkPolyDataNormals.h>
-#include <vtkStreamLine.h>
+#include <vtkStreaklineFilter.h>
 #include <vtkExtractGrid.h>
 #include <vtkFloatArray.h>
 #include <vtkCellDerivatives.h>
 #include <vtkAssignAttribute.h>
 #include <vtkTransform.h>
+#include <vtkXMLImageDataWriter.h>
+#include <vtkDoubleArray.h>
 
 #include <vtkUnstructuredGridVolumeZSweepMapper.h>
 #include <fstream>
@@ -282,10 +284,11 @@ SimpleView::SimpleView()
 
     for (int i=0; i<27; i++) {
 		//qDebug() << "i:" << i << (int)(domainRGB[i][0] * 255) << (int)(domainRGB[i][1] * 255) << (int)(domainRGB[i][2] * 255);
-        this->ui->domain_LW->item(i+4)->setForeground(QColor((domainRGB[i][0] * 255) , (domainRGB[i][1] * 255) , (domainRGB[i][2] * 255)));
+        //this->ui->domain_LW->item(i+4)->setForeground(QColor((domainRGB[i][0] * 255) , (domainRGB[i][1] * 255) , (domainRGB[i][2] * 255)));
+		this->ui->domain_TW->item(i + 4,0)->setForeground(QColor((domainRGB[i][0] * 255), (domainRGB[i][1] * 255), (domainRGB[i][2] * 255)));
     }
     
-    std::string list[31]={ "Check all domains","Check all R domains", "Check all O domains", "Check all T domains", "Substrate", \
+    std::string list[31]={ "All domains","All R domains", "All O domains", "All T domains", "Substrate", \
         "R1+(+,+,+)","R1-(-,-,-)","R2+(-,+,+)","R2-(+,-,-)","R3+(-,-,+)","R3-(+,+,-)","R4+(+,-,+)","R4-(-,+,-)", \
         "O1+(+,+,0)","O1-(-,-,0)","O2+(+,-,0)","O2-(-,+,0)","O3+(+,0,+)","O3-(-,0,-)","O4+(+,0,-)","O4-(-,0,+)",\
         "O5+(0,+,+)","O5-(0,-,-)","O6+(0,+,-)","O6-(0,-,+)","T1+(+,0,0)","T1-(-,0,0)","T2+(0,+,0)","T2-(0,-,0)","T3+(0,0,+)","T3-(0,0,-)"};
@@ -921,7 +924,7 @@ void SimpleView::updateVTK(std::string scalarname, std::string vectorname){
             VTK_CREATE(vtkSmartVolumeMapper,mapperScalar);
 //            VTK_CREATE(vtkVolumeMapper,mapperScalar)
             mapperScalar->SetInputConnection(0,readerScalar->GetOutputPort(0));
-//			mapperScalar->SetRequestedRenderModeToRayCast();
+			mapperScalar->SetRequestedRenderModeToRayCast();
             // mapperScalar->SetLookupTable(tableScalar);
             actorScalar->SetMapper(mapperScalar);
         }
@@ -3012,13 +3015,20 @@ int SimpleView::domainProcessing(QString filedir){
     outputDomain(filedir,xmax,ymax,zmax);
 
 
-    
-    for (int i=0;i<27;i++){
+	this->ui->domain_TW->item(0, 0)->setCheckState(Qt::Checked);
+	this->ui->domain_TW->item(1, 0)->setCheckState(Qt::Checked);
+	this->ui->domain_TW->item(2, 0)->setCheckState(Qt::Checked);
+	this->ui->domain_TW->item(3, 0)->setCheckState(Qt::Checked);
+	this->ui->domain_TW->item(4, 0)->setCheckState(Qt::Checked);
+
+	for (int i=0;i<27;i++){
         qDebug()<<i<<existDomain[i];
         if(existDomain[i]){
-            this->ui->domain_LW->item(i+4)->setCheckState(Qt::Checked);
-        }else{
-            this->ui->domain_LW->item(i+4)->setCheckState(Qt::Unchecked);
+			//this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Checked);
+			this->ui->domain_TW->item(i + 4,0)->setCheckState(Qt::Checked);
+		}else{
+            //this->ui->domain_LW->item(i+4)->setCheckState(Qt::Unchecked);
+			this->ui->domain_TW->item(i + 4,0)->setCheckState(Qt::Unchecked);
         }
     }
     return columnNumber;
@@ -3229,7 +3239,7 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
 			}
 		}
     }
-    qDebug()<<nfs<<" "<<nsub;
+    qDebug()<<nfs<<" nf and ns"<<nsub;
     for (i=1;i<xmax+2;i++){
         for (j=1;j<ymax+2;j++){
             for (k=1;k<nsub+1;k++){
@@ -3314,6 +3324,7 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
     std::string str;
 //    QFileInfo filehold(filedir);
 //    domainDir= QFileInfo(filehold.absolutePath()+"/"+filehold.completeBaseName());
+	// The following part is outputting the vtk data format, 
     str=filedir.toStdString()+".domain.vtk";
     const char *outdir=str.c_str();
     output.open(outdir);
@@ -3333,27 +3344,104 @@ void SimpleView::outputDomain(QString filedir,int x, int y, int z){
         output << outputData[i] << "\n";
     }
     output.close();
-    for (int i=0;i<rowNumber;++i){
-        //        qDebug()<<outputData[i];
-        if (outputData[i]!=-1) {
-            existDomain[outputData[i]]=true;
-        }
-    }
-    delete[] outputData;
+	// vtk output end here
+	// The following part is for output vti file, which is better than the vtk file
 
-	this->ui->domain_LW->item(0)->setText(domainList[0] + "\t" + QString::number(std::accumulate(pointFraction, pointFraction + 27, 0.0, std::plus<double>()) * 100) + "%");
-	this->ui->domain_LW->item(1)->setText(domainList[1] + "\t" + QString::number(std::accumulate(pointFraction + 1, pointFraction + 9, 0.0, std::plus<double>()) * 100) + "%");
-	this->ui->domain_LW->item(2)->setText(domainList[2] + "\t" + QString::number(std::accumulate(pointFraction + 9, pointFraction + 21, 0.0, std::plus<double>()) * 100) + "%");
-	this->ui->domain_LW->item(3)->setText(domainList[3] + "\t" + QString::number(std::accumulate(pointFraction + 21, pointFraction + 27, 0.0, std::plus<double>()) * 100) + "%");
+	VTK_CREATE(vtkImageData, imageData);
+	imageData->SetDimensions(x + 3, y + 3, z + 3);
+	std::vector<vtkSmartPointer<vtkDoubleArray>> imageDataHold;
+	for (size_t i = 0; i < columns/3; i++)
+	{
+		imageDataHold.push_back(vtkSmartPointer<vtkDoubleArray>::New());
+	}
+	//VTK_CREATE(vtkDoubleArray, imageDataHold[2]);
+	VTK_CREATE(vtkIntArray, imageDomainType);
+	imageDomainType->SetNumberOfComponents(1);
+	imageDomainType->SetNumberOfTuples(rowNumber);
+	str = "domain";
+	imageDomainType->SetName(str.c_str());
+
+	for (size_t i = 0; i < rowNumber; i++)
+	{
+		imageDomainType->SetTuple1(i, outputData[i]);
+	}
+
+	imageData->GetPointData()->AddArray(imageDomainType);
+
+	for (size_t m = 0; m < columns/3; m++)
+	{
+		imageDataHold[m]->SetNumberOfComponents(3);
+		imageDataHold[m]->SetNumberOfTuples(rowNumber);
+		str = "vector_"+std::to_string(m);
+		imageDataHold[m]->SetName(str.c_str());
+		int rowHold = 0;
+		for (size_t i = 0; i < x+3; i++)
+		{
+			for (size_t j = 0; j < y+3; j++)
+			{
+				for (size_t k = 0; k < z+3; k++)
+				{
+					if (i*j*k==0 || (i-x-2)*(j-y-2)*(k-z-2)==0)
+					{
+						imageDataHold[m]->SetTuple3(i + j*(x + 3) + k*(x + 3)*(y + 3), 0, 0, 0);
+					}
+					else
+					{
+						rowHold = (i - 1)*(zmax + 1)*(ymax + 1) + (j - 1)*(zmax + 1) + (k - 1);
+						imageDataHold[m]->SetTuple3(i + j*(x + 3) + k*(x + 3)*(y + 3), vtkData[rowHold][m * 3], vtkData[rowHold][m * 3 + 1], vtkData[rowHold][m * 3 + 2]);
+					}
+				}
+			}
+		}
+		imageData->GetPointData()->AddArray(imageDataHold[m]);
+	}
+
+	VTK_CREATE(vtkXMLImageDataWriter, writerVTI);
+	str = filedir.toStdString() + ".domain.vti";
+	writerVTI->SetFileName(str.c_str());
+	writerVTI->SetDataModeToBinary();
+	writerVTI->SetInputData(imageData);
+	writerVTI->Write();
+
+
+	// vti output end here
+
+	for (int i = 0; i<rowNumber; ++i) {
+		//        qDebug()<<outputData[i];
+		if (outputData[i] != -1) {
+			existDomain[outputData[i]] = true;
+		}
+	}
+    delete[] outputData;
+	std::ostringstream oss;
+
+	//this->ui->domain_LW->item(0)->setText(domainList[0] + "\t" + QString::number(std::accumulate(pointFraction, pointFraction + 27, 0.0, std::plus<double>()) * 100) + "%");
+	//this->ui->domain_LW->item(1)->setText(domainList[1] + "\t" + QString::number(std::accumulate(pointFraction + 1, pointFraction + 9, 0.0, std::plus<double>()) * 100) + "%");
+	//this->ui->domain_LW->item(2)->setText(domainList[2] + "\t" + QString::number(std::accumulate(pointFraction + 9, pointFraction + 21, 0.0, std::plus<double>()) * 100) + "%");
+	//this->ui->domain_LW->item(3)->setText(domainList[3] + "\t" + QString::number(std::accumulate(pointFraction + 21, pointFraction + 27, 0.0, std::plus<double>()) * 100) + "%");
+	this->ui->domain_TW->item(0, 1)->setText(QString::number(std::accumulate(pointFraction, pointFraction + 27, 0.0, std::plus<double>()) * 100) + "%" );
+	this->ui->domain_TW->item(1, 1)->setText(QString::number(std::accumulate(pointFraction+1, pointFraction + 9, 0.0, std::plus<double>()) * 100) + "%");
+	this->ui->domain_TW->item(2, 1)->setText(QString::number(std::accumulate(pointFraction+9, pointFraction + 21, 0.0, std::plus<double>()) * 100) + "%");
+	this->ui->domain_TW->item(3, 1)->setText(QString::number(std::accumulate(pointFraction+21, pointFraction + 27, 0.0, std::plus<double>()) * 100) + "%");
 	for (int i = 1; i<27; i++) {
 		//qDebug() << i << pointFraction[i] << existDomain[i] << domainList[i + 4] + " " + QString::number(pointFraction[i]);
-		this->ui->domain_LW->item(i + 4)->setText(domainList[i + 4] + "\t" + QString::number(pointFraction[i] * 100) + "%");
+		//oss << setw(15) << std::left << domainList[i + 4].toStdString();
+		//oss << std::right << pointFraction[i + 4] * 100 << "%";
+		//str = oss.str();
+
+		//this->ui->domain_LW->item(i + 4)->setText(domainList[i + 4] + "\t" + QString::number(pointFraction[i] * 100) + "%");
+		this->ui->domain_TW->item(i + 4,1)->setText(QString::number(pointFraction[i] * 100) + "%");
 		if (existDomain[i]) {
-			this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Checked);
+			//this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Checked); 
+			this->ui->domain_TW->item(i + 4,0)->setCheckState(Qt::Checked);
 		}
 		else {
-			this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Unchecked);
+			//this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Unchecked);
+			this->ui->domain_TW->item(i + 4,0)->setCheckState(Qt::Unchecked);
 		}
+
+		//oss.clear();
+		//oss.str();
 
 	}
 
@@ -3714,7 +3802,8 @@ void SimpleView::drawDomain(std::string domainname){
 			domainRGB[i][0] = domainRGBHold[i][0];
 			domainRGB[i][1] = domainRGBHold[i][1];
 			domainRGB[i][2] = domainRGBHold[i][2];
-			this->ui->domain_LW->item(i + 4)->setForeground(QColor(domainRGB[i][0] * 255, domainRGB[i][1] * 255, domainRGB[i][2] * 255));
+			//this->ui->domain_LW->item(i + 4)->setForeground(QColor(domainRGB[i][0] * 255, domainRGB[i][1] * 255, domainRGB[i][2] * 255));
+			this->ui->domain_TW->item(i + 4,0)->setForeground(QColor(domainRGB[i][0] * 255, domainRGB[i][1] * 255, domainRGB[i][2] * 255));
 		}
 		
 		for (int i = 0; i < this->ui->RGBDomain_Table->rowCount(); i++)
@@ -3723,7 +3812,8 @@ void SimpleView::drawDomain(std::string domainname){
 			domainRGB[index][0] = this->ui->RGBDomain_Table->item(i, 1)->text().toDouble()/255;
 			domainRGB[index][1] = this->ui->RGBDomain_Table->item(i, 2)->text().toDouble()/255;
 			domainRGB[index][2] = this->ui->RGBDomain_Table->item(i, 3)->text().toDouble()/255;
-			this->ui->domain_LW->item(index + 4)->setForeground(QColor(domainRGB[index][0]*255 ,  domainRGB[index][1]*255, domainRGB[index][2]*255));
+			//this->ui->domain_LW->item(index + 4)->setForeground(QColor(domainRGB[index][0] * 255, domainRGB[index][1] * 255, domainRGB[index][2] * 255));
+			this->ui->domain_TW->item(index + 4,0)->setForeground(QColor(domainRGB[index][0]*255 ,  domainRGB[index][1]*255, domainRGB[index][2]*255));
 			qDebug() << "domainRGB" << index << domainRGB[index][0] << domainRGB[index][1] << domainRGB[index][2];
 		}
 		VTK_CREATE(vtkExtractVOI, readerDomain);
@@ -3789,7 +3879,8 @@ void SimpleView::drawDomain(std::string domainname){
 						// actorDomain[i]->GetProperty()->SetDiffuseColor(domainRGB[i][0],domainRGB[i][1],domainRGB[i][2]);
 						// actorDomain[i]->GetProperty()->SetRepresentationToSurface();
 				actorDomain[i]->Modified();
-				if (this->ui->domain_LW->item(i + 4)->checkState())
+				//if (this->ui->domain_LW->item(i + 4)->checkState())
+				if (this->ui->domain_TW->item(i + 4,0)->checkState())
 				{
 				actorDomain[i]->SetVisibility(true);
 				domainRenderer->AddActor(actorDomain[i]);
@@ -3908,47 +3999,114 @@ void SimpleView::on_vo2Domain_LW_itemChanged(QListWidgetItem *item) {
 
 }
 
-void SimpleView::on_domain_LW_itemChanged(QListWidgetItem *item){
+//void SimpleView::on_domain_LW_itemChanged(QListWidgetItem *item) {
+//	int i = 0;
+//	//i = this->ui->domain_LW->row(item);
+//	i = this->ui->domain_TW->row(item);
+//	if (i == 0) {
+//		if (item->checkState()) {
+//			for (int j = 0; j<31; j++) {
+//				this->ui->domain_LW->item(j)->setCheckState(Qt::Checked);
+//			}
+//		}
+//		else {
+//			for (int j = 0; j<31; j++) {
+//				this->ui->domain_LW->item(j)->setCheckState(Qt::Unchecked);
+//			}
+//		}
+//	}
+//	else if (i == 1) {
+//		if (item->checkState()) {
+//			for (int j = 5; j<13; j++) {
+//				this->ui->domain_LW->item(j)->setCheckState(Qt::Checked);
+//			}
+//		}
+//		else {
+//			for (int j = 5; j<13; j++) {
+//				this->ui->domain_LW->item(j)->setCheckState(Qt::Unchecked);
+//			}
+//		}
+//	}
+//	else if (i == 2) {
+//		if (item->checkState()) {
+//			for (int j = 13; j<25; j++) {
+//				this->ui->domain_LW->item(j)->setCheckState(Qt::Checked);
+//			}
+//		}
+//		else {
+//			for (int j = 13; j<25; j++) {
+//				this->ui->domain_LW->item(j)->setCheckState(Qt::Unchecked);
+//			}
+//		}
+//	}
+//	else if (i == 3) {
+//		if (item->checkState()) {
+//			for (int j = 25; j<31; j++) {
+//				this->ui->domain_LW->item(j)->setCheckState(Qt::Checked);
+//			}
+//		}
+//		else {
+//			for (int j = 25; j<31; j++) {
+//				this->ui->domain_LW->item(j)->setCheckState(Qt::Unchecked);
+//			}
+//		}
+//	}
+//	else {
+//		if (item->checkState()) {
+//			actorDomain[i - 4]->SetVisibility(true);
+//		}
+//		else {
+//			actorDomain[i - 4]->SetVisibility(false);
+//		}
+//	}
+//
+//	this->ui->qvtkWidget->GetRenderWindow()->Render();
+//	this->ui->qvtkWidget->update();
+//
+//}
+
+void SimpleView::on_domain_TW_itemChanged(QTableWidgetItem *item){
     int i=0;
-    i=this->ui->domain_LW->row(item);
+	//i = this->ui->domain_LW->row(item);
+    i=this->ui->domain_TW->row(item);
     if (i==0) {
         if (item->checkState()) {
             for (int j=0; j<31 ; j++) {
-                this->ui->domain_LW->item(j)->setCheckState(Qt::Checked);
+                this->ui->domain_TW->item(j,0)->setCheckState(Qt::Checked);
             }
         }else{
             for (int j=0; j<31 ; j++) {
-                this->ui->domain_LW->item(j)->setCheckState(Qt::Unchecked);
+                this->ui->domain_TW->item(j,0)->setCheckState(Qt::Unchecked);
             }
         }
     }else if (i==1){
         if (item->checkState()) {
             for (int j=5; j<13 ; j++) {
-                this->ui->domain_LW->item(j)->setCheckState(Qt::Checked);
+                this->ui->domain_TW->item(j,0)->setCheckState(Qt::Checked);
             }
         }else{
             for (int j=5; j<13 ; j++) {
-                this->ui->domain_LW->item(j)->setCheckState(Qt::Unchecked);
+                this->ui->domain_TW->item(j,0)->setCheckState(Qt::Unchecked);
             }
         }
     }else if (i==2){
         if (item->checkState()) {
             for (int j=13; j<25 ; j++) {
-                this->ui->domain_LW->item(j)->setCheckState(Qt::Checked);
+                this->ui->domain_TW->item(j,0)->setCheckState(Qt::Checked);
             }
         }else{
             for (int j=13; j<25 ; j++) {
-                this->ui->domain_LW->item(j)->setCheckState(Qt::Unchecked);
+                this->ui->domain_TW->item(j,0)->setCheckState(Qt::Unchecked);
             }
         }
     }else if (i==3){
         if (item->checkState()) {
             for (int j=25; j<31 ; j++) {
-                this->ui->domain_LW->item(j)->setCheckState(Qt::Checked);
+                this->ui->domain_TW->item(j,0)->setCheckState(Qt::Checked);
             }
         }else{
             for (int j=25; j<31 ; j++) {
-                this->ui->domain_LW->item(j)->setCheckState(Qt::Unchecked);
+                this->ui->domain_TW->item(j,0)->setCheckState(Qt::Unchecked);
             }
         }
     }else{
@@ -3966,14 +4124,16 @@ void SimpleView::on_domain_LW_itemChanged(QListWidgetItem *item){
 
 void SimpleView::on_domain_CB_stateChanged(int state){
     if(state==0){
-        this->ui->domain_LW->setEnabled(false);
+        this->ui->domain_TW->setEnabled(false);
+		//this->ui->domain_LW->setEnabled(false);
         outlineDomainActor->SetVisibility(false);
         for(int i=0;i<27;i++){
             actorDomain[i]->SetVisibility(false);
         }
     }else{
         outlineDomainActor->SetVisibility(true);
-        this->ui->domain_LW->setEnabled(true);
+        //this->ui->domain_LW->setEnabled(true);
+		this->ui->domain_TW->setEnabled(true);
         for(int i=0;i<27;i++){
             actorDomain[i]->SetVisibility(true);
         }
@@ -4005,6 +4165,10 @@ void SimpleView::outputImage(QString load){
 	if (!this->ui->exportRatio->text().isNull())
 	{
 		magnify = this->ui->exportRatio->text().toInt();
+		if (magnify <= 0 )
+		{
+			magnify = 1;
+		}
 	}
     windowToImage->SetMagnification(magnify);
     windowToImage->SetInputBufferTypeToRGBA();
@@ -4580,8 +4744,15 @@ void SimpleView::on_cameraSet_PB_released(){
     camera->SetFocalPoint(focalX, focalY, focalZ);
     camera->SetViewUp(viewX, viewY, viewZ);
 	sizeX = this->ui->viewportSizeX->text().toInt();
+	if (sizeX <= 0)
+	{
+		sizeX = 500;
+	}
 	sizeY = this->ui->viewportSizeY->text().toInt();
-	
+	if (sizeY <= 0)
+	{
+		sizeY = 500;
+	}
 	QList<int> splitterSize;
 	splitterSize.append(this->ui->inputTab->width());
 	splitterSize.append(sizeX);
@@ -4718,8 +4889,11 @@ void SimpleView::outputStatus(QFileInfo filedir){
     
     // output for the domain tab
     output << this->ui->domain_CB->checkState()<<endl;
-    for (int i=0; i<this->ui->domain_LW->count(); i++) {
-        output << this->ui->domain_LW->item(i)->checkState()<<endl;
+	//for (int i = 0; i<this->ui->domain_LW->count(); i++) {
+	//	output << this->ui->domain_LW->item(i)->checkState() << endl;
+	//}
+    for (int i=0; i<this->ui->domain_TW->rowCount(); i++) {
+        output << this->ui->domain_TW->item(i,0)->checkState()<<endl;
     }
 	output << this->ui->domainStdAngle_LE->text().toDouble() << " " << this->ui->domainStdValue_LE->text().toDouble() <<endl;
 
@@ -4968,7 +5142,8 @@ void SimpleView::loadStatus(QFileInfo filedir){
     domain=checkstate;
     for (int i=0; i<31; i++) {
         input >> checkstate;
-        this->ui->domain_LW->item(i)->setCheckState(static_cast<Qt::CheckState>(checkstate));
+		//this->ui->domain_LW->item(i)->setCheckState(static_cast<Qt::CheckState>(checkstate));
+        this->ui->domain_TW->item(i,0)->setCheckState(static_cast<Qt::CheckState>(checkstate));
     }
 	input >> min >> max;
 	this->ui->domainStdAngle_LE->setText(QString::fromStdString(min));
@@ -5048,10 +5223,12 @@ void SimpleView::on_domainRePlot_PB_released()
 		for (int i = 0; i < 27; i++) {
 			//qDebug() << i << existDomain[i];
 			if (existDomain[i]) {
-				this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Checked);
+				this->ui->domain_TW->item(i + 4,0)->setCheckState(Qt::Checked);
+				//this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Checked);
 			}
 			else {
-				this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Unchecked);
+				this->ui->domain_TW->item(i + 4,0)->setCheckState(Qt::Unchecked);
+				//this->ui->domain_LW->item(i + 4)->setCheckState(Qt::Unchecked);
 			}
 		}
 		domainName = domainDir.absoluteFilePath().toStdString() + ".domain.vtk";
@@ -5080,10 +5257,10 @@ void SimpleView::on_domainRePlot_PB_released()
 		for (int i = 0; i < 9; i++) {
 			//qDebug() << i << existDomain[i];
 			if (existDomain[i]) {
-				this->ui->domain_LW->item(i)->setCheckState(Qt::Checked);
+				this->ui->vo2Domain_LW->item(i)->setCheckState(Qt::Checked);
 			}
 			else {
-				this->ui->domain_LW->item(i)->setCheckState(Qt::Unchecked);
+				this->ui->vo2Domain_LW->item(i)->setCheckState(Qt::Unchecked);
 			}
 		}
 		domainName = domainDir.absoluteFilePath().toStdString() + ".domain.vtk";
@@ -5117,6 +5294,8 @@ void SimpleView::on_outlineWidth_LE_editingFinished() {
 
 void SimpleView::on_domain_Combo_currentIndexChanged(int index) {
 	this->ui->domain_stack->setCurrentIndex(index);
+	this->ui->domainCriteria_Stack->setCurrentIndex(index);
+
 }
 
 void SimpleView::on_domainColor_Combo_currentIndexChanged(int index) {

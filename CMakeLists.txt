@@ -15,7 +15,8 @@ endif()
 
 project(SimpleView)
 
-set(VTK_DIR "/usr/local/lib")
+#set(VTK_DIR "/usr/local/lib")
+#set(VTK_DIR "C:\Program/ Files\VTK\lib\cmake\vtk-8.0")
 
 # use, i.e. don't skip the full RPATH for the build tree
 SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
