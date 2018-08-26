@@ -20,7 +20,7 @@
 #include <vtkLookupTable.h>
 #include <vtkPiecewiseFunction.h>
 #include <vtkColorTransferFunction.h>
-#include <vtkVolumeRayCastMapper.h>
+//#include <vtkVolumeRayCastMapper.h>
 #include <vtkQtTableView.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
@@ -2426,7 +2426,7 @@ double SimpleView::rescale(double value, double range[2]) {
 
 double * SimpleView::getRGB(double px, double py, double pz, double magnitudeRange[2], double xyRange[2], double zRange[2]) {
 	double hue,saturation,lightness;
-	double xyMagnitude = 0.0;
+	double xyMagnitude = 0.0,magnitude=0.0;
 	xyMagnitude = std::sqrt(px*px + py*py);
 	if (xyMagnitude<10e-6)
 	{
@@ -2442,9 +2442,11 @@ double * SimpleView::getRGB(double px, double py, double pz, double magnitudeRan
 		else {
 			hue = 360 - (std::acos(px / xyMagnitude) / piValue * 180);
 		}
-		saturation = rescale(std::sqrt(px*px + py*py + pz*pz), magnitudeRange);
-		saturation = 1;
-		lightness = rescale(pz, zRange);
+		magnitude = std::sqrt(px*px + py * py + pz * pz);
+		saturation = rescale(magnitude, magnitudeRange);
+		//saturation = 1;
+		//lightness = rescale(pz, zRange);
+		lightness = (pz / magnitude + 1)/2;
 	}
 
 	//qDebug() << "rrrgggbbb" << px << py << pz << hue << saturation << lightness;
