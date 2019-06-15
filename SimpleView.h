@@ -41,6 +41,7 @@
 #include <vtkDataSetReader.h>
 #include <vtkStructuredPointsReader.h>
 #include <vtkStructuredPoints.h>
+#include <vtkX3DExporter.h>
 #include <QDesktopWidget>
 #include <QScreen>
 #include <QMessageBox>
@@ -132,6 +133,7 @@ public:
     void updateCamera(int choice);
     void updateExtraction(int x,int y, int z);
     void saveImage();
+	void saveScene();
     void slotSwitch3D();
     void slotSwitch1D();
     void slotOutputStatus();

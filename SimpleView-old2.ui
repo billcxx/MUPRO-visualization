@@ -4736,7 +4736,7 @@ qproperty-alignment: AlignCenter;*/
                  <string>Color</string>
                 </property>
                </widget>
-               <widget class="QWidget" name="">
+               <widget class="QWidget" name="layoutWidget">
                 <property name="geometry">
                  <rect>
                   <x>30</x>
@@ -5416,7 +5416,7 @@ background: rgb(255, 213, 205);
            </widget>
           </item>
           <item row="0" column="2">
-           <widget class="QVTKWidget" name="qvtkWidget">
+           <widget class="QVTKWidget" name="qvtkWidget" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
@@ -7103,6 +7103,7 @@ qproperty-alignment: AlignCenter;*/
    <addaction name="actionBatch3D"/>
    <addaction name="action3D"/>
    <addaction name="action1D"/>
+   <addaction name="actionExportX3D"/>
   </widget>
   <action name="actionOpenFile_scalar">
    <property name="enabled">
@@ -7347,6 +7348,18 @@ qproperty-alignment: AlignCenter;*/
    </property>
    <property name="toolTip">
     <string>Batch produce 3D image</string>
+   </property>
+  </action>
+  <action name="actionExportX3D">
+   <property name="icon">
+    <iconset>
+     <normaloff>Icons/x3d.png</normaloff>Icons/x3d.png</iconset>
+   </property>
+   <property name="text">
+    <string>ExportX3D</string>
+   </property>
+   <property name="toolTip">
+    <string>Export the scene to x3d</string>
    </property>
   </action>
  </widget>

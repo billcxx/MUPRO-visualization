@@ -39,11 +39,14 @@ IF("${isSystemDir}" STREQUAL "-1")
 ENDIF("${isSystemDir}" STREQUAL "-1")
 
 find_package(VTK REQUIRED)
-find_package(VTK COMPONENTS
+find_package(VTK COMPONENTS   
   vtkRenderingVolumeOpenGL2
   vtkFiltersGeometry
   vtkInteractionStyle
   vtkViewsQt
+  vtkIOXML
+  vtkIOExport
+  vtkIOXMLParser
   vtkIOLegacy
 )
 include(${VTK_USE_FILE})
@@ -99,6 +102,9 @@ target_link_libraries(SimpleView
   vtkInteractionStyle
   vtkViewsQt
   vtkIOLegacy
+  vtkIOXML
+  vtkIOExport
+  vtkIOXMLParser
   vtkFiltersGeometry
   vtkFiltersFlowPaths
   vtkFiltersSources

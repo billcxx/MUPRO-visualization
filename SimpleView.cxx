@@ -89,7 +89,7 @@
 #include <vtkTransform.h>
 #include <vtkXMLImageDataWriter.h>
 #include <vtkDoubleArray.h>
-
+#include <vtkX3DExporter.h>
 #include <vtkUnstructuredGridVolumeZSweepMapper.h>
 #include <fstream>
 #include <iostream>
@@ -183,8 +183,9 @@ SimpleView::SimpleView()
     connect(this->ui->actionExit, SIGNAL(triggered()), this, SLOT(slotExit()));
     connect(this->ui->actionRefresh,SIGNAL(triggered()),this,SLOT(slotUpdate()));
     connect(this->ui->actionClear,SIGNAL(triggered()),this,SLOT(slotClear()));
-    connect(this->ui->actionSave , SIGNAL(triggered()), this, SLOT(saveImage()));
-    connect(this->ui->actionRotateToXP , SIGNAL(triggered()), this, SLOT(slotUpdateCamera1()));
+	connect(this->ui->actionSave, SIGNAL(triggered()), this, SLOT(saveImage()));
+	connect(this->ui->actionExportX3D, SIGNAL(triggered()), this, SLOT(saveScene()));
+	connect(this->ui->actionRotateToXP , SIGNAL(triggered()), this, SLOT(slotUpdateCamera1()));
     connect(this->ui->actionRotateToXN , SIGNAL(triggered()), this, SLOT(slotUpdateCamera2()));
     connect(this->ui->actionRotateToYP , SIGNAL(triggered()), this, SLOT(slotUpdateCamera3()));
     connect(this->ui->actionRotateToYN , SIGNAL(triggered()), this, SLOT(slotUpdateCamera4()));
@@ -4160,6 +4161,27 @@ void SimpleView::saveImage(){
     this->ui->qvtkWidget->update();
 }
 
+void SimpleView::saveScene() {
+	QFileDialog filedialog;
+	filedialog.setAcceptMode(QFileDialog::AcceptSave);
+	filedialog.setDefaultSuffix("x3d");
+	QString load = filedialog.getSaveFileName(0, tr("Save file"), 0, tr("Images (*.x3d)"));
+	qDebug() << load;
+	if (this->ui->stackedWidget->currentIndex() == 0) {
+		VTK_CREATE(vtkX3DExporter,exporter);
+		exporter->SetInput(this->ui->qvtkWidget->GetRenderWindow());
+		exporter->SetFileName(load.toStdString().c_str());
+		exporter->Update();
+		exporter->Write();
+		exporter->Print(std::cout);
+
+	}
+	else {
+		std::cout << "you are on the 1D page, won't be able to save the scene" << std::endl;
+	}
+	this->ui->qvtkWidget->update();
+}
+
 void SimpleView::outputImage(QString load){
     VTK_CREATE(vtkWindowToImageFilter, windowToImage);
     windowToImage->SetInput(this->ui->qvtkWidget->GetRenderWindow());
@@ -4172,8 +4194,9 @@ void SimpleView::outputImage(QString load){
 			magnify = 1;
 		}
 	}
-    windowToImage->SetMagnification(magnify);
-    windowToImage->SetInputBufferTypeToRGBA();
+	//windowToImage->SetMagnification(magnify);
+	windowToImage->SetScale(magnify);
+	windowToImage->SetInputBufferTypeToRGBA();
     windowToImage->FixBoundaryOff();
     windowToImage->ReadFrontBufferOn();
     windowToImage->UpdateWholeExtent();

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1072</width>
-    <height>532</height>
+    <height>533</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -494,7 +494,7 @@ background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8DAEBE, 
                   <x>0</x>
                   <y>0</y>
                   <width>280</width>
-                  <height>210</height>
+                  <height>406</height>
                  </rect>
                 </property>
                 <property name="minimumSize">
@@ -1986,7 +1986,7 @@ background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8DAEBE, 
                   <x>0</x>
                   <y>0</y>
                   <width>280</width>
-                  <height>300</height>
+                  <height>406</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -3497,7 +3497,7 @@ background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #8DAEBE, 
                   <x>0</x>
                   <y>0</y>
                   <width>280</width>
-                  <height>364</height>
+                  <height>406</height>
                  </rect>
                 </property>
                 <attribute name="label">
@@ -5340,7 +5340,7 @@ color:white;
               <x>0</x>
               <y>0</y>
               <width>280</width>
-              <height>220</height>
+              <height>414</height>
              </rect>
             </property>
             <attribute name="label">
@@ -6218,7 +6218,7 @@ color:white;
               <x>0</x>
               <y>0</y>
               <width>280</width>
-              <height>358</height>
+              <height>414</height>
              </rect>
             </property>
             <attribute name="label">
@@ -6830,7 +6830,7 @@ color:white;
               <x>0</x>
               <y>0</y>
               <width>280</width>
-              <height>180</height>
+              <height>414</height>
              </rect>
             </property>
             <attribute name="label">
@@ -7830,7 +7830,7 @@ background: rgb(255, 213, 205);
               <x>0</x>
               <y>0</y>
               <width>280</width>
-              <height>180</height>
+              <height>414</height>
              </rect>
             </property>
             <attribute name="label">
@@ -8954,7 +8954,7 @@ qproperty-alignment: AlignCenter;*/
 </string>
                   </property>
                   <property name="currentIndex">
-                   <number>1</number>
+                   <number>6</number>
                   </property>
                   <widget class="QWidget" name="page_13">
                    <widget class="QLabel" name="label_53">
@@ -10847,6 +10847,7 @@ qproperty-alignment: AlignCenter;*/
    <addaction name="actionBatch3D"/>
    <addaction name="action3D"/>
    <addaction name="action1D"/>
+   <addaction name="actionExportX3D"/>
   </widget>
   <action name="actionOpenFile_scalar">
    <property name="enabled">
@@ -11091,6 +11092,19 @@ qproperty-alignment: AlignCenter;*/
    </property>
    <property name="toolTip">
     <string>Batch produce 3D image</string>
+   </property>
+  </action>
+  <action name="actionExportX3D">
+   <property name="icon">
+    <iconset>
+     <normalon>Icons/x3d.png</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>ExportX3D</string>
+   </property>
+   <property name="toolTip">
+    <string>Export the scene to x3d</string>
    </property>
   </action>
  </widget>
