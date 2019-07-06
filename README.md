@@ -19,3 +19,13 @@ To deploy on mac, make sure you're using the correct macdeployqt, there is anoth
 After bundle all dynamic library into the app, we can build the dmg file
 ```brew install create-dmg```
 ```create-dmg --window-pos 200 120 --window-size 800 400 --app-drop-link 600 185 MuViz.dmg Release/```
+
+
+# Windows
+
+Add bin directory of your Qt installation (e.g. <QT_DIR\bin>) to the PATH variable and then run:
+  windeployqt <path-to-app-binary>
+
+Also copy all vtk dll to the directory, start the application and then delete the dlls.
+
+Reconfigure and generate the project and then build the PACKAGE target.

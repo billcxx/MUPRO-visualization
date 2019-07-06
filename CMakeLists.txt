@@ -115,3 +115,41 @@ target_link_libraries(SimpleView
   vtkFiltersSources
   ${VTK_LIBRARIES}
 )
+
+if(WIN32)
+
+MACRO(SUBDIRLIST result curdir)
+  FILE(GLOB children RELATIVE ${curdir} ${curdir}/*)
+  SET(dirlist "")
+  FOREACH(child ${children})
+    IF(IS_DIRECTORY ${curdir}/${child})
+      LIST(APPEND dirlist ${child})
+    ENDIF()
+  ENDFOREACH()
+  SET(${result} ${dirlist})
+ENDMACRO()
+
+
+install(TARGETS SimpleView DESTINATION bin)
+
+MESSAGE(STATUS ${CMAKE_CURRENT_BINARY_DIR})
+
+file( GLOB pattern_files "${CMAKE_CURRENT_BINARY_DIR}/Release/*.dll")
+SUBDIRLIST(subdir_list "${CMAKE_CURRENT_BINARY_DIR}/Release/")
+
+#get_directory_property(subdir_list DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/Release/*" SUBDIRECTORIES)
+
+install(FILES ${pattern_files} DESTINATION bin)
+FOREACH(subdir ${subdir_list})
+	install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/Release/${subdir}" DESTINATION bin/${subdir})
+	MESSAGE(STATUS ${subdir})
+ENDFOREACH()
+MESSAGE(STATUS ${wxWidgets_LIBRARIES})
+MESSAGE(STATUS ${pattern_files})
+# build a CPack driven installer package
+include (InstallRequiredSystemLibraries)
+set (CPACK_RESOURCE_FILE_LICENSE  
+     "${CMAKE_CURRENT_SOURCE_DIR}/License.txt")
+include (CPack)
+
+endif(WIN32)
