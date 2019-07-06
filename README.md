@@ -9,3 +9,9 @@ are also doing Qt+vtk development and very likely you're already frustrated with
 be a small example that might help some of you with your problems (if you can bear my poor programming style). 
 So feel free to read the code, but please don't distribute the code to anyone else, since I haven't consider about license yet, and I don't
 want to be in trouble.
+
+# Mac
+```brew install vtk```, this will install both vtk and qt!
+
+To deploy on mac, make sure you're using the correct macdeployqt, there is another one in anaconda
+```/usr/local/opt/qt/bin/macdeployqt SimpleView.app```

@@ -25,11 +25,11 @@ SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
 # (but later on when installing)
 SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) 
 
-SET(CMAKE_INSTALL_RPATH "/usr/local/vtk7-share/lib")
+#SET(CMAKE_INSTALL_RPATH "/usr/local/vtk7-share/lib")
 
 # add the automatically determined parts of the RPATH
 # which point to directories outside the build tree to the install RPATH
-SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+# SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 
 # the RPATH to be used when installing, but only if it's not a system directory
@@ -94,8 +94,13 @@ MESSAGE("vtk library" ${VTK_LIBRARIES} )
 MESSAGE("QT library" ${QT_LIBRARIES} )
 
 
+if(WIN32)
 add_executable(SimpleView WIN32
   ${Srcs} ${Hdrs} ${UI_Srcs} ${MOC_Hdrs} ${QRC_Srcs})
+else()
+add_executable(SimpleView MACOSX_BUNDLE
+    ${Srcs} ${Hdrs} ${UI_Srcs} ${MOC_Hdrs} ${QRC_Srcs})
+endif(WIN32)
 qt5_use_modules(SimpleView Core Gui Widgets PrintSupport)
 target_link_libraries(SimpleView 
   vtkRenderingVolumeOpenGL2
