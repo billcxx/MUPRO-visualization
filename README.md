@@ -15,3 +15,7 @@ want to be in trouble.
 
 To deploy on mac, make sure you're using the correct macdeployqt, there is another one in anaconda
 ```/usr/local/opt/qt/bin/macdeployqt SimpleView.app```
+
+After bundle all dynamic library into the app, we can build the dmg file
+```brew install create-dmg```
+```create-dmg --window-pos 200 120 --window-size 800 400 --app-drop-link 600 185 MuViz.dmg Release/```
