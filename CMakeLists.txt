@@ -90,8 +90,6 @@ source_group("Generated" FILES
   ${QRC_Srcs}
 )
 
-MESSAGE("vtk library" ${VTK_LIBRARIES} )
-MESSAGE("QT library" ${QT_LIBRARIES} )
 
 
 if(WIN32)
@@ -102,6 +100,11 @@ add_executable(SimpleView MACOSX_BUNDLE
     ${Srcs} ${Hdrs} ${UI_Srcs} ${MOC_Hdrs} ${QRC_Srcs})
 endif(WIN32)
 qt5_use_modules(SimpleView Core Gui Widgets PrintSupport)
+
+MESSAGE("vtk library" ${VTK_LIBRARIES} )
+MESSAGE("QT library" ${QT_LIBRARIES} )
+
+
 target_link_libraries(SimpleView 
   vtkRenderingVolumeOpenGL2
   vtkInteractionStyle
@@ -114,6 +117,7 @@ target_link_libraries(SimpleView
   vtkFiltersFlowPaths
   vtkFiltersSources
   ${VTK_LIBRARIES}
+  Qt5::Core Qt5::Widgets Qt5::Gui Qt5::PrintSupport
 )
 
 if(WIN32)
@@ -134,14 +138,14 @@ install(TARGETS SimpleView DESTINATION bin)
 
 MESSAGE(STATUS ${CMAKE_CURRENT_BINARY_DIR})
 
-file( GLOB pattern_files "${CMAKE_CURRENT_BINARY_DIR}/Release/*.dll")
-SUBDIRLIST(subdir_list "${CMAKE_CURRENT_BINARY_DIR}/Release/")
+file( GLOB pattern_files "${CMAKE_CURRENT_BINARY_DIR}/MinSizeRel/*.dll")
+SUBDIRLIST(subdir_list "${CMAKE_CURRENT_BINARY_DIR}/MinSizeRel/")
 
-#get_directory_property(subdir_list DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/Release/*" SUBDIRECTORIES)
+#get_directory_property(subdir_list DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/MinSizeRel/*" SUBDIRECTORIES)
 
 install(FILES ${pattern_files} DESTINATION bin)
 FOREACH(subdir ${subdir_list})
-	install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/Release/${subdir}" DESTINATION bin/${subdir})
+	install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/MinSizeRel/${subdir}" DESTINATION bin)
 	MESSAGE(STATUS ${subdir})
 ENDFOREACH()
 MESSAGE(STATUS ${wxWidgets_LIBRARIES})
